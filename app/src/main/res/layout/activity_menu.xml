@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.interaxon.test.libmuse.MainPageFragment">
+
+    <TextView
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="5dp"
+        android:textColor="@color/Black"
+        android:layout_gravity="center"
+        android:layout_weight="1" />
+
+
+    <Button
+        android:id="@+id/b_calibration"
+        android:text="@string/calibration"
+        android:layout_width="@dimen/button"
+        android:layout_height="wrap_content"
+        android:background="@color/Black"
+        android:padding="5dp"
+        android:textColor="@color/White"
+        android:layout_margin="5dp"
+        android:layout_gravity="center" />
+    <Button
+        android:id="@+id/b_meditation"
+        android:text="@string/meditation"
+        android:layout_width="@dimen/button"
+        android:layout_height="wrap_content"
+        android:background="@color/Black"
+        android:padding="5dp"
+        android:textColor="@color/White"
+        android:layout_margin="5dp"
+        android:layout_gravity="center" />
+</LinearLayout>

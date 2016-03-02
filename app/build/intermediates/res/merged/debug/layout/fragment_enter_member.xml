@@ -1,0 +1,81 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/White"
+    tools:context="com.interaxon.test.libmuse.BlankFragment">
+
+    <TextView
+        android:layout_weight="2"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:layout_weight="1"
+        android:layout_gravity="left"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+    <EditText
+        android:id="@+id/enter_existing_username"
+        android:inputType="text"
+        android:textColor="@color/Grey"
+        android:hint="@string/enter_username"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/password"
+        android:layout_weight="1"
+        android:layout_gravity="left"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+    <EditText
+        android:id="@+id/enter_existing_password"
+        android:inputType="textPassword"
+        android:hint="@string/enter_password"
+        android:textColor="@color/Grey"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/b_check_member"
+        android:text="@string/find_me"
+        android:layout_width="@dimen/button"
+        android:layout_height="wrap_content"
+        android:background="@color/Black"
+        android:textColor="@color/White"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:layout_gravity="center_horizontal"/>
+    <Button
+        android:id="@+id/b_back_new_member"
+        android:text="@string/new_member"
+        android:layout_width="@dimen/button"
+        android:layout_height="wrap_content"
+        android:background="@color/Blue"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:layout_gravity="center" />
+    <TextView
+        android:layout_weight="7"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

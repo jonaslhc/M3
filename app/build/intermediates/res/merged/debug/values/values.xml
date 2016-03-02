@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="AccentBlue">#129793</color>
+    <color name="Black">#000000</color>
+    <color name="Blue">#6BCAE2</color>
+    <color name="Grey">#7F7270</color>
+    <color name="White">#FBFBFB</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="button">200dp</dimen>
+    <string name="accel">Accelerometer Data:</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_member">Sign Me Up!</string>
+    <string name="app_name">M3</string>
+    <string name="app_name_long">Mindful Meditative Minds</string>
+    <string name="artifacts">Blinks, Jaw: </string>
+    <string name="calibrate_button">Start Calibration</string>
+    <string name="calibration">Calibrate!</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="drop">Drop</string>
+    <string name="eeg">EEG data:</string>
+    <string name="enter_name">First and Last Name</string>
+    <string name="enter_password">Create Password</string>
+    <string name="enter_password2">Confirm Password</string>
+    <string name="enter_username">Create Username</string>
+    <string name="find_me">Sign In</string>
+    <string name="init_val">0.0</string>
+    <string name="meditation">Meditate!</string>
+    <string name="msg_count">Msg number, size: </string>
+    <string name="muse_elem">Elements:</string>
+    <string name="name">Name: </string>
+    <string name="new_member">New Member</string>
+    <string name="old_member">Already a Member</string>
+    <string name="password">Password: </string>
+    <string name="pause">Pause/Resume</string>
+    <string name="refresh">Refresh</string>
+    <string name="status">Connection Status:</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="undefined">unknown</string>
+    <string name="username">Username: </string>
+    <string name="version">Version:</string>
+    <string name="welcome">Welcome Back</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+</resources>

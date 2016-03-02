@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">M3</string>
+    <string name="app_name_long">Mindful Meditative Minds</string>
+    <string name="new_member">New Member</string>
+    <string name="old_member">Already a Member</string>
+    <string name="add_member">Sign Me Up!</string>
+    <string name="enter_name">First and Last Name</string>
+    <string name="enter_username">Create Username</string>
+    <string name="enter_password">Create Password</string>
+    <string name="enter_password2">Confirm Password</string>
+
+    <string name="name">Name: </string>
+    <string name="username">Username: </string>
+    <string name="password">Password: </string>
+
+    <string name="find_me">Sign In</string>
+    <string name="calibrate_button">Start Calibration</string>
+    <string name="welcome">Welcome Back</string>
+    <string name="calibration">Calibrate!</string>
+    <string name="meditation">Meditate!</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="connect">Connect</string>
+    <string name="status">Connection Status:</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="refresh">Refresh</string>
+    <string name="init_val">0.0</string>
+    <string name="eeg">EEG data:</string>
+    <string name="accel">Accelerometer Data:</string>
+    <string name="version">Version:</string>
+    <string name="undefined">unknown</string>
+    <string name="artifacts">Blinks, Jaw: </string>
+    <string name="msg_count">Msg number, size: </string>
+    <string name="pause">Pause/Resume</string>
+    <string name="drop">Drop</string>
+    <string name="muse_elem">Elements:</string>
+
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_menu">MenuActivity</string>
+
+
+</resources>
