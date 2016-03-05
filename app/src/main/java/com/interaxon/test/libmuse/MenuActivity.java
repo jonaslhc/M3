@@ -11,7 +11,7 @@ import org.w3c.dom.Text;
 
 public class MenuActivity extends Activity {
 
-    boolean calibrated = false;
+    boolean calibrated;
     Button meditation;
 
     @Override
@@ -20,10 +20,16 @@ public class MenuActivity extends Activity {
         setContentView(R.layout.activity_menu);
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
+        String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
+
+        ProfileData currentUser = DatabaseHandler.getHandler().getData(username);
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
-        welcome.setText(getResources().getString(R.string.welcome)+"\n" + message);
+        welcome.setText(getResources().getString(R.string.welcome)+"\n" + currentUser.getName());
+
+        // first time menu is created, calibrated should be false
+        // after calibration, this value should turn to true for the rest of the session
+        calibrated = false;
 
         Button calibration = (Button) findViewById(R.id.b_calibration);
         calibration.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +68,8 @@ public class MenuActivity extends Activity {
     }
 
     public void start_meditation() {
-        // meditate
+        Intent intent = new Intent(this, MeditationActivity.class);
+        startActivity(intent);
     }
 
 
