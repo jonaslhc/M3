@@ -1,15 +1,16 @@
-package com.interaxon.test.libmuse;
-
+package com.interaxon.test.libmuse.Fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.interaxon.test.libmuse.Fragments.AddMemberFragment;
+import com.interaxon.test.libmuse.Fragments.EnterMemberFragment;
+import com.interaxon.test.libmuse.R;
 
 
 public class MainPageFragment extends Fragment {

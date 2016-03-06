@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
+import com.interaxon.test.libmuse.Data.ProfileData;
 
 public class MenuActivity extends Activity {
 

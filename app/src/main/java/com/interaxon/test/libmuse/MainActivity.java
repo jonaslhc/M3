@@ -1,9 +1,7 @@
-/**
+package com.interaxon.test.libmuse; /**
  * Example of using libmuse library on android.
  * Interaxon, Inc. 2015
  */
-
-package com.interaxon.test.libmuse;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -18,20 +16,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.interaxon.libmuse.Accelerometer;
 import com.interaxon.libmuse.AnnotationData;
 import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.libmuse.Eeg;
@@ -53,16 +48,15 @@ import com.interaxon.libmuse.MusePreset;
 import com.interaxon.libmuse.MuseVersion;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.w3c.dom.Text;
 
 
 /**
- * In this simple example MainActivity implements 2 MuseHeadband listeners
+ * In this simple example com.interaxon.test.libmuse.MainActivity implements 2 MuseHeadband listeners
  * and updates UI when data from Muse is received. Similarly you can implement
  * listers for other data or register same listener to listen for different type
  * of data.
- * For simplicity we create Listeners as inner classes of MainActivity. We pass
- * reference to MainActivity as we want listeners to update UI thread in this
+ * For simplicity we create Listeners as inner classes of com.interaxon.test.libmuse.MainActivity. We pass
+ * reference to com.interaxon.test.libmuse.MainActivity as we want listeners to update UI thread in this
  * example app.
  * You can also connect multiple muses to the same phone and register same
  * listener to listen for data from different muses. In this case you will
@@ -87,7 +81,7 @@ public class MainActivity extends Activity implements OnClickListener {
     /**
      * Connection listener updates UI with new connection status and logs it.
      */
-    String TAG = "MainActivity";
+    String TAG = "com.interaxon.test.libmuse.MainActivity";
     long calibrate_interval = 20000;
     long count_down_interval = 1000;
     CounterClass counterClass = new CounterClass(calibrate_interval, count_down_interval);
@@ -372,7 +366,7 @@ public class MainActivity extends Activity implements OnClickListener {
         fileWriter = MuseFileFactory.getMuseFileWriter(
                 new File(dir, "new_muse_file.muse"));
         Log.i("Muse Headband", "libmuse version=" + LibMuseVersion.SDK_VERSION);
-        fileWriter.addAnnotationString(1, "MainActivity onCreate");
+        fileWriter.addAnnotationString(1, "com.interaxon.test.libmuse.MainActivity onCreate");
         dataListener.setFileWriter(fileWriter);
     }
 

@@ -1,4 +1,4 @@
-package com.interaxon.test.libmuse;
+package com.interaxon.test.libmuse.Data;
 
 /* this data structure contains the profile data of users
  * username: user's name, must be unique

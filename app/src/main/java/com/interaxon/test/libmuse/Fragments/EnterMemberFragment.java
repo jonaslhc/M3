@@ -1,5 +1,4 @@
-package com.interaxon.test.libmuse;
-
+package com.interaxon.test.libmuse.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.interaxon.test.libmuse.Data.ProfileData;
+import com.interaxon.test.libmuse.R;
 
 
 public class EnterMemberFragment extends Fragment {

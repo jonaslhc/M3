@@ -1,16 +1,16 @@
 package com.interaxon.test.libmuse;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
+import com.interaxon.test.libmuse.Data.ProfileData;
+import com.interaxon.test.libmuse.Fragments.AddMemberFragment;
+import com.interaxon.test.libmuse.Fragments.EnterMemberFragment;
+import com.interaxon.test.libmuse.Fragments.MainPageFragment;
 
 public class ProfileActivity extends FragmentActivity implements EnterMemberFragment.CheckMemberListener, AddMemberFragment.NewMemberListener {
 
