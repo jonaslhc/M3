@@ -19,8 +19,10 @@
     <string name="find_me">Sign In</string>
     <string name="calibrate_button">Start Calibration</string>
     <string name="welcome">Welcome Back</string>
-    <string name="calibration">Calibrate!</string>
-    <string name="meditation">Meditate!</string>
+    <string name="calibration">Calibrate</string>
+    <string name="meditation">Meditate</string>
+    <string name="stroop">Stroop</string>
+    <string name="profile">Profile</string>
 
     <string name="action_settings">Settings</string>
     <string name="connect">Connect</string>
@@ -38,9 +40,19 @@
     <string name="drop">Drop</string>
     <string name="muse_elem">Elements:</string>
 
+    <string name="play_again">Try Again!</string>
+    <string name="back_menu">Back to Menu</string>
+
+    <string name="dialog_title">Stroop</string>
+    <string name="dialog_message">Stroop is a mental game which you are required to answer the color of text.
+        For example, if you see red, click red.</string>
+    <string name="ok">OK</string>
+
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_menu">MenuActivity</string>
 
+    <string name="connecting">Muse is trying to connect.</string>
+    <string name="connectfail">Muse cannot connect.</string>
     <string name="connected">Muse has been connected.</string>
     <string name="signalQ">Muse is checking for signal quality.</string>
     <string name="calibrate">Muse is calibrating.\n
@@ -51,5 +63,17 @@
     <string name="left_fore">Left Forehead</string>
     <string name="right_fore">Right Forehead</string>
 
+    <string name="question1">Red</string>
+    <string name="question2">Blue</string>
+    <string name="question3">XXXXXX</string>
+    <string name="question4">Green</string>
+    <string name="question5">Yellow</string>
+    <string name="question6">XXX</string>
+    <string name="answer1">Red</string>
+    <string name="answer2">Green</string>
+    <string name="answer3">Yellow</string>
+    <string name="answer4">Green</string>
+    <string name="answer5">Blue</string>
+    <string name="answer6">Red</string>
 
 </resources>

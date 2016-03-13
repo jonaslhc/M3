@@ -104,14 +104,11 @@ public class MuseHandler {
         return version;
     }
 
-    public boolean getConnectionStatus () {
+    public ConnectionState getConnectionStatus () {
 
-        boolean isConnected = false;
+        ConnectionState connectionState = mConnectionListener.mCurrent;
 
-        if (mConnectionListener.mCurrent == ConnectionState.CONNECTED) {
-            isConnected = true;
-        }
-        return isConnected;
+        return connectionState;
     }
 
     public void disconnect () {

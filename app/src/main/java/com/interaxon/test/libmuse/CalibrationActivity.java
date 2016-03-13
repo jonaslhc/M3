@@ -43,49 +43,15 @@ public class CalibrationActivity extends FragmentActivity implements OnClickList
 
     String TAG = "CalibrationActivity";
 
-
-    TextView countDownTextView;
-    TextView calibratedMean;
-    TextView meanText;
-    TextView currMean;
-
-    double calibrated_result;
-
-    private static enum Fragments {
-        CONNECTION,
-        SIGNAL,
-        CALIBRATE
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
 
         MuseHandler.initHandler(this);
-        showFragment(Fragments.CONNECTION);
-    }
+        getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                new ConnectMuseFragment()).addToBackStack("Add to Back Stack").commit();
 
-    // Do not add anything other than connection to back stack
-    // since we don't want users to be able to "back"
-    private void showFragment (Fragments type) {
-        switch(type) {
-            case CONNECTION: {
-                getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                        new ConnectMuseFragment()).addToBackStack("Add to Back Stack").commit();
-                break;
-            }
-            case SIGNAL: {
-                getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                        new SignalQualityFragment()).commit();
-                break;
-            }
-            case CALIBRATE: {
-                getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                        new CalibrateFragment()).commit();
-                break;
-            }
-        }
     }
 
     @Override

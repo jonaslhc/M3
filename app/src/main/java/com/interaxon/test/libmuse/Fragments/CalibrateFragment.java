@@ -24,13 +24,10 @@ public class CalibrateFragment extends Fragment {
     TextView calibrateStatus;
     TextView counterStatus;
 
-    long calibrate_interval = 20000;
-    long count_down_interval = 1000;
-    //CounterClass counterClass = new CounterClass(calibrate_interval, count_down_interval);
-
     public CalibrateFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -48,8 +45,6 @@ public class CalibrateFragment extends Fragment {
     }
 
     public void calibrateMuse () {
-
-        //counterClass.start();
 
         new Thread(new Runnable() {
             @Override
@@ -76,36 +71,12 @@ public class CalibrateFragment extends Fragment {
                     @Override
                     public void run() {
                         calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
-
                     }
                 });
 
+                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                        new CalibrateFragment()).commit();
             }
         }).start();
     }
-
-    private class CounterClass extends CountDownTimer {
-
-        boolean done;
-
-        public CounterClass(long millisInFuture, long countDownInterval){
-            super(millisInFuture, countDownInterval);
-            done = false;
-        }
-        @Override
-        public void onTick(long millisUntilFinished) {
-            long millis = millisUntilFinished;
-            String hms = String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(millis)
-                    - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-            //counterStatus.setText(hms);
-        }
-
-        @Override
-        public void onFinish() {
-            done = true;
-            //counterStatus.setText("Completed.");
-        }
-    }
-
-
 }
