@@ -1,6 +1,7 @@
 package com.interaxon.test.libmuse.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
@@ -20,6 +22,9 @@ import org.w3c.dom.Text;
 import java.util.concurrent.TimeUnit;
 
 public class CalibrateFragment extends Fragment {
+
+    public final static String EXTRA_MESSAGE = "CALIBRATE STATUS";
+
 
     TextView calibrateStatus;
     TextView counterStatus;
@@ -50,6 +55,7 @@ public class CalibrateFragment extends Fragment {
             @Override
             public void run() {
 
+                MuseHandler.getHandler().startAvgMean();
 
                 for (int i=20; i>=0; i--) {
                     final int time_left = i;
@@ -57,7 +63,6 @@ public class CalibrateFragment extends Fragment {
                         @Override
                         public void run() {
                             counterStatus.setText(String.valueOf(time_left));
-
                         }
                     });
                     try {
@@ -66,17 +71,19 @@ public class CalibrateFragment extends Fragment {
 
                 }
 
-                MuseHandler.getHandler().startAvgMean();
                 calibrateStatus.post(new Runnable() {
                     @Override
                     public void run() {
                         calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
                     }
                 });
-
-                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                        new CalibrateFragment()).commit();
+                goBack();
             }
         }).start();
+    }
+    public void goBack () {
+        Intent intent = new Intent(getActivity(), MenuActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, "calibrated");
+        startActivity(intent);
     }
 }

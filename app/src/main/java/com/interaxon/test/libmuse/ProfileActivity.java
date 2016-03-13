@@ -14,7 +14,7 @@ import com.interaxon.test.libmuse.Fragments.MainPageFragment;
 
 public class ProfileActivity extends FragmentActivity implements EnterMemberFragment.CheckMemberListener, AddMemberFragment.NewMemberListener {
 
-    public final static String EXTRA_MESSAGE = "com.example.kimjin14.myfirstapp.MESSAGE";
+    public final static String EXTRA_MESSAGE = "USER INFORMATION";
     Context mContext = null;
 
     @Override

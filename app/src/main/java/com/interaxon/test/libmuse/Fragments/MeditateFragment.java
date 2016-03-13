@@ -26,6 +26,8 @@ import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,8 +49,29 @@ public class MeditateFragment extends Fragment implements OnChartValueSelectedLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meditate, container, false);
 
+        ArrayList<Double> meditation_results;
+
+
+
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
         mLineChart.setOnChartValueSelectedListener(this);
+
+        Button button = (Button) view.findViewById(R.id.b_start_med);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addDataToChart();
+            }
+        });
+
+        //startAudio (meditation_results);
+        //graphResults(mediataion_results);
+
+        return view;
+    }
+
+    public void graphResults (ArrayList<Double> data) {
+
 
         // no description text
         mLineChart.setDescription("");
@@ -75,7 +98,7 @@ public class MeditateFragment extends Fragment implements OnChartValueSelectedLi
         mLineChart.setData(mLineData);
 
         Typeface tf = Typeface.DEFAULT;
-                //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+        //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
@@ -106,15 +129,7 @@ public class MeditateFragment extends Fragment implements OnChartValueSelectedLi
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);
 
-        Button button = (Button) view.findViewById(R.id.b_start_med);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDataToChart();
-            }
-        });
 
-        return view;
     }
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
+import com.interaxon.test.libmuse.Fragments.CalibrateFragment;
 
 public class MenuActivity extends Activity {
 
@@ -34,11 +35,17 @@ public class MenuActivity extends Activity {
             currentUser = DatabaseHandler.getHandler().getData(username);
 
             usernameSet = true;
+        } else if (!calibrated) {
+            Intent intent = getIntent();
+            String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);
+
+            Log.d("main menu", calibrate_info);
+
+            if (calibrate_info.equals("calibrated")) calibrated = true;
         }
+
         TextView welcome = (TextView)findViewById(R.id.welcome);
         welcome.setText(getResources().getString(R.string.welcome)+"\n" + currentUser.getName());
-
-
 
         Button calibration = (Button) findViewById(R.id.b_calibration);
         calibration.setOnClickListener(new View.OnClickListener() {
