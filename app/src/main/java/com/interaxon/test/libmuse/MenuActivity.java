@@ -63,7 +63,7 @@ public class MenuActivity extends Activity {
     }
 
     public void start_calibration() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, CalibrationActivity.class);
         startActivity(intent);
         calibrated = true;
     }

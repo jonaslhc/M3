@@ -1,31 +1,10 @@
 package com.interaxon.test.libmuse;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.interaxon.libmuse.Eeg;
-import com.interaxon.libmuse.MuseArtifactPacket;
-import com.interaxon.libmuse.MuseDataListener;
-import com.interaxon.libmuse.MuseDataPacket;
-import com.interaxon.libmuse.MuseFileWriter;
-import com.interaxon.test.libmuse.Fragments.MeditationMenuFragment;
-
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import com.interaxon.test.libmuse.Fragments.MeditateFragment;
 
 public class MeditationActivity extends FragmentActivity {
 

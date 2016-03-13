@@ -2,20 +2,11 @@ package com.interaxon.test.libmuse.Museheadband;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.libmuse.Eeg;
-import com.interaxon.libmuse.LibMuseVersion;
 import com.interaxon.libmuse.Muse;
 import com.interaxon.libmuse.MuseArtifactPacket;
 import com.interaxon.libmuse.MuseConnectionListener;
@@ -28,15 +19,11 @@ import com.interaxon.libmuse.MuseFileWriter;
 import com.interaxon.libmuse.MuseManager;
 import com.interaxon.libmuse.MusePreset;
 import com.interaxon.libmuse.MuseVersion;
-import com.interaxon.test.libmuse.Data.DatabaseHandler;
-import com.interaxon.test.libmuse.MainActivity;
-import com.interaxon.test.libmuse.R;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,26 +42,22 @@ public class MuseHandler {
 
     private Muse currMuse = null;
     private boolean dataTransmission = true;
-    private boolean connectStatus;
     private MuseFileWriter fileWriter = null;
 
     private ArrayList<Double> alphaData;
     private boolean alphaDataRdy;
 
-    public boolean checkConnectionStatus () {
-        return connectStatus;
-    }
-    public boolean checkDataStatus () {
-        return alphaDataRdy;
-    }
 
     Mean tp9Mean = new Mean();
     Mean fp1Mean = new Mean();
     Mean fp2Mean = new Mean();
     Mean tp10Mean = new Mean();
+
     Mean avgMean = new Mean();
 
     Double totalMean = 0.0;
+
+    boolean tp9Rdy, fp1Rdy, fp2Rdy, tp10Rdy;
 
     public MuseHandler (Activity activity) {
 
@@ -84,8 +67,6 @@ public class MuseHandler {
         mDataListener = new DataListener(weakActivity);
 
         setFileWriter();
-        connectStatus = false;
-        alphaDataRdy = false;
     }
 
     public static MuseHandler initHandler (Activity activity) {
@@ -123,23 +104,20 @@ public class MuseHandler {
         return version;
     }
 
-    public String getStatus () {
+    public boolean getConnectionStatus () {
 
-        if (mConnectionListener.mStatus == null) {
-            Log.d(TAG, "nothing");
+        boolean isConnected = false;
 
-        } else {
-            Log.d(TAG, mConnectionListener.mStatus);
-
+        if (mConnectionListener.mCurrent == ConnectionState.CONNECTED) {
+            isConnected = true;
         }
-        return mConnectionListener.mStatus;
+        return isConnected;
     }
 
     public void disconnect () {
 
         if (currMuse != null) {
             currMuse.disconnect(true);
-            connectStatus = false;
             fileWriter.addAnnotationString(1, "Disconnect clicked.");
             fileWriter.flush();
             fileWriter.close();
@@ -153,36 +131,41 @@ public class MuseHandler {
         }
     }
 
-    public void connect (Muse muse) {
+    public void connect () {
 
-        try {
-            currMuse = muse;
-        } catch (Exception e){
+        //refresh list of muses
+        MuseManager.refreshPairedMuses();
+        List<Muse> pairedMuses = MuseManager.getPairedMuses();
 
-        }
-        ConnectionState state = currMuse.getConnectionState();
-        if (state == ConnectionState.CONNECTED ||
-                state == ConnectionState.CONNECTING) {
-            Log.w("Muse Headband",
-                    "doesn't make sense to connect second time to the same muse");
-            return;
-        }
+        //try to connect, if not keep trying
+        //for (Muse m: pairedMuses) {
+            currMuse = pairedMuses.get(0);
 
-        connectStatus = true;
-        configureLibrary();
-        fileWriter.open();
-        fileWriter.addAnnotationString(1, "Connect clicked.");
+            Log.d(TAG, "connecting" + currMuse.getName());
 
-        try {
-            currMuse.runAsynchronously();
-        } catch (Exception e) {
-            Log.e("Muse Headband", e.toString());
-        }
+            ConnectionState state = currMuse.getConnectionState();
+            if (state == ConnectionState.CONNECTED ||
+                    state == ConnectionState.CONNECTING) {
+                Log.w("Muse Headband",
+                        "doesn't make sense to connect second time to the same muse");
+                return;
+            }
 
+            configureLibrary();
+            fileWriter.open();
+            fileWriter.addAnnotationString(1, "Connect clicked.");
+
+            try {
+                currMuse.runAsynchronously();
+            } catch (Exception e) {
+                Log.e("Muse Headband", e.toString());
+            }
     }
 
     private void configureLibrary() {
         currMuse.registerConnectionListener(mConnectionListener);
+        currMuse.registerDataListener(mDataListener,
+                MuseDataPacketType.HORSESHOE);
         currMuse.registerDataListener(mDataListener,
                 MuseDataPacketType.EEG);
         currMuse.registerDataListener(mDataListener,
@@ -220,7 +203,7 @@ public class MuseHandler {
 
             Activity activity = activityRef.get();
 
-            if (activity != null) {
+            /*if (activity != null) {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -231,7 +214,7 @@ public class MuseHandler {
                         }
                     }
                 });
-            }
+            }*/
 
             if (mCurrent == ConnectionState.CONNECTED) {
                 Toast toast = Toast.makeText(mActivity.getBaseContext(), "Muse Headband Connected", Toast.LENGTH_SHORT);
@@ -261,8 +244,6 @@ public class MuseHandler {
         final WeakReference<Activity> activityRef;
         private MuseFileWriter fileWriter;
 
-
-
         DataListener(final WeakReference<Activity> activityRef) {
             this.activityRef = activityRef;
         }
@@ -271,13 +252,12 @@ public class MuseHandler {
         public void receiveMuseDataPacket(MuseDataPacket p) {
             alphaDataRdy = true;
             switch (p.getPacketType()) {
-                case EEG:
-                    break;
                 case ALPHA_RELATIVE:
                     updateAlphaRelative(p.getValues());
                     updateAlphaRdy();
                     break;
-                case BETA_RELATIVE:
+                case HORSESHOE:
+                    getSignalQuality(p.getValues());
                     break;
                 case BATTERY:
                     fileWriter.addDataPacket(1, p);
@@ -338,5 +318,44 @@ public class MuseHandler {
                 }
             }).start();
         }
+
+        private void getSignalQuality (final ArrayList<Double> data) {
+
+            tp9Rdy = false;
+            tp10Rdy = false;
+            fp1Rdy = false;
+            fp2Rdy = false;
+
+            if (data.get(Eeg.TP9.ordinal()) <= 1) {
+                tp9Rdy = true;
+            }
+            if (data.get(Eeg.TP10.ordinal()) <= 1) {
+                tp10Rdy = true;
+            }
+            if (data.get(Eeg.FP1.ordinal()) <= 1) {
+                fp1Rdy = true;
+            }
+            if (data.get(Eeg.FP2.ordinal()) <= 1) {
+                fp2Rdy = true;
+            }
+            Log.d(TAG, String.valueOf(tp9Rdy));
+
+        }
+    }
+
+    public boolean getTp9Rdy () {
+        return tp9Rdy;
+    }
+    public boolean getTp10Rdy () {
+        return tp10Rdy;
+    }
+    public boolean getFp1Rdy () {
+        return fp1Rdy;
+    }
+    public boolean getFp2Rdy () {
+        return fp2Rdy;
+    }
+    public boolean checkDataStatus () {
+        return alphaDataRdy;
     }
 }

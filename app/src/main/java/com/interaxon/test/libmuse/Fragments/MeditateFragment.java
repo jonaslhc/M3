@@ -1,4 +1,4 @@
-package com.interaxon.test.libmuse;
+package com.interaxon.test.libmuse.Fragments;
 
 
 import android.graphics.Color;
@@ -24,6 +24,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
+import com.interaxon.test.libmuse.R;
 
 
 /**

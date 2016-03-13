@@ -1,0 +1,22 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/White"
+    tools:context=".Fragments.ConnectMuseFragment">
+
+    <TextView
+        android:id="@+id/connected"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="@string/connected"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+
+</LinearLayout>
