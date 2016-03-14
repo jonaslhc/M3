@@ -37,6 +37,10 @@
             android:label="@string/app_name" />
         <activity android:name=".MeditationActivity" />
         <activity android:name=".StroopActivity"></activity>
+        <activity android:name=".MyResults"></activity>
+
+
+
     </application>
 
 </manifest>
