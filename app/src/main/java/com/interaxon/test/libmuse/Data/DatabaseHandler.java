@@ -28,12 +28,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_ACCURACY = "accuracy";
+    private static final String COLUMN_REACTION_TIME = "reaction_time";
+
 
     private static final String DATABASE_CREATE =
             "CREATE TABLE " + DATA_TABLE + " (" +
                     COLUMN_USERNAME + " TEXT, " +
                     COLUMN_PASSWORD + " TEXT, " +
-                    COLUMN_NAME+ " TEXT" +
+                    COLUMN_NAME + " TEXT, " +
+                    COLUMN_ACCURACY + " REAL, " +
+                    COLUMN_REACTION_TIME + " REAL" +
             ");";
 
     @Override
@@ -122,6 +127,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_USERNAME, newUser.getUsername());
         values.put(COLUMN_PASSWORD, newUser.getPassword());
         values.put(COLUMN_NAME, newUser.getName());
+        values.put(COLUMN_ACCURACY, newUser.getAccuracy());
+        values.put(COLUMN_REACTION_TIME, newUser.getReaction_time());
 
         db.insert(DATA_TABLE, null, values);
         db.close();
@@ -130,7 +137,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // delete one data then username becomes available again
     public void deleteData(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(DATA_TABLE, COLUMN_USERNAME + " =?",
+        db.delete(DATA_TABLE, COLUMN_USERNAME + "=?",
                 new String[]{username});
         db.close();
     }
@@ -158,6 +165,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME
         } , null, null, null, null, null, null);
 
         // go through the database and add to the array
@@ -166,7 +175,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ProfileData CurrUser = new ProfileData(
                         cursor.getString(0),
                         cursor.getString(1),
-                        cursor.getString(2)
+                        cursor.getString(2),
+                        cursor.getDouble(3),
+                        cursor.getDouble(4)
                 );
                 DataList.add(CurrUser);
             } while (cursor.moveToNext());
@@ -185,7 +196,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.query(DATA_TABLE, new String[]{
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
-                COLUMN_NAME
+                COLUMN_NAME,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME
         } , COLUMN_USERNAME + "=?", new String[]{ username
         } , null, null, null, null);
 
@@ -197,7 +210,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             data = new ProfileData(
                     cursor.getString(0), //username
                     cursor.getString(1), //password
-                    cursor.getString(2)  //name
+                    cursor.getString(2),  //name
+                    cursor.getDouble(3),  //accuracy
+                    cursor.getDouble(4)   // reaction time
             );
         }
 
@@ -219,7 +234,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.query(DATA_TABLE, new String[]{
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
-                COLUMN_NAME
+                COLUMN_NAME,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME
         } , COLUMN_USERNAME + "=?", new String[]{ user.getUsername()
         } , null, null, null, null);
 
@@ -238,6 +255,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return itExists;
     }
 
+    public void updateSpecificColumn(String column, String username, double value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(column, String.format("%.2f", value));
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=" + username, null);
+    }
+
+    public void updateAccuracy(double value){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_ACCURACY,value);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"hi"});
+    }
 
 
 }

@@ -35,6 +35,7 @@ public class AddMemberFragment extends Fragment {
         final EditText password = (EditText)view.findViewById(R.id.enter_password);
         final EditText password2 = (EditText)view.findViewById(R.id.enter_password2);
 
+
         Button old_user = (Button)view.findViewById(R.id.b_back_old_member);
         old_user.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +49,7 @@ public class AddMemberFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addMember (new ProfileData(username.getText().toString(),
-                        password.getText().toString(), name.getText().toString()));
+                        password.getText().toString(), name.getText().toString(), 0.0, 0.0));
             }
         });
 

@@ -22,7 +22,7 @@ public class MenuActivity extends Activity {
     static boolean calibrated = false;
     static boolean usernameSet = false;
     static ProfileData currentUser;
-
+    public static String USERNAME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class MenuActivity extends Activity {
         if (!usernameSet) {
             Intent intent = getIntent();
             String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
+            USERNAME = username;
             currentUser = DatabaseHandler.getHandler().getData(username);
 
             usernameSet = true;
@@ -98,6 +99,11 @@ public class MenuActivity extends Activity {
         super.onResume();
 
     }
+
+    public String getMyName(){
+        return USERNAME;
+    }
+
 
     public void start_calibration() {
         Intent intent = new Intent(this, CalibrationActivity.class);
