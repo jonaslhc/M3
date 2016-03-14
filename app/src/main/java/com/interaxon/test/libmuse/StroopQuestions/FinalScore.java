@@ -1,11 +1,9 @@
 package com.interaxon.test.libmuse.StroopQuestions;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,12 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.interaxon.test.libmuse.Data.DatabaseHandler;
-import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
-import com.interaxon.test.libmuse.MyResults;
-import com.interaxon.test.libmuse.ProfileActivity;
 import com.interaxon.test.libmuse.R;
 import com.interaxon.test.libmuse.StroopActivity;
 
@@ -36,15 +30,10 @@ public class FinalScore extends Fragment {
     TextView correct_answer, reaction_incongruent, reaction_neutral, reaction_result;
     int q2_incong_ans, q5_incong_ans, q3_neutral_ans, q6_neutral_ans;
     long q2_incong_time, q5_incong_time, q3_neutral_time, q6_neutral_time;
-    static double incong_score, neutral_score;
+    double incong_score, neutral_score;
     Mean incongruent_mean = new Mean();
     Mean neutral_mean = new Mean();
-    Button play_again_button, back_to_menu, see_results;
-    DatabaseHandler databaseHandler;
-    static ProfileData currentUser;
-    static double average_reaction_time, accuracy_score;
-    MenuActivity menuActivity;
-
+    Button play_again_button, back_to_menu;
 
 
     @Override
@@ -55,11 +44,8 @@ public class FinalScore extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        databaseHandler = DatabaseHandler.getHandler();
-        menuActivity = new MenuActivity();
         initView();
     }
-
 
     private void initView() {
         correct_answer = (TextView) getActivity().findViewById(R.id.correct_answer);
@@ -91,24 +77,10 @@ public class FinalScore extends Fragment {
         if(neutral_score == 0)
             neutral_score = 1;
 
-        accuracy_score = incong_score/neutral_score;
-
-        average_reaction_time = (incongruent_mean.getResult() / neutral_mean.getResult());
         correct_answer.setText(String.format("%6.2f", incong_score/neutral_score));
-        reaction_incongruent.setText(String.format("%6.2fs", average_reaction_time));
+        reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult()/neutral_mean.getResult())));
 
-        saveScore();
-        initButtons();
-    }
 
-    private void saveScore() {
-        String username = menuActivity.getMyName();
-        Log.d("test", String.valueOf(databaseHandler.checkUser(new ProfileData(username, "123", null, 0, 0))));
-        databaseHandler.updateAccuracy(accuracy_score);
-       // databaseHandler.updateSpecificColumn("reaction_time", username, average_reaction_time);
-    }
-
-    private void initButtons() {
         play_again_button = (Button) getActivity().findViewById(R.id.b_play_again);
         play_again_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,14 +99,5 @@ public class FinalScore extends Fragment {
             }
         });
 
-
-        see_results = (Button) getActivity().findViewById(R.id.see_result);
-        see_results.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyResults.class);
-                startActivity(intent);
-            }
-        });
     }
 }

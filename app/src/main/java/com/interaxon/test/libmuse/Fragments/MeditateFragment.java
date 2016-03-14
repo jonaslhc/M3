@@ -1,8 +1,13 @@
 package com.interaxon.test.libmuse.Fragments;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -22,6 +28,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
@@ -32,11 +39,26 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeditateFragment extends Fragment implements OnChartValueSelectedListener {
+public class MeditateFragment extends Fragment {
 
+    private AudioManager mAudioManager;
+    private MediaPlayer mMediaPlayer;
 
-    private LineChart mLineChart;
-    private LineData mLineData;
+    TextView counterStatus;
+    TextView messageDisplay;
+
+    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                stopPlayback();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                startPlayback();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                mAudioManager.abandonAudioFocus(afChangeListener);
+                stopPlayback();
+            }
+        }
+    };
 
     public MeditateFragment() {
         // Required empty public constructor
@@ -51,179 +73,93 @@ public class MeditateFragment extends Fragment implements OnChartValueSelectedLi
 
         ArrayList<Double> meditation_results;
 
+        counterStatus = (TextView) view.findViewById(R.id.count_down_med);
+        messageDisplay = (TextView) view.findViewById(R.id.meditate);
 
+        this.getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        mAudioManager = (AudioManager) this.getActivity().getSystemService(Context.AUDIO_SERVICE);
 
-        mLineChart = (LineChart) view.findViewById(R.id.chart1);
-        mLineChart.setOnChartValueSelectedListener(this);
-
-        Button button = (Button) view.findViewById(R.id.b_start_med);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDataToChart();
-            }
-        });
-
-        //startAudio (meditation_results);
-        //graphResults(mediataion_results);
+        doMeditation();
 
         return view;
     }
 
-    public void graphResults (ArrayList<Double> data) {
+    public void doMeditation() {
 
-
-        // no description text
-        mLineChart.setDescription("");
-        mLineChart.setNoDataTextDescription("You need to provide data for the chart.");
-
-        // enable touch gestures
-        mLineChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        mLineChart.setDragEnabled(true);
-        mLineChart.setScaleEnabled(true);
-        mLineChart.setDrawGridBackground(false);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mLineChart.setPinchZoom(true);
-
-        // set an alternative background color
-        mLineChart.setBackgroundColor(Color.LTGRAY);
-
-        mLineData = new LineData();
-        mLineData.setValueTextColor(Color.WHITE);
-
-        // add empty data
-        mLineChart.setData(mLineData);
-
-        Typeface tf = Typeface.DEFAULT;
-        //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
-
-        // get the legend (only possible after setting data)
-        Legend l = mLineChart.getLegend();
-
-        // modify the legend ...
-        // l.setPosition(LegendPosition.LEFT_OF_CHART);
-        l.setForm(Legend.LegendForm.LINE);
-        l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
-
-        XAxis xl = mLineChart.getXAxis();
-        xl.setTypeface(tf);
-        xl.setTextColor(Color.WHITE);
-        xl.setDrawGridLines(false);
-        xl.setAvoidFirstLastClipping(true);
-        xl.setSpaceBetweenLabels(5);
-        xl.setEnabled(true);
-
-        YAxis leftAxis = mLineChart.getAxisLeft();
-        leftAxis.setTypeface(tf);
-        leftAxis.setTextColor(Color.WHITE);
-
-        //TODO: change to more specific values dep calibration
-        leftAxis.setAxisMaxValue(1.2f);
-        leftAxis.setAxisMinValue(0.5f);
-        leftAxis.setDrawGridLines(true);
-
-        YAxis rightAxis = mLineChart.getAxisRight();
-        rightAxis.setEnabled(false);
-
-
-    }
-
-
-    public void addDataToChart (){
         new Thread(new Runnable() {
 
             @Override
             public void run() {
-                for(int i = 0; i < 500; i++) {
+                //double start_time = System.currentTimeMillis();
+                //double end_time = System.currentTimeMillis();
 
-                    getActivity().runOnUiThread(new Runnable() {
 
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {}
+                messageDisplay.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        messageDisplay.setText(getResources().getString(R.string.start_meditate));
+                    }
+                });
+                startAudio();
+
+                for (int i=20; i>=0; i--) {
+                    final int time_left = i;
+                    counterStatus.post(new Runnable() {
                         @Override
                         public void run() {
-                            addEntry();
+                            counterStatus.setText(String.valueOf(time_left));
                         }
                     });
-
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    } catch (InterruptedException e) {}
+
                 }
+
+                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                        new GraphFragment()).commit();
             }
         }).start();
     }
 
-    private void addEntry() {
+    public void startAudio () {
+        final int audioReq = mAudioManager.requestAudioFocus(afChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
 
-        LineData data = mLineChart.getData();
-
-        if (data != null) {
-
-            ILineDataSet set = data.getDataSetByIndex(0);
-
-            if (set == null) {
-                set = createSet();
-                data.addDataSet(set);
-            }
-
-            // add a new x-value first
-            data.addXValue(String.valueOf(System.currentTimeMillis()));
-            data.addEntry(new Entry((float) MuseHandler.getHandler().getTotalMean(), set.getEntryCount()), 0);
-
-
-            // let the chart know it's data has changed
-            mLineChart.notifyDataSetChanged();
-
-            // limit the number of visible entries
-            mLineChart.setVisibleXRangeMaximum(120);
-            // mChart.setVisibleYRange(30, AxisDependency.LEFT);
-
-            // move to the latest entry
-            mLineChart.moveViewToX(data.getXValCount() - 121);
-
-            // this automatically refreshes the chart (calls invalidate())
-            // mChart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
+        if (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+            builder.setMessage(R.string.low_volume_message).setTitle(R.string.dialog_title);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    playAudio(audioReq);
+                }
+            }).create().show();
+        } else {
+            playAudio(audioReq);
         }
     }
 
-    private LineDataSet createSet() {
+    public void playAudio(int audioReq){
 
-        LineDataSet set = new LineDataSet(null, "Dynamic Data");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.WHITE);
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
-        set.setFillAlpha(65);
-        set.setFillColor(ColorTemplate.getHoloBlue());
-        set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.WHITE);
-        set.setValueTextSize(9f);
-        set.setDrawValues(false);
-        return set;
+        if (audioReq == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            startPlayback();
+        }
     }
 
-    private void feedMultiple() {
-
-
+    private void startPlayback () {
+        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_0);
+        mMediaPlayer.setLooping(false);
+        mMediaPlayer.start();
     }
 
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        Log.i("Entry selected", e.toString());
+    private void stopPlayback () {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
     }
-
-    @Override
-    public void onNothingSelected() {
-        Log.i("Nothing selected", "Nothing selected.");
-    }
-
-
 
 }
