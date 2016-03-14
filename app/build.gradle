@@ -20,10 +20,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java/com/interaxon/test/libmuse/Activities', 'src/main/java/com/interaxon/test/libmuse/ProfileFragments', 'src/main/java/com/interaxon/test/libmuse/Muse']
+            resources.srcDirs = ['src/main/resources', 'src/main/java/com/interaxon/test/libmuse/profile']
+        }
+    }
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
     compile files('libs/libmuseandroid.jar')
     compile project(':commons-math3-3.6')
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.3'
 }
