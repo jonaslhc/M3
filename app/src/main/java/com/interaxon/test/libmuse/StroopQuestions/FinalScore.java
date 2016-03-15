@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
+import com.interaxon.test.libmuse.MyResults;
 import com.interaxon.test.libmuse.R;
 import com.interaxon.test.libmuse.StroopActivity;
 
@@ -33,7 +36,10 @@ public class FinalScore extends Fragment {
     double incong_score, neutral_score;
     Mean incongruent_mean = new Mean();
     Mean neutral_mean = new Mean();
-    Button play_again_button, back_to_menu;
+    Button play_again_button, back_to_menu, go_to_results;
+    MenuActivity menuActivity;
+    String user_name;
+    DatabaseHandler db;
 
 
     @Override
@@ -44,6 +50,8 @@ public class FinalScore extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        menuActivity = new MenuActivity();
+        db = DatabaseHandler.getHandler();
         initView();
     }
 
@@ -78,7 +86,12 @@ public class FinalScore extends Fragment {
             neutral_score = 1;
 
         correct_answer.setText(String.format("%6.2f", incong_score/neutral_score));
-        reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult()/neutral_mean.getResult())));
+        reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
+
+        // update accuracy with specified user_name
+        user_name = menuActivity.getMyName();
+        db.updateAccuracy(incong_score / neutral_score, user_name);
+        db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
 
 
         play_again_button = (Button) getActivity().findViewById(R.id.b_play_again);
@@ -98,6 +111,16 @@ public class FinalScore extends Fragment {
                 startActivity(intent);
             }
         });
+
+        go_to_results = (Button) getActivity().findViewById(R.id.see_result);
+        go_to_results.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MyResults.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 }
