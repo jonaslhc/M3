@@ -80,7 +80,7 @@ public class MenuActivity extends Activity {
                 // 1. Instantiate an AlertDialog.Builder with its constructor
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
                 // 2. Chain together various setter methods to set the dialog characteristics
-                builder.setMessage(R.string.dialog_message).setTitle(R.string.dialog_title);
+                builder.setMessage(R.string.stroop_message).setTitle(R.string.dialog_title);
                 // Add the buttons
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
