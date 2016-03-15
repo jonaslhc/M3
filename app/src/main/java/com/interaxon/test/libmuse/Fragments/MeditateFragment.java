@@ -126,8 +126,7 @@ public class MeditateFragment extends Fragment {
                 }
                 finish = true;
 
-                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                        new GraphFragment()).commit();
+
             }
         }).start();
     }
@@ -150,6 +149,8 @@ public class MeditateFragment extends Fragment {
                     } catch (InterruptedException e) {}
                 }
                 DatabaseHandler.getHandler().updateMeditation(meditation);
+                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                        new GraphFragment()).commit();
 
             }
         }).start();

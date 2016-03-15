@@ -77,6 +77,7 @@ public class CalibrateFragment extends Fragment {
                         calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
                     }
                 });
+                MuseHandler.getHandler().setCalibratedMean();
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {

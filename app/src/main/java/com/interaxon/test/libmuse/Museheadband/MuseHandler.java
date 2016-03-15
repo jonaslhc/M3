@@ -47,7 +47,6 @@ public class MuseHandler {
     private ArrayList<Double> alphaData;
     private boolean alphaDataRdy;
 
-
     Mean tp9Mean = new Mean();
     Mean fp1Mean = new Mean();
     Mean fp2Mean = new Mean();
@@ -55,6 +54,7 @@ public class MuseHandler {
 
     Mean avgMean = new Mean();
 
+    Double calibratedMean = 0.0;
     Double totalMean = 0.0;
 
     boolean tp9Rdy, fp1Rdy, fp2Rdy, tp10Rdy;
@@ -227,9 +227,13 @@ public class MuseHandler {
         fp2Mean.clear();
         avgMean.clear();
     }
+    public void setCalibratedMean (){
+        calibratedMean = avgMean.getResult();
+    }
 
     public double getAvgMean () {
-        return avgMean.getResult();
+        //Log.d(TAG, String.valueOf(avgMean.getResult()));
+        return calibratedMean;
     }
 
     public double getTotalMean () {
@@ -273,6 +277,7 @@ public class MuseHandler {
             }
         }
 
+
         public void setFileWriter(MuseFileWriter fileWriter) {
             this.fileWriter = fileWriter;
         }
@@ -309,8 +314,8 @@ public class MuseHandler {
                             data.get(Eeg.TP9.ordinal()), data.get(Eeg.FP1.ordinal()),
                             data.get(Eeg.FP2.ordinal()), data.get(Eeg.TP10.ordinal()));
 
-                    Log.d(TAG, s);
-                    Log.d(TAG, s2);
+                    //Log.d(TAG, s);
+                    //Log.d(TAG, s2);
 
                 }
             }).start();
@@ -335,7 +340,7 @@ public class MuseHandler {
             if (data.get(Eeg.FP2.ordinal()) <= 1) {
                 fp2Rdy = true;
             }
-            Log.d(TAG, String.valueOf(tp9Rdy));
+            //Log.d(TAG, String.valueOf(tp9Rdy));
 
         }
     }

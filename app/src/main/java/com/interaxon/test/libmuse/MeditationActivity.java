@@ -8,11 +8,6 @@ import com.interaxon.test.libmuse.Fragments.MeditateFragment;
 
 public class MeditationActivity extends FragmentActivity {
 
-    Context mContext;
-    long calibrate_interval = 20000;
-    long count_down_interval = 1000;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
