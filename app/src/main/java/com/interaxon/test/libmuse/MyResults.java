@@ -40,7 +40,7 @@ public class MyResults extends Activity {
         //Intent intent = getIntent();
         //String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
 
-        Log.e(TAG, "hello" + menuActivity.getMyName());
+        Log.e(TAG, "current user name: " + menuActivity.getMyName());
 
         profileData = databaseHandler.getHandler().getData(menuActivity.getMyName());
 

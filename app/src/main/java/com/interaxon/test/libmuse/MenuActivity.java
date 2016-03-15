@@ -10,11 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Fragments.CalibrateFragment;
 
-public class MenuActivity extends Activity {
+public class MenuActivity extends Activity implements View.OnClickListener {
 
     Button meditation;
     Button stroop_button;
@@ -22,6 +25,9 @@ public class MenuActivity extends Activity {
     static boolean calibrated = false;
     static boolean usernameSet = false;
     public static String USERNAME;
+    ShowcaseView showcaseView;
+    Target meditation_target, stroop_target, profile_target;
+    int pos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +45,26 @@ public class MenuActivity extends Activity {
             Intent intent = getIntent();
             String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);
 
-            Log.d("main menu", calibrate_info);
+            Log.d("main menu", ""+calibrate_info);
 
             if (calibrate_info.equals("calibrated")) calibrated = true;
         }
+
+        // Set up Showcaseview
+        meditation_target = new ViewTarget(R.id.b_meditation, this);
+        stroop_target = new ViewTarget(R.id.b_stroop, this);
+        profile_target = new ViewTarget(R.id.b_profile, this);
+
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(Target.NONE)
+                .setOnClickListener(this)
+                .setContentTitle("Walk Through")
+                .setContentText("This will guide you through the correct usage of our app")
+                .setStyle(R.style.CustomShowcaseTheme2)
+                .build();
+        showcaseView.setButtonText("OK");
+
+
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
         String welcomeMsg = getResources().getString(R.string.welcome) +
@@ -120,4 +142,31 @@ public class MenuActivity extends Activity {
         Intent intent = new Intent(this, StroopActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch(pos) {
+            case 0:
+                showcaseView.setShowcase(meditation_target, true);
+                showcaseView.setContentTitle("Meditation");
+                showcaseView.setContentText("We will guide you through a meditation session");
+                break;
+            case 1:
+                showcaseView.setShowcase(stroop_target, true);
+                showcaseView.setContentTitle("Stroop");
+                showcaseView.setContentText("We will begin a brain game that will be used to evaluate your cognitive performance");
+                break;
+            case 2:
+                showcaseView.setShowcase(profile_target, true);
+                showcaseView.setContentTitle("Profile");
+                showcaseView.setContentText("This will take you to your profile page, where you have access to your records and information");
+                break;
+            case 3:
+                showcaseView.hide();
+                break;
+        }
+        pos++;
+
+    }
+
 }

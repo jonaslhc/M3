@@ -9,5 +9,6 @@
     <color name="Red">#FF0000</color>
     <color name="Yellow">#ffff00</color>
     <color name="Green">#00ff00</color>
+    <color name="TransparentBlue">#3300A621</color>
 </resources>
 
