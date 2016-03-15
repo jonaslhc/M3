@@ -44,8 +44,8 @@
     <string name="back_menu">Back to Menu</string>
 
     <string name="dialog_title">Stroop</string>
-    <string name="stroop_message">Stroop is a mental game which you are required to answer the color of text.
-        For example, if you see red, click red.</string>
+    <string name="stroop_message">Stroop is a mental game where you are required to indicate the ink colour of what you see on the screen.
+        For example, if you see the word "red" in red ink, click red.</string>
     <string name="ok">OK</string>
 
     <string name="title_activity_profile">ProfileActivity</string>
