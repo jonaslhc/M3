@@ -141,7 +141,10 @@ public class MeditateFragment extends Fragment {
             public void run() {
 
                 while (!finish) {
-                   meditation.add(MuseHandler.getHandler().getTotalMean());
+                    double currMean = MuseHandler.getHandler().getTotalMean();
+                    if (!Double.isNaN(currMean)) {
+                        meditation.add(currMean);
+                    }
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {}

@@ -77,6 +77,11 @@ public class CalibrateFragment extends Fragment {
                         calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
                     }
                 });
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+
+                }
                 goBack();
             }
         }).start();

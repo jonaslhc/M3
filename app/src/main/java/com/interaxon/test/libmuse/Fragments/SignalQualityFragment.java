@@ -100,15 +100,17 @@ public class SignalQualityFragment extends Fragment {
                                 leQualitySign.setText("Good");
                             }
                         });
-                    } /*else {
+                    } else {
                         pgbLe.post(new Runnable() {
                             @Override
                             public void run() {
                                 pgbLe.setVisibility(View.VISIBLE);
                                 leQualitySign.setTextColor(getResources().getColor(R.color.Grey));
+                                leQualitySign.setText("Bad");
+
                             }
                         });
-                    }*/
+                    }
                     if (re_bool) {
                         pgbRe.post(new Runnable() {
                             @Override
@@ -119,15 +121,17 @@ public class SignalQualityFragment extends Fragment {
 
                             }
                         });
-                    } /*else {
+                    } else {
                         pgbRe.post(new Runnable() {
                             @Override
                             public void run() {
                                 pgbRe.setVisibility(View.VISIBLE);
                                 reQualitySign.setTextColor(getResources().getColor(R.color.Grey));
+                                reQualitySign.setText("Bad");
+
                             }
                         });
-                    }*/
+                    }
                     if (lf_bool) {
                         pgbLf.post(new Runnable() {
                             @Override
@@ -138,15 +142,17 @@ public class SignalQualityFragment extends Fragment {
 
                             }
                         });
-                    } /*else {
+                    } else {
                         pgbLf.post(new Runnable() {
                             @Override
                             public void run() {
                                 pgbLf.setVisibility(View.VISIBLE);
                                 lfQualitySign.setTextColor(getResources().getColor(R.color.Grey));
+                                lfQualitySign.setText("Bad");
+
                             }
                         });
-                    }*/
+                    }
                     if (rf_bool) {
                         pgbRf.post(new Runnable() {
                             @Override
@@ -157,16 +163,21 @@ public class SignalQualityFragment extends Fragment {
 
                             }
                         });
-                    } /*else{
+                    } else{
                         pgbRf.post(new Runnable() {
                             @Override
                             public void run() {
                                 pgbRf.setVisibility(View.VISIBLE);
                                 rfQualitySign.setTextColor(getResources().getColor(R.color.Grey));
+                                rfQualitySign.setText("Bad");
                             }
                         });
-                    }*/
+                    }
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
 
+                    }
                 }
 
                 try {

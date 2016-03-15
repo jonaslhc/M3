@@ -226,8 +226,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             );
         }
 
-        db.close();
         cursor.close();
+        db.close();
 
         // return the data
         return data;
