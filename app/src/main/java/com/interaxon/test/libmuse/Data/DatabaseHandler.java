@@ -19,11 +19,14 @@ import com.google.gson.reflect.TypeToken;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
+    String TAG = "Database Handler";
     private static DatabaseHandler mDatabaseHandler = null;
     private static Context mContext;
 
     private static String DIR_PATH;
     private static String CURR_FILE;
+
+    private ProfileData mCurrUser;
 
     private static final String DATABASE_NAME = "profiles.db";
     private static final int DATABASE_VERSION = 2;
@@ -87,6 +90,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         + newVersion + ", which will destroy all old data.");
         db.execSQL("DROP TABLE IF EXISTS " + DATA_TABLE);
         onCreate(db);
+    }
+
+    public void updateCurrUser (String username) {
+        mCurrUser = getData(username);
+        Log.d(TAG, username);
+    }
+
+    public ProfileData getCurrUser () {
+        return mCurrUser;
     }
 
     public void load(String file_name) {
@@ -283,27 +295,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updateMeditation(ArrayList<Double> meditation){
 
 
+        Log.d(TAG+"update", meditation.get(0).toString());
+        Log.d(TAG+"update", String.valueOf(meditation.size()));
+
         Gson gson = new Gson();
         String inputMeditation = gson.toJson(meditation);
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_MEDITATION, inputMeditation);
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"test"});
+
+        Log.d(TAG + "update", inputMeditation);
+
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
+        updateCurrUser(mCurrUser.getUsername());
     }
 
     public ArrayList<Double> getMeditation(){
 
+        Log.d(TAG+"get", mCurrUser.getUsername());
+
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Double>>() {}.getType();
 
-        ProfileData profileData = getData("test");
+        ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
 
-        ArrayList<Double> outputMeditation = gson.fromJson(profileData.getMeditation(), type);
+        Log.d(TAG+"get", outputMeditation.get(0).toString());
+        Log.d(TAG+"get", String.valueOf(outputMeditation.size()));
 
-        for (int i = 0; i<outputMeditation.size(); i++){
-            Log.d("data", String.valueOf(outputMeditation.get(i)));
-        }
 
         return outputMeditation;
     }

@@ -21,7 +21,6 @@ public class MenuActivity extends Activity {
 
     static boolean calibrated = false;
     static boolean usernameSet = false;
-    static ProfileData currentUser;
     public static String USERNAME;
 
     @Override
@@ -33,7 +32,7 @@ public class MenuActivity extends Activity {
             Intent intent = getIntent();
             String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
             USERNAME = username;
-            currentUser = DatabaseHandler.getHandler().getData(username);
+            DatabaseHandler.getHandler().updateCurrUser(username);
             usernameSet = true;
 
         } else if (!calibrated) {
@@ -46,7 +45,9 @@ public class MenuActivity extends Activity {
         }
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
-        welcome.setText(getResources().getString(R.string.welcome)+"\n" + currentUser.getName());
+        String welcomeMsg = getResources().getString(R.string.welcome) +
+                " " +DatabaseHandler.getHandler().getCurrUser().getName();
+        welcome.setText(welcomeMsg);
 
         Button calibration = (Button) findViewById(R.id.b_calibration);
         calibration.setOnClickListener(new View.OnClickListener() {

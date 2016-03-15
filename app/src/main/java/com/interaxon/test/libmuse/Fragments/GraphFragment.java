@@ -73,11 +73,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             }
         });
 
-        graphResults(DatabaseHandler.getHandler().getMeditation());
+        graphResults();
         return view;
     }
 
-    public void graphResults (ArrayList<Double> data) {
+    public void graphResults () {
 
         // no description text
         mLineChart.setDescription("");
