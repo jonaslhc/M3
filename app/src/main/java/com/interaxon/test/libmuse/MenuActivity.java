@@ -34,8 +34,8 @@ public class MenuActivity extends Activity {
             String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
             USERNAME = username;
             currentUser = DatabaseHandler.getHandler().getData(username);
-
             usernameSet = true;
+
         } else if (!calibrated) {
             Intent intent = getIntent();
             String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);

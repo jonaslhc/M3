@@ -40,7 +40,7 @@ public class EnterMemberFragment extends Fragment {
         check_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileData user = new ProfileData(username.getText().toString(), password.getText().toString(), "", 0.0, 0.0);
+                ProfileData user = new ProfileData(username.getText().toString(), password.getText().toString(), "", 0.0, 0.0, null);
                 checkMember(user);
             }
         });

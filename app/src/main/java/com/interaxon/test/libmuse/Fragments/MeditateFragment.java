@@ -29,6 +29,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.libmuse.ConnectionState;
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
@@ -43,6 +44,8 @@ public class MeditateFragment extends Fragment {
 
     private AudioManager mAudioManager;
     private MediaPlayer mMediaPlayer;
+
+    boolean finish;
 
     TextView counterStatus;
     TextView messageDisplay;
@@ -81,6 +84,8 @@ public class MeditateFragment extends Fragment {
 
         doMeditation();
 
+        finish = false;
+
         return view;
     }
 
@@ -104,6 +109,7 @@ public class MeditateFragment extends Fragment {
                     }
                 });
                 startAudio();
+                gatherData();
 
                 for (int i=20; i>=0; i--) {
                     final int time_left = i;
@@ -118,11 +124,34 @@ public class MeditateFragment extends Fragment {
                     } catch (InterruptedException e) {}
 
                 }
+                finish = true;
 
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                         new GraphFragment()).commit();
             }
         }).start();
+    }
+
+    public void gatherData () {
+        final ArrayList<Double> meditation = new ArrayList<Double>();
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+                while (!finish) {
+                   meditation.add(MuseHandler.getHandler().getTotalMean());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {}
+                }
+                DatabaseHandler.getHandler().updateMeditation(meditation);
+
+            }
+        }).start();
+
+
     }
 
     public void startAudio () {

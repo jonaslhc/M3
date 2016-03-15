@@ -25,6 +25,7 @@ public class ProfileActivity extends FragmentActivity implements EnterMemberFrag
         mContext = this;
 
         DatabaseHandler.initHandler(mContext);
+        //DatabaseHandler.getHandler().deleteDatabase();
 
         getSupportFragmentManager().beginTransaction().add(R.id.frag_container,
                 new MainPageFragment()).addToBackStack(null).commit();

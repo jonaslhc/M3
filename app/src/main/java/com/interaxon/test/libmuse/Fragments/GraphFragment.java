@@ -4,6 +4,7 @@ package com.interaxon.test.libmuse.Fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.AudioManager;
@@ -29,7 +30,9 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.libmuse.ConnectionState;
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
+import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
@@ -41,6 +44,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     private LineChart mLineChart;
     private LineData mLineData;
+
+    Button menuButton;
 
     TextView counterStatus;
 
@@ -56,17 +61,23 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
 
-        ArrayList<Double> meditation_results=null;
-
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
         mLineChart.setOnChartValueSelectedListener(this);
 
-        graphResults(meditation_results);
+        menuButton = (Button) view.findViewById(R.id.b_back_menu_med);
+        menuButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        graphResults(DatabaseHandler.getHandler().getMeditation());
         return view;
     }
 
     public void graphResults (ArrayList<Double> data) {
-
 
         // no description text
         mLineChart.setDescription("");
@@ -86,20 +97,78 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         // set an alternative background color
         mLineChart.setBackgroundColor(Color.LTGRAY);
 
-        mLineData = new LineData();
-        mLineData.setValueTextColor(Color.WHITE);
-
-        // add empty data
-        mLineChart.setData(mLineData);
+        //mLineData = new LineData();
+        //mLineData.setValueTextColor(Color.WHITE);
 
         Typeface tf = Typeface.DEFAULT;
         //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
+
+        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getMeditation();
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        for (int i = 0; i < meditationData.size(); i++) {
+            xVals.add("");
+        }
+
+        double largest = 0;
+        double smallest = meditationData.get(0);
+        double curr = 0;
+
+        ArrayList<Entry> yVals = new ArrayList<Entry>();
+        ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
+
+        for (int i = 0; i < meditationData.size(); i++) {
+            curr = meditationData.get(i).floatValue();
+            if (curr > largest) largest = curr;
+            else if (curr < smallest) smallest = curr;
+
+            yVals.add(new Entry((float)curr, i));
+            yValsAvg.add(new Entry((float)MuseHandler.getHandler().getAvgMean(), i));
+
+        }
+
+        LineDataSet set = new LineDataSet(yVals, "Meditation");
+        LineDataSet setAvg = new LineDataSet(yValsAvg, "Calibration");
+
+        set.setAxisDependency(YAxis.AxisDependency.LEFT);
+        set.setColor(ColorTemplate.getHoloBlue());
+        set.setCircleColor(Color.WHITE);
+        set.setLineWidth(2f);
+        set.setCircleRadius(1f);
+        set.setFillAlpha(65);
+        set.setFillColor(ColorTemplate.getHoloBlue());
+        set.setHighLightColor(Color.rgb(244, 117, 117));
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(9f);
+        set.setDrawValues(false);
+
+        setAvg.setAxisDependency(YAxis.AxisDependency.LEFT);
+        setAvg.setColor(Color.BLACK);
+        setAvg.setCircleColor(Color.WHITE);
+        setAvg.setLineWidth(2f);
+        setAvg.setCircleRadius(1f);
+        setAvg.setFillAlpha(65);
+        setAvg.setFillColor(ColorTemplate.getHoloBlue());
+        setAvg.setHighLightColor(Color.rgb(244, 117, 117));
+        setAvg.setValueTextColor(Color.WHITE);
+        setAvg.setValueTextSize(9f);
+        setAvg.setDrawValues(false);
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(set); // add the datasets
+        dataSets.add(setAvg); // add the datasets
+
+        // create a data object with the datasets
+        mLineData = new LineData(xVals, dataSets);
+
+        // set data
+        mLineChart.setData(mLineData);
 
         // get the legend (only possible after setting data)
         Legend l = mLineChart.getLegend();
 
         // modify the legend ...
-        // l.setPosition(LegendPosition.LEFT_OF_CHART);
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
         l.setTextColor(Color.WHITE);
@@ -116,97 +185,12 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         leftAxis.setTypeface(tf);
         leftAxis.setTextColor(Color.WHITE);
 
-        //TODO: change to more specific values dep calibration
-        leftAxis.setAxisMaxValue(1.2f);
-        leftAxis.setAxisMinValue(0.5f);
+        leftAxis.setAxisMaxValue(((float)largest));
+        leftAxis.setAxisMinValue((float)smallest);
         leftAxis.setDrawGridLines(true);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);
-
-
-    }
-
-
-    public void addDataToChart (){
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                for(int i = 0; i < 500; i++) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            addEntry();
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private void addEntry() {
-
-        LineData data = mLineChart.getData();
-
-        if (data != null) {
-
-            ILineDataSet set = data.getDataSetByIndex(0);
-
-            if (set == null) {
-                set = createSet();
-                data.addDataSet(set);
-            }
-
-            // add a new x-value first
-            data.addXValue(String.valueOf(System.currentTimeMillis()));
-            data.addEntry(new Entry((float) MuseHandler.getHandler().getTotalMean(), set.getEntryCount()), 0);
-
-
-            // let the chart know it's data has changed
-            mLineChart.notifyDataSetChanged();
-
-            // limit the number of visible entries
-            mLineChart.setVisibleXRangeMaximum(120);
-            // mChart.setVisibleYRange(30, AxisDependency.LEFT);
-
-            // move to the latest entry
-            mLineChart.moveViewToX(data.getXValCount() - 121);
-
-            // this automatically refreshes the chart (calls invalidate())
-            // mChart.moveViewTo(data.getXValCount()-7, 55f,
-            // AxisDependency.LEFT);
-        }
-    }
-
-    private LineDataSet createSet() {
-
-        LineDataSet set = new LineDataSet(null, "Dynamic Data");
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.WHITE);
-        set.setLineWidth(2f);
-        set.setCircleRadius(4f);
-        set.setFillAlpha(65);
-        set.setFillColor(ColorTemplate.getHoloBlue());
-        set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.WHITE);
-        set.setValueTextSize(9f);
-        set.setDrawValues(false);
-        return set;
-    }
-
-    private void feedMultiple() {
-
-
     }
 
     @Override

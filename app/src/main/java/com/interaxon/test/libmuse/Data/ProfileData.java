@@ -13,6 +13,7 @@ public class ProfileData {
     private String password;
     private String age;
     private double accuracy, reaction_time;
+    private String meditation;
 
     // empty constructor
     public ProfileData() {
@@ -20,12 +21,13 @@ public class ProfileData {
     }
 
     // add a new data
-    public ProfileData(String username, String password, String name, double accuracy, double reaction_time) {
+    public ProfileData(String username, String password, String name, double accuracy, double reaction_time, String meditation) {
         this.username = username;
         this.name = name;
         this.password = password;
         this.accuracy = accuracy;
         this.reaction_time = reaction_time;
+        this.meditation = meditation;
     }
 
     // get functions for data
@@ -46,4 +48,9 @@ public class ProfileData {
     public double getReaction_time() {
         return reaction_time;
     }
+
+    public String getMeditation() {
+        return meditation;
+    }
+
 }

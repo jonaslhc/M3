@@ -10,8 +10,12 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Type;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -30,7 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_ACCURACY = "accuracy";
     private static final String COLUMN_REACTION_TIME = "reaction_time";
-
+    private static final String COLUMN_MEDITATION = "meditation";
 
     private static final String DATABASE_CREATE =
             "CREATE TABLE " + DATA_TABLE + " (" +
@@ -38,7 +42,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     COLUMN_PASSWORD + " TEXT, " +
                     COLUMN_NAME + " TEXT, " +
                     COLUMN_ACCURACY + " REAL, " +
-                    COLUMN_REACTION_TIME + " REAL" +
+                    COLUMN_REACTION_TIME + " REAL, " +
+                    COLUMN_MEDITATION + " TEXT " +
             ");";
 
     @Override
@@ -129,6 +134,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, newUser.getName());
         values.put(COLUMN_ACCURACY, newUser.getAccuracy());
         values.put(COLUMN_REACTION_TIME, newUser.getReaction_time());
+        values.put(COLUMN_MEDITATION, newUser.getMeditation());
 
         db.insert(DATA_TABLE, null, values);
         db.close();
@@ -166,7 +172,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
                 COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
         } , null, null, null, null, null, null);
 
         // go through the database and add to the array
@@ -177,7 +184,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getDouble(3),
-                        cursor.getDouble(4)
+                        cursor.getDouble(4),
+                        cursor.getString(5)
                 );
                 DataList.add(CurrUser);
             } while (cursor.moveToNext());
@@ -198,7 +206,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
                 COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
         } , COLUMN_USERNAME + "=?", new String[]{ username
         } , null, null, null, null);
 
@@ -212,7 +221,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     cursor.getString(1), //password
                     cursor.getString(2),  //name
                     cursor.getDouble(3),  //accuracy
-                    cursor.getDouble(4)   // reaction time
+                    cursor.getDouble(4),   // reaction time
+                    cursor.getString(5) //meditation
             );
         }
 
@@ -236,7 +246,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
                 COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
         } , COLUMN_USERNAME + "=?", new String[]{ user.getUsername()
         } , null, null, null, null);
 
@@ -263,11 +274,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void updateAccuracy(double value){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_ACCURACY,value);
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"hi"});
+        //SQLiteDatabase db = this.getWritableDatabase();
+        //ContentValues cv = new ContentValues();
+        //cv.put(COLUMN_ACCURACY,value);
+        //db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"hi"});
     }
 
+    public void updateMeditation(ArrayList<Double> meditation){
+
+
+        Gson gson = new Gson();
+        String inputMeditation = gson.toJson(meditation);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_MEDITATION, inputMeditation);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"test"});
+    }
+
+    public ArrayList<Double> getMeditation(){
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Double>>() {}.getType();
+
+        ProfileData profileData = getData("test");
+
+        ArrayList<Double> outputMeditation = gson.fromJson(profileData.getMeditation(), type);
+
+        for (int i = 0; i<outputMeditation.size(); i++){
+            Log.d("data", String.valueOf(outputMeditation.get(i)));
+        }
+
+        return outputMeditation;
+    }
 
 }

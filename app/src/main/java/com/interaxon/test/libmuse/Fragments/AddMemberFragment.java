@@ -49,7 +49,7 @@ public class AddMemberFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 addMember (new ProfileData(username.getText().toString(),
-                        password.getText().toString(), name.getText().toString(), 0.0, 0.0));
+                        password.getText().toString(), name.getText().toString(), 0.0, 0.0, null));
             }
         });
 
