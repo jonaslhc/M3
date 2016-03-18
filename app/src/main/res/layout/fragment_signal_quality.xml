@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:text="@string/signalQ"
         android:layout_weight="3"
+        android:textAlignment="center"
         android:layout_gravity="center"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -29,7 +30,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginTop="5dp"/>
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
@@ -45,7 +46,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:id="@+id/left_fore"
         android:layout_width="wrap_content"
@@ -56,7 +57,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginTop="5dp"/>
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
@@ -72,7 +73,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:id="@+id/right_fore"
         android:layout_width="wrap_content"
@@ -83,7 +84,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginTop="5dp"/>
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
@@ -99,7 +100,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:id="@+id/right_ear"
         android:layout_width="wrap_content"
@@ -110,7 +111,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginTop="5dp"/>
     <ProgressBar
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
@@ -126,6 +127,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_marginBottom="5dp"/>
 
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.interaxon.libmuse.ConnectionState;
@@ -25,6 +26,8 @@ import java.util.List;
 public class ConnectMuseFragment extends Fragment {
 
     TextView connectedSign;
+    TextView bluetoothSign;
+    Button connectButton;
 
     public ConnectMuseFragment() {
         // Required empty public constructor
@@ -39,10 +42,34 @@ public class ConnectMuseFragment extends Fragment {
         connectedSign.setText(getResources().getString(R.string.connecting));
         connectedSign.setTextColor(getResources().getColor(R.color.Grey));
 
-        MuseHandler.getHandler().connect();
-        checkConnectionStatus();
+        bluetoothSign = (TextView) view.findViewById(R.id.bluetooth);
+        bluetoothSign.setVisibility(View.INVISIBLE);
+
+        connectButton = (Button) view.findViewById(R.id.b_connect_again);
+        connectButton.setVisibility(View.INVISIBLE);
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connect();
+            }
+        });
+
+        connect();
 
         return view;
+    }
+
+    public void connect () {
+        if (MuseHandler.getHandler().connect()) {
+            connectedSign.setText(getResources().getString(R.string.connecting));
+            connectedSign.setTextColor(getResources().getColor(R.color.Grey));
+            bluetoothSign.setVisibility(View.INVISIBLE);
+            connectButton.setVisibility(View.INVISIBLE);
+
+            checkConnectionStatus();
+        } else {
+            noBluetooth();
+        }
     }
 
     public void checkConnectionStatus () {
@@ -51,21 +78,9 @@ public class ConnectMuseFragment extends Fragment {
 
             @Override
             public void run() {
-                double start_time = System.currentTimeMillis();
-                double end_time = System.currentTimeMillis();
-
 
                 while (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.CONNECTING){}
 
-
-
-
-                /*boolean isConnected = MuseHandler.getHandler().getConnectionStatus();
-
-                while (!isConnected&& end_time-start_time < 20000){
-                    end_time = System.currentTimeMillis();
-                    isConnected = MuseHandler.getHandler().getConnectionStatus();
-                }*/
                 if (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.CONNECTED) {
                     connectedSign.post(new Runnable() {
                         @Override
@@ -79,13 +94,13 @@ public class ConnectMuseFragment extends Fragment {
                     } catch (InterruptedException e) {
 
                     }
-                    getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
                             new SignalQualityFragment()).commit();
                 } else {
                     connectedSign.post(new Runnable() {
                         @Override
                         public void run() {
-                            connectedSign.setText(getResources().getString(R.string.connectfail));
+                            noConnection();
                         }
                     });
                     try {
@@ -93,16 +108,18 @@ public class ConnectMuseFragment extends Fragment {
                     } catch (InterruptedException e) {
 
                     }
-                    goBack();
                 }
-
             }
         }).start();
     }
 
-    public void goBack () {
-        Intent intent = new Intent(getActivity(), MenuActivity.class);
-        startActivity(intent);
+    public void noBluetooth () {
+        bluetoothSign.setText(getResources().getString(R.string.bluetooth));
+        connectButton.setVisibility(View.VISIBLE);
     }
 
+    public void noConnection () {
+        connectedSign.setText(getResources().getString(R.string.connectfail));
+        connectButton.setVisibility(View.VISIBLE);
+    }
 }

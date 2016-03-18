@@ -163,7 +163,10 @@ public class MeditateFragment extends Fragment {
                 AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
 
-        if (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+        playAudio(audioReq);
+
+
+        /*if (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
             builder.setMessage(R.string.low_volume_message).setTitle(R.string.dialog_title);
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -172,8 +175,7 @@ public class MeditateFragment extends Fragment {
                 }
             }).create().show();
         } else {
-            playAudio(audioReq);
-        }
+        }*/
     }
 
     public void playAudio(int audioReq){

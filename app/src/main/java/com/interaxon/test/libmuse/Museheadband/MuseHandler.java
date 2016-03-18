@@ -128,14 +128,16 @@ public class MuseHandler {
         }
     }
 
-    public void connect () {
+    public boolean connect () {
 
         //refresh list of muses
         MuseManager.refreshPairedMuses();
         List<Muse> pairedMuses = MuseManager.getPairedMuses();
 
+        boolean connected = false;
+
         //try to connect, if not keep trying
-        //for (Muse m: pairedMuses) {
+        if (pairedMuses.size() > 0) {
             currMuse = pairedMuses.get(0);
 
             Log.d(TAG, "connecting" + currMuse.getName());
@@ -145,7 +147,6 @@ public class MuseHandler {
                     state == ConnectionState.CONNECTING) {
                 Log.w("Muse Headband",
                         "doesn't make sense to connect second time to the same muse");
-                return;
             }
 
             configureLibrary();
@@ -157,6 +158,9 @@ public class MuseHandler {
             } catch (Exception e) {
                 Log.e("Muse Headband", e.toString());
             }
+            connected = true;
+        }
+        return connected;
     }
 
     private void configureLibrary() {
@@ -198,21 +202,6 @@ public class MuseHandler {
             mFull = "Muse " + p.getSource().getMacAddress() + " " + mStatus;
             Log.i("Muse Headband", mFull);
 
-            Activity activity = activityRef.get();
-
-            /*if (activity != null) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mCurrent == ConnectionState.CONNECTED) {
-                            Toast toast = Toast.makeText(mActivity.getBaseContext(), "Muse Headband Connected", Toast.LENGTH_SHORT);
-                            toast.show();
-                        } else {
-                        }
-                    }
-                });
-            }*/
-
             if (mCurrent == ConnectionState.CONNECTED) {
                 Toast toast = Toast.makeText(mActivity.getBaseContext(), "Muse Headband Connected", Toast.LENGTH_SHORT);
                 toast.show();
@@ -231,7 +220,7 @@ public class MuseHandler {
         calibratedMean = avgMean.getResult();
     }
 
-    public double getAvgMean () {
+    public double getCalibratedMean () {
         //Log.d(TAG, String.valueOf(avgMean.getResult()));
         return calibratedMean;
     }
@@ -314,12 +303,17 @@ public class MuseHandler {
                             data.get(Eeg.TP9.ordinal()), data.get(Eeg.FP1.ordinal()),
                             data.get(Eeg.FP2.ordinal()), data.get(Eeg.TP10.ordinal()));
 
-                    //Log.d(TAG, s);
-                    //Log.d(TAG, s2);
+                    Log.d(TAG, s);
+                    Log.d(TAG, s2);
 
                 }
             }).start();
         }
+
+        int countTp9 = 0;
+        int countTp10 = 0;
+        int countFp1 = 0;
+        int countFp2 = 0;
 
         private void getSignalQuality (final ArrayList<Double> data) {
 
@@ -328,18 +322,32 @@ public class MuseHandler {
             fp1Rdy = false;
             fp2Rdy = false;
 
-            if (data.get(Eeg.TP9.ordinal()) <= 1) {
+            if (data.get(Eeg.TP9.ordinal()) <= 1) countTp9++;
+            else countTp9 = 0;
+
+            if (data.get(Eeg.TP10.ordinal()) <= 1) countTp10++;
+            else countTp10 = 0;
+
+            if (data.get(Eeg.FP1.ordinal()) <= 1) countFp1++;
+            else countFp1 = 0;
+
+            if (data.get(Eeg.FP2.ordinal()) <= 1) countFp2++;
+            else countFp2 = 0;
+
+            if (countTp9 > 10) {
                 tp9Rdy = true;
             }
-            if (data.get(Eeg.TP10.ordinal()) <= 1) {
+            if (countTp10 > 10) {
                 tp10Rdy = true;
             }
-            if (data.get(Eeg.FP1.ordinal()) <= 1) {
+            if (countFp1 > 10) {
                 fp1Rdy = true;
             }
-            if (data.get(Eeg.FP2.ordinal()) <= 1) {
+            if (countFp2 > 10) {
                 fp2Rdy = true;
             }
+
+
             //Log.d(TAG, String.valueOf(tp9Rdy));
 
         }

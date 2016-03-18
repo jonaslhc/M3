@@ -28,6 +28,7 @@ public class CalibrateFragment extends Fragment {
 
     TextView calibrateStatus;
     TextView counterStatus;
+    TextView resultStatus;
 
     public CalibrateFragment() {
         // Required empty public constructor
@@ -55,6 +56,20 @@ public class CalibrateFragment extends Fragment {
             @Override
             public void run() {
 
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                calibrateStatus.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        calibrateStatus.setText(getString(R.string.calibratestart));
+                    }
+                });
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {}
+
                 MuseHandler.getHandler().startAvgMean();
 
                 for (int i=20; i>=0; i--) {
@@ -71,23 +86,47 @@ public class CalibrateFragment extends Fragment {
 
                 }
 
-                calibrateStatus.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
-                    }
-                });
                 MuseHandler.getHandler().setCalibratedMean();
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
 
+                if (Double.isNaN(MuseHandler.getHandler().getCalibratedMean())){
+                    calibrateStatus.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            calibrateStatus.setText(getString(R.string.calibratefail));
+                            resultStatus.setText(getString(R.string.back_to_signalQ));
+                        }
+                    });
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+
+                    }
+                    getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
+                            new CalibrateFragment()).commit();
+                } else {
+                    calibrateStatus.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            calibrateStatus.setTextColor(getResources().getColor(R.color.Blue));
+                            calibrateStatus.setText(getString(R.string.calibratedone));
+                        }
+                    });
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+
+                    }
+                    finish();
                 }
-                goBack();
             }
         }).start();
     }
-    public void goBack () {
+    public void checkCalibration () {
+
+
+    }
+
+    public void finish () {
         Intent intent = new Intent(getActivity(), MenuActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "calibrated");
         startActivity(intent);

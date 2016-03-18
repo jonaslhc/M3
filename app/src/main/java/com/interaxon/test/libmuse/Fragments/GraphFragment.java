@@ -118,13 +118,19 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         ArrayList<Entry> yVals = new ArrayList<Entry>();
         ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
 
+        double avg = MuseHandler.getHandler().getCalibratedMean();
+
         for (int i = 0; i < meditationData.size(); i++) {
             curr = meditationData.get(i).floatValue();
             if (curr > largest) largest = curr;
             else if (curr < smallest) smallest = curr;
 
+            if (avg > largest) largest = avg;
+            else if (avg < smallest) smallest = avg;
+
+
             yVals.add(new Entry((float)curr, i));
-            yValsAvg.add(new Entry((float)MuseHandler.getHandler().getAvgMean(), i));
+            yValsAvg.add(new Entry((float)avg, i));
 
         }
 

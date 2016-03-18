@@ -185,7 +185,7 @@ public class SignalQualityFragment extends Fragment {
                 } catch (InterruptedException e) {
 
                 }
-                getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
                         new CalibrateFragment()).commit();
 
             }

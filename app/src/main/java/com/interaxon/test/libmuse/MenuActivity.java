@@ -45,8 +45,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
             Intent intent = getIntent();
             String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);
 
-            Log.d("main menu", ""+calibrate_info);
-
             if (calibrate_info.equals("calibrated")) calibrated = true;
         }
 

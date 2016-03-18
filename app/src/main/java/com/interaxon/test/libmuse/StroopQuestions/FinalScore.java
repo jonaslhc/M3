@@ -90,8 +90,8 @@ public class FinalScore extends Fragment {
 
         // update accuracy with specified user_name
         user_name = menuActivity.getMyName();
-        db.updateAccuracy(incong_score / neutral_score, user_name);
-        db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
+        //db.updateAccuracy(incong_score / neutral_score, user_name);
+        //db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
 
 
         play_again_button = (Button) getActivity().findViewById(R.id.b_play_again);
