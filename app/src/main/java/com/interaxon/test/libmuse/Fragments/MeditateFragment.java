@@ -29,6 +29,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.libmuse.ConnectionState;
+import com.interaxon.libmuse.Muse;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
@@ -167,13 +168,14 @@ public class MeditateFragment extends Fragment {
             public void run() {
 
                 while (!finish) {
+                    MuseHandler.getHandler().startAvgMean();
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {}
                     double currMean = MuseHandler.getHandler().getTotalMean();
                     if (!Double.isNaN(currMean)) {
                         meditation.add(currMean);
                     }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {}
                 }
                 DatabaseHandler.getHandler().updateMeditation(meditation);
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,

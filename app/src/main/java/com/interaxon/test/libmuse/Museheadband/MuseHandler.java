@@ -216,6 +216,7 @@ public class MuseHandler {
         fp2Mean.clear();
         avgMean.clear();
     }
+
     public void setCalibratedMean (){
         calibratedMean = avgMean.getResult();
     }
