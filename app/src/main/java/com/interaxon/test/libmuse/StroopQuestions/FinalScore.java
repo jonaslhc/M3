@@ -89,7 +89,7 @@ public class FinalScore extends Fragment {
         reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
 
         // update accuracy with specified user_name
-        user_name = menuActivity.getMyName();
+        user_name = DatabaseHandler.getHandler().getCurrUser().getName();
         //db.updateAccuracy(incong_score / neutral_score, user_name);
         //db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
 

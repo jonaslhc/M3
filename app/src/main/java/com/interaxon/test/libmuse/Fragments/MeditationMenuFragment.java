@@ -1,52 +1,73 @@
 package com.interaxon.test.libmuse.Fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.interaxon.test.libmuse.R;
 
-public class MeditationMenuFragment extends Fragment {
+import java.util.ArrayList;
 
-    private OnFragmentInteractionListener mListener;
+
+
+public class MeditationMenuFragment extends Fragment implements View.OnClickListener {
+
+    private static final int NUMSESSION = 10;
 
     public MeditationMenuFragment() {
         // Required empty public constructor
     }
 
+    Button med1, med2, med3, med4, med5, med6, med7, med8, med9, med10;
+
+    ArrayList<Button> med_session;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_start_meditation, container, false);
+        View view = inflater.inflate(R.layout.fragment_start_meditation, container, false);
+
+        med1 = (Button) view.findViewById(R.id.b_med1);
+        med2 = (Button) view.findViewById(R.id.b_med2);
+        med3 = (Button) view.findViewById(R.id.b_med3);
+        med4 = (Button) view.findViewById(R.id.b_med4);
+        med5 = (Button) view.findViewById(R.id.b_med5);
+        med6 = (Button) view.findViewById(R.id.b_med6);
+        med7 = (Button) view.findViewById(R.id.b_med7);
+        med8 = (Button) view.findViewById(R.id.b_med8);
+        med9 = (Button) view.findViewById(R.id.b_med9);
+        med10 = (Button) view.findViewById(R.id.b_med10);
+
+        med1.setOnClickListener(this);
+        med2.setOnClickListener(this);
+        med3.setOnClickListener(this);
+        med4.setOnClickListener(this);
+        med5.setOnClickListener(this);
+        med6.setOnClickListener(this);
+        med7.setOnClickListener(this);
+        med8.setOnClickListener(this);
+        med9.setOnClickListener(this);
+        med10.setOnClickListener(this);
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onClick (View v) {
+        if (v.getId() == R.id.b_med1) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(1)).commit();
+        } else if (v.getId() == R.id.b_med2) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(2)).commit();
         }
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

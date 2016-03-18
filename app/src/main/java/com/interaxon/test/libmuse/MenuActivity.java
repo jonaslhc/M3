@@ -17,13 +17,14 @@ import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Fragments.CalibrateFragment;
 
-public class MenuActivity extends Activity implements View.OnClickListener {
+public class MenuActivity extends Activity {
 
     Button meditation;
     Button stroop_button;
 
     static boolean calibrated = false;
     static boolean usernameSet = false;
+
     public static String USERNAME;
     ShowcaseView showcaseView;
     Target meditation_target, stroop_target, profile_target;
@@ -53,7 +54,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         stroop_target = new ViewTarget(R.id.b_stroop, this);
         profile_target = new ViewTarget(R.id.b_profile, this);
 
-        showcaseView = new ShowcaseView.Builder(this)
+        /*showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(Target.NONE)
                 .setOnClickListener(this)
                 .setContentTitle("Walk Through")
@@ -61,7 +62,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         showcaseView.setButtonText("OK");
-
+*/
 
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
@@ -69,30 +70,30 @@ public class MenuActivity extends Activity implements View.OnClickListener {
                 " " +DatabaseHandler.getHandler().getCurrUser().getName();
         welcome.setText(welcomeMsg);
 
-        Button calibration = (Button) findViewById(R.id.b_calibration);
-        calibration.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                start_calibration();
-            }
-        });
+        //Button calibration = (Button) findViewById(R.id.b_meditation);
+        //calibration.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View view) {
+        //        start_calibration();
+        //    }
+        //});
 
         meditation = (Button) findViewById(R.id.b_meditation);
         meditation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                start_meditation();
+                start_calibration();
             }
         });
         // first time menu is created, calibrated should be false
         // after calibration, this value should turn to true for the rest of the session
-        if (!calibrated) {
+        /*if (!calibrated) {
             meditation.setBackgroundColor(getResources().getColor(R.color.Grey));
             meditation.setEnabled(false);
         } else {
             meditation.setBackgroundColor(getResources().getColor(R.color.Black));
             meditation.setEnabled(true);
-        }
+        }*/
 
         stroop_button = (Button) findViewById(R.id.b_stroop);
         stroop_button.setOnClickListener(new View.OnClickListener(){
@@ -121,11 +122,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public String getMyName(){
-        return USERNAME;
-    }
-
-
     public void start_calibration() {
         Intent intent = new Intent(this, CalibrationActivity.class);
         startActivity(intent);
@@ -141,7 +137,7 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         startActivity(intent);
     }
 
-    @Override
+   /* @Override
     public void onClick(View v) {
         switch(pos) {
             case 0:
@@ -165,6 +161,6 @@ public class MenuActivity extends Activity implements View.OnClickListener {
         }
         pos++;
 
-    }
+    }*/
 
 }

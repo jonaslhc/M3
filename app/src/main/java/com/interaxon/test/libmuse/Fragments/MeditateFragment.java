@@ -50,6 +50,8 @@ public class MeditateFragment extends Fragment {
     TextView counterStatus;
     TextView messageDisplay;
 
+    int session_num;
+
     AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
@@ -67,14 +69,25 @@ public class MeditateFragment extends Fragment {
         // Required empty public constructor
     }
 
+    // meditation sessions differ by audio ONLY
+    // send session # and determine which audio
+    public static MeditateFragment newInstance(int session_num) {
+        MeditateFragment fragment = new MeditateFragment();
+        Bundle args = new Bundle();
+        args.putInt("session_num", session_num);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public int getSessionNum() {
+        return getArguments().getInt("session_num", 0);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meditate, container, false);
-
-        ArrayList<Double> meditation_results;
 
         counterStatus = (TextView) view.findViewById(R.id.count_down_med);
         messageDisplay = (TextView) view.findViewById(R.id.meditate);
@@ -91,45 +104,59 @@ public class MeditateFragment extends Fragment {
 
     public void doMeditation() {
 
-        new Thread(new Runnable() {
+        if (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+            builder.setMessage(R.string.low_volume_message).setTitle(R.string.dialog_title);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    runAudio.start();
+                }
+            }).create().show();
+        } else {
+            runAudio.start();
+        }
 
-            @Override
-            public void run() {
-                //double start_time = System.currentTimeMillis();
-                //double end_time = System.currentTimeMillis();
+    }
 
+    Thread runAudio = new Thread(new Runnable() {
 
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {}
-                messageDisplay.post(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {}
+            messageDisplay.post(new Runnable() {
+                @Override
+                public void run() {
+                    messageDisplay.setText(getResources().getString(R.string.start_meditate));
+                }
+            });
+
+            int audioReq = mAudioManager.requestAudioFocus(afChangeListener,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN);
+
+            playAudio(audioReq);
+            gatherData();
+
+            for (int i=20; i>=0; i--) {
+                final int time_left = i;
+                counterStatus.post(new Runnable() {
                     @Override
                     public void run() {
-                        messageDisplay.setText(getResources().getString(R.string.start_meditate));
+                        counterStatus.setText(String.valueOf(time_left));
                     }
                 });
-                startAudio();
-                gatherData();
-
-                for (int i=20; i>=0; i--) {
-                    final int time_left = i;
-                    counterStatus.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            counterStatus.setText(String.valueOf(time_left));
-                        }
-                    });
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {}
-
-                }
-                finish = true;
-
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
 
             }
-        }).start();
-    }
+            finish = true;
+
+
+        }
+    });
 
     public void gatherData () {
         final ArrayList<Double> meditation = new ArrayList<Double>();
@@ -158,26 +185,6 @@ public class MeditateFragment extends Fragment {
 
     }
 
-    public void startAudio () {
-        final int audioReq = mAudioManager.requestAudioFocus(afChangeListener,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN);
-
-        playAudio(audioReq);
-
-
-        /*if (mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
-            builder.setMessage(R.string.low_volume_message).setTitle(R.string.dialog_title);
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    playAudio(audioReq);
-                }
-            }).create().show();
-        } else {
-        }*/
-    }
-
     public void playAudio(int audioReq){
 
         if (audioReq == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -186,7 +193,8 @@ public class MeditateFragment extends Fragment {
     }
 
     private void startPlayback () {
-        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_0);
+        if (getSessionNum() == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (getSessionNum() == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }

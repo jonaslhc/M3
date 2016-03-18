@@ -40,9 +40,9 @@ public class MyResults extends Activity {
         //Intent intent = getIntent();
         //String username = intent.getStringExtra(ProfileActivity.EXTRA_MESSAGE);
 
-        Log.e(TAG, "current user name: " + menuActivity.getMyName());
+        Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getName());
 
-        profileData = databaseHandler.getHandler().getData(menuActivity.getMyName());
+        profileData = databaseHandler.getHandler().getData(DatabaseHandler.getHandler().getCurrUser().getName());
 
         last_accuracy = profileData.getAccuracy();
         last_reaction_time = profileData.getReaction_time();

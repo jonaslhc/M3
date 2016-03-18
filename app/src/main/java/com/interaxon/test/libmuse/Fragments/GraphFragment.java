@@ -49,7 +49,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     TextView counterStatus;
 
-
     public GraphFragment() {
         // Required empty public constructor
     }
@@ -68,13 +67,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         menuButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MenuActivity.class);
-                startActivity(intent);
+                returnToMenu();
             }
         });
 
         graphResults();
         return view;
+    }
+
+    public void returnToMenu () {
+        getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                new MeditationMenuFragment()).addToBackStack("Add to Back Stack").commit();
     }
 
     public void graphResults () {
@@ -128,10 +131,15 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             if (avg > largest) largest = avg;
             else if (avg < smallest) smallest = avg;
 
-
             yVals.add(new Entry((float)curr, i));
             yValsAvg.add(new Entry((float)avg, i));
 
+        }
+
+        if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
+            largest = avg+Math.abs(avg-smallest);
+        } else {
+            smallest = avg-Math.abs(largest-avg);
         }
 
         LineDataSet set = new LineDataSet(yVals, "Meditation");

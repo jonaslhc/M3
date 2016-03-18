@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
@@ -44,7 +45,7 @@ public class CalibrateFragment extends Fragment {
         calibrateStatus = (TextView) view.findViewById(R.id.calibrate);
         calibrateStatus.setTextColor(getResources().getColor(R.color.Grey));
         counterStatus = (TextView) view.findViewById(R.id.count_down);
-
+        resultStatus = (TextView) view.findViewById(R.id.medidate_result);
         calibrateMuse();
 
         return view;
@@ -127,7 +128,7 @@ public class CalibrateFragment extends Fragment {
     }
 
     public void finish () {
-        Intent intent = new Intent(getActivity(), MenuActivity.class);
+        Intent intent = new Intent(getActivity(), MeditationActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "calibrated");
         startActivity(intent);
     }
