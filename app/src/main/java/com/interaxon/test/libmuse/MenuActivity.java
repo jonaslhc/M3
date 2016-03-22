@@ -17,7 +17,7 @@ import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Fragments.CalibrateFragment;
 
-public class MenuActivity extends Activity {
+public class MenuActivity extends Activity implements View.OnClickListener{
 
     Button meditation;
     Button stroop_button;
@@ -137,7 +137,7 @@ public class MenuActivity extends Activity {
         startActivity(intent);
     }
 
-   /* @Override
+    @Override
     public void onClick(View v) {
         switch(pos) {
             case 0:
@@ -161,6 +161,6 @@ public class MenuActivity extends Activity {
         }
         pos++;
 
-    }*/
+    }
 
 }

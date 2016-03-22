@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -14,13 +16,16 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
+
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
@@ -41,7 +46,7 @@ public class MyResults extends Activity {
     String TAG = MyResults.class.getSimpleName();
     MenuActivity menuActivity;
     BarChart mChart;
-    BarData mData;
+    Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +58,10 @@ public class MyResults extends Activity {
     }
 
     private void initBarGraph() {
-        mChart = new BarChart(this);
-        mChart.setDescription("Comparison of your results");
+
         mChart.setNoDataText("No data is currently available");
+        mChart.setDescription("");
+        mChart.setDrawHighlightArrow(true);
 
         Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getName());
         Typeface tf = Typeface.DEFAULT;
@@ -63,10 +69,6 @@ public class MyResults extends Activity {
 
         last_accuracy = profileData.getAccuracy();
         last_reaction_time = profileData.getReaction_time();
-
-        lastAccuracy.setText(String.format("Accuracy: %6.2f", last_accuracy));
-        lastReactionTime.setText(String.format("Reaction Time: %6.2f", last_reaction_time));
-
 
         XAxis horizontal_axis = mChart.getXAxis();
         YAxis vertical_axis = mChart.getAxis(YAxis.AxisDependency.LEFT);
@@ -83,28 +85,34 @@ public class MyResults extends Activity {
         vertical_axis.setDrawGridLines(true);
         vertical_axis.setDrawZeroLine(true);
 
-        List<BarEntry> accuracy = new ArrayList<BarEntry>();
-        List<BarEntry> reaction_time = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> accuracy = new ArrayList<>();
+        ArrayList<BarEntry> reaction_time = new ArrayList<>();
+
 
         // Populate with values
         accuracy.add(new BarEntry((float) profileData.getAccuracy(), 0));
-        reaction_time.add(new BarEntry((float) profileData.getReaction_time(), 0));
+        reaction_time.add(new BarEntry((float) profileData.getReaction_time(), 1));
+
+        for(int i = 1; i < 6; i ++){
+            accuracy.add(new BarEntry((float) i/10, i));
+            reaction_time.add(new BarEntry((float) i/10, i));
+        }
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
         BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
 
         accuracy_set.setAxisDependency(YAxis.AxisDependency.LEFT);
         accuracy_set.setColor(ColorTemplate.getHoloBlue());
-        accuracy_set.setHighLightColor(Color.rgb(244, 117, 117));
+        //accuracy_set.setHighLightColor(Color.rgb(244, 117, 117));
         accuracy_set.setValueTextColor(Color.WHITE);
-        accuracy_set.setValueTextSize(9f);
+        accuracy_set.setValueTextSize(10f);
         accuracy_set.setDrawValues(false);
 
         reaction_score.setAxisDependency(YAxis.AxisDependency.LEFT);
         reaction_score.setColor(Color.BLACK);
-        reaction_score.setHighLightColor(Color.rgb(244, 117, 117));
+        //reaction_score.setHighLightColor(Color.rgb(244, 117, 117));
         reaction_score.setValueTextColor(Color.WHITE);
-        reaction_score.setValueTextSize(9f);
+        reaction_score.setValueTextSize(10f);
         reaction_score.setDrawValues(false);
 
 
@@ -112,9 +120,15 @@ public class MyResults extends Activity {
         dataSets.add(accuracy_set);
         dataSets.add(reaction_score);
 
+
         ArrayList<String> xVals = new ArrayList<String>();
         xVals.add(profileData.getName());
-        xVals.add(profileData.getUsername());
+        xVals.add("Jin Hee");
+        xVals.add("Andrea");
+        xVals.add("Jia");
+        xVals.add("Jonas");
+        xVals.add("Orca Friend");
+        xVals.add("HeartBear");
 
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
@@ -122,25 +136,29 @@ public class MyResults extends Activity {
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
 
-
-        mData = new BarData(xVals, dataSets);
-        mData.setValueFormatter(new PercentFormatter());
+        BarData mData = new BarData(xVals, dataSets);
+        //mData.setValueFormatter(new PercentFormatter());
         mData.setValueTextSize(10f);
         mData.setValueTextColor(Color.GRAY);
+        mChart.setDrawValueAboveBar(true);
         mChart.setData(mData);
+        mChart.setDrawHighlightArrow(true);
         mChart.invalidate();
     }
 
 
 
     private void initView() {
-        lastAccuracy = (TextView) findViewById(R.id.last_accuracy);
-        lastReactionTime = (TextView) findViewById(R.id.last_reaction_time);
         mChart = (BarChart) findViewById(R.id.bar_chart);
+        backButton = (Button) findViewById(R.id.back_to_menu);
+
     }
 
 
-
+    public void Back(View view) {
+        Intent intent = new Intent(this, MenuActivity.class);
+        startActivity(intent);
+    }
 }
