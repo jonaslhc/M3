@@ -7,18 +7,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your Last Results"
-        android:textSize="30sp"/>
-    <TextView
-        android:id="@+id/last_accuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accuracy:"
         android:textSize="20sp"/>
-    <TextView
-        android:id="@+id/last_reaction_time"
-        android:layout_width="wrap_content"
+
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reaction Time:"
-        android:textSize="20sp"/>
+        android:layout_weight="100"/>
+
+    <Button
+        android:id="@+id/back_to_menu"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/play_again"
+        android:layout_gravity="center"
+        android:textColor="@color/White"
+        android:background="@color/Black"
+        android:layout_weight="1"
+        android:onClick="Back"/>
+
 
 </LinearLayout>
