@@ -86,21 +86,24 @@
         android:text="@string/add_member"
         android:layout_width="@dimen/button"
         android:layout_height="wrap_content"
-        android:background="@color/Blue"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:padding="5dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/blue_button"
+        style="@style/ButtonText"/>
+
     <Button
         android:id="@+id/b_back_old_member"
         android:text="@string/old_member"
         android:layout_width="@dimen/button"
         android:layout_height="wrap_content"
-        android:background="@color/Black"
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:padding="5dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/black_button"
+        style="@style/ButtonText"/>
 
 </LinearLayout>

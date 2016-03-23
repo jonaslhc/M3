@@ -56,22 +56,25 @@
         android:text="@string/find_me"
         android:layout_width="@dimen/button"
         android:layout_height="wrap_content"
-        android:background="@color/Black"
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:padding="5dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/black_button"
+        style="@style/ButtonText"
+        />
     <Button
         android:id="@+id/b_back_new_member"
         android:text="@string/new_member"
         android:layout_width="@dimen/button"
         android:layout_height="wrap_content"
-        android:background="@color/Blue"
         android:padding="5dp"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@drawable/blue_button"
+        style="@style/ButtonText"/>
     <TextView
         android:layout_weight="7"
         android:layout_margin="5dp"
