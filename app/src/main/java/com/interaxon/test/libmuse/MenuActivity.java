@@ -46,6 +46,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             Intent intent = getIntent();
             String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);
 
+            // this line produces a crash, null object reference
             if (calibrate_info.equals("calibrated")) calibrated = true;
         }
 
@@ -54,7 +55,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         stroop_target = new ViewTarget(R.id.b_stroop, this);
         profile_target = new ViewTarget(R.id.b_profile, this);
 
-        /*showcaseView = new ShowcaseView.Builder(this)
+        showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(Target.NONE)
                 .setOnClickListener(this)
                 .setContentTitle("Walk Through")
@@ -62,7 +63,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 .setStyle(R.style.CustomShowcaseTheme2)
                 .build();
         showcaseView.setButtonText("OK");
-*/
+
 
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
@@ -106,11 +107,9 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 // Add the buttons
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
                         start_stroop();
                     }
                 }).create().show();
-                // 3. Get the AlertDialog from create()
             }
         });
 
@@ -141,17 +140,17 @@ public class MenuActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch(pos) {
             case 0:
-                showcaseView.setShowcase(meditation_target, true);
+                showcaseView.setShowcase(meditation_target, false);
                 showcaseView.setContentTitle("Meditation");
                 showcaseView.setContentText("We will guide you through a meditation session");
                 break;
             case 1:
-                showcaseView.setShowcase(stroop_target, true);
+                showcaseView.setShowcase(stroop_target, false);
                 showcaseView.setContentTitle("Stroop");
                 showcaseView.setContentText("We will begin a brain game that will be used to evaluate your cognitive performance");
                 break;
             case 2:
-                showcaseView.setShowcase(profile_target, true);
+                showcaseView.setShowcase(profile_target, false);
                 showcaseView.setContentTitle("Profile");
                 showcaseView.setContentText("This will take you to your profile page, where you have access to your records and information");
                 break;
