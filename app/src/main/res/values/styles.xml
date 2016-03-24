@@ -19,7 +19,7 @@
 
     <style name="CustomShowcaseTheme2" parent="ShowcaseView">
         <item name="sv_backgroundColor">@color/Black</item>
-        <item name="sv_showcaseColor">@color/Blue</item>
+        <item name="sv_showcaseColor">@color/Grey</item>
         <item name="sv_buttonText">Close</item>
         <item name="sv_titleTextAppearance">@style/CustomTitle2</item>
         <item name="sv_detailTextAppearance">@style/CustomText2</item>
@@ -31,7 +31,7 @@
     </style>
 
     <style name="CustomText2" parent="TextAppearance.ShowcaseView.Detail.Light">
-        <item name="android:textColor">@color/AccentBlue</item>
+        <item name="android:textColor">@color/White</item>
     </style>
 
 

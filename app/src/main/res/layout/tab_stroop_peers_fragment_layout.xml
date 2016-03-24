@@ -2,9 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Tab 2"/>
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart_peers_reaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="100"/>
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart_peers_accuracy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="100"/>
 </LinearLayout>

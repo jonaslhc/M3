@@ -17,15 +17,15 @@
             android:layout_height="wrap_content"
             android:text="Learn More"
             android:clickable="true"
-            android:textSize="18sp"
-            android:paddingLeft="150dp"
-            android:textColor="@color/Blue"
+            android:textSize="15sp"
+            android:paddingLeft="100dp"
+            android:textColor="@color/AccentBlue"
             android:onClick="text_view_on_click"/>
     </LinearLayout>
 
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bar_chart"
+        android:id="@+id/bar_chart_personal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="100"/>
@@ -36,7 +36,7 @@
         android:id="@+id/back_to_menu"
         android:layout_width="200dp"
         android:layout_height="35dp"
-        android:text="@string/play_again"
+        android:text="Back"
         android:layout_gravity="center"
         android:textColor="@color/White"
         android:layout_weight="1"
