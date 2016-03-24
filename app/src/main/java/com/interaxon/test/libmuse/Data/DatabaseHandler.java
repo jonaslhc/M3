@@ -278,19 +278,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return itExists;
     }
 
-    public void updateSpecificColumn(String column, String username, double value){
+
+
+    public void updateAccuracy(double value, String username){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(column, String.format("%.2f", value));
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=" + username, null);
+        cv.put(COLUMN_ACCURACY, value);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
+    }
+    public void updateReactionTime(double value, String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_REACTION_TIME,value);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
     }
 
-    public void updateAccuracy(double value){
-        //SQLiteDatabase db = this.getWritableDatabase();
-        //ContentValues cv = new ContentValues();
-        //cv.put(COLUMN_ACCURACY,value);
-        //db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{"hi"});
-    }
 
     public void updateMeditation(ArrayList<Double> meditation){
 

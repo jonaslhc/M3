@@ -1,8 +1,5 @@
-package com.interaxon.test.libmuse;
+package com.interaxon.test.libmuse.StroopInfo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -26,6 +23,8 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
+import com.interaxon.test.libmuse.MenuActivity;
+import com.interaxon.test.libmuse.R;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,7 @@ public class StroopPersonalScore extends Fragment {
     static ProfileData profileData;
     TextView moreInfoText;
     DatabaseHandler databaseHandler;
-    String TAG = MyResults.class.getSimpleName();
+    String TAG = StroopPersonalScore.class.getSimpleName();
     MenuActivity menuActivity;
     BarChart mChart;
     Button backButton;
@@ -93,12 +92,8 @@ public class StroopPersonalScore extends Fragment {
 
         // Populate with values
         accuracy.add(new BarEntry((float) profileData.getAccuracy(), 0));
-        reaction_time.add(new BarEntry((float) profileData.getReaction_time(), 1));
+        reaction_time.add(new BarEntry((float) profileData.getReaction_time(), 0));
 
-        for(int i = 1; i < 6; i ++){
-            accuracy.add(new BarEntry((float) i/10, i));
-            reaction_time.add(new BarEntry((float) i/10, i));
-        }
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
         BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
@@ -106,14 +101,14 @@ public class StroopPersonalScore extends Fragment {
         accuracy_set.setAxisDependency(YAxis.AxisDependency.LEFT);
         accuracy_set.setColor(ColorTemplate.getHoloBlue());
         //accuracy_set.setHighLightColor(Color.rgb(244, 117, 117));
-        accuracy_set.setValueTextColor(Color.WHITE);
+        accuracy_set.setValueTextColor(Color.BLACK);
         accuracy_set.setValueTextSize(10f);
         accuracy_set.setDrawValues(false);
 
         reaction_score.setAxisDependency(YAxis.AxisDependency.LEFT);
-        reaction_score.setColor(Color.BLACK);
+        reaction_score.setColor(Color.MAGENTA);
         //reaction_score.setHighLightColor(Color.rgb(244, 117, 117));
-        reaction_score.setValueTextColor(Color.WHITE);
+        reaction_score.setValueTextColor(Color.BLACK);
         reaction_score.setValueTextSize(10f);
         reaction_score.setDrawValues(false);
 
@@ -125,35 +120,32 @@ public class StroopPersonalScore extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<String>();
         xVals.add(profileData.getName());
-        xVals.add("Jeremy Lin");
-        xVals.add("Andrea");
-        xVals.add("Jia");
-        xVals.add("Jin Hee");
-        xVals.add("Orca Friend");
-        xVals.add("HeartBear");
-
-        // get the legend (only possible after setting data)
-        Legend l = mChart.getLegend();
-
-        // modify the legend ...
-        l.setForm(Legend.LegendForm.LINE);
-        l.setTypeface(tf);
-        l.setTextColor(Color.BLACK);
 
         BarData mData = new BarData(xVals, dataSets);
         //mData.setValueFormatter(new PercentFormatter());
         mData.setValueTextSize(10f);
-        mData.setValueTextColor(Color.GRAY);
+        mData.setValueTextColor(Color.BLACK);
         mChart.setDrawValueAboveBar(true);
         mChart.setData(mData);
+        mChart.animateX(2000);
+        mChart.animateY(2000);
         mChart.setDrawHighlightArrow(true);
         mChart.invalidate();
+
+        // get the legend (only possible after setting data)
+        Legend l = mChart.getLegend();
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTypeface(tf);
+        l.setTextColor(Color.BLACK);
+        l.setTextSize(12f);
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_INSIDE);
     }
 
 
 
     private void initView() {
-        mChart = (BarChart) getActivity().findViewById(R.id.bar_chart);
+        mChart = (BarChart) getActivity().findViewById(R.id.bar_chart_personal);
         backButton = (Button) getActivity().findViewById(R.id.back_to_menu);
         moreInfoText = (TextView) getActivity().findViewById(R.id.more_info_text_view);
     }

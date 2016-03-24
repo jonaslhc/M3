@@ -1,8 +1,10 @@
 package com.interaxon.test.libmuse;
 
-import android.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.interaxon.test.libmuse.StroopInfo.StroopPeersScore;
+import com.interaxon.test.libmuse.StroopInfo.StroopPersonalScore;
 
 import java.util.Locale;
 

@@ -1,4 +1,4 @@
-package com.interaxon.test.libmuse;
+package com.interaxon.test.libmuse.StroopInfo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,6 +12,11 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toolbar;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.interaxon.test.libmuse.MenuActivity;
+import com.interaxon.test.libmuse.MyPagerAdapter;
+import com.interaxon.test.libmuse.R;
 
 /**
  * Created by st924507 on 2016-03-23.
