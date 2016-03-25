@@ -192,13 +192,15 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void addDataReaction() {
+        final int percentile_reaction = findReactionPercentile(profileData.getReaction_time());
+
         ArrayList<Entry> yVals = new ArrayList<>();
         /*
         for(int i = 0; i < yData.length; i++){
             yVals.add(new Entry(yData[i], i));
         }*/
-        yVals.add(new Entry((float) profileData.getReaction_time(), 0));
-        yVals.add(new Entry((float) 0.5, 1));
+        yVals.add(new Entry((float) 100*percentile_reaction/stroop_reaction_datapool.length, 0));
+        yVals.add(new Entry((float) (100-100*percentile_reaction/stroop_reaction_datapool.length), 1));
 
         ArrayList<String> xVals = new ArrayList<>();
         /*
