@@ -55,14 +55,14 @@ public class MeditateFragment extends Fragment {
 
     AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                stopPlayback();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                startPlayback();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                mAudioManager.abandonAudioFocus(afChangeListener);
-                stopPlayback();
-            }
+        if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            stopPlayback();
+        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+            startPlayback();
+        } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+            mAudioManager.abandonAudioFocus(afChangeListener);
+            stopPlayback();
+        }
         }
     };
 
@@ -123,6 +123,8 @@ public class MeditateFragment extends Fragment {
 
         @Override
         public void run() {
+            MuseHandler.getHandler().resume();
+
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {}
@@ -154,6 +156,7 @@ public class MeditateFragment extends Fragment {
 
             }
             finish = true;
+            MuseHandler.getHandler().pause();
 
 
         }
@@ -168,7 +171,7 @@ public class MeditateFragment extends Fragment {
             public void run() {
 
                 while (!finish) {
-                    MuseHandler.getHandler().startAvgMean();
+                    MuseHandler.getHandler().clearMean();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {}
@@ -177,7 +180,8 @@ public class MeditateFragment extends Fragment {
                         meditation.add(currMean);
                     }
                 }
-                DatabaseHandler.getHandler().updateMeditation(meditation);
+                //DatabaseHandler.getHandler().updateMeditation(meditation);
+                DatabaseHandler.getHandler().addMeditation(meditation);
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                         new GraphFragment()).commit();
 

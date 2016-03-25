@@ -71,7 +71,7 @@ public class CalibrateFragment extends Fragment {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {}
 
-                MuseHandler.getHandler().startAvgMean();
+                MuseHandler.getHandler().clearMean();
 
                 for (int i=20; i>=0; i--) {
                     final int time_left = i;
@@ -84,7 +84,6 @@ public class CalibrateFragment extends Fragment {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {}
-
                 }
 
                 MuseHandler.getHandler().setCalibratedMean();

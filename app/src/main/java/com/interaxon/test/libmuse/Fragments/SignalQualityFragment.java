@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
@@ -178,6 +179,11 @@ public class SignalQualityFragment extends Fragment {
                     } catch (InterruptedException e) {
 
                     }
+                    if (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.DISCONNECTED) {
+                        getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                                new ConnectMuseFragment()).commit();
+                    }
+
                 }
 
                 try {
@@ -185,8 +191,14 @@ public class SignalQualityFragment extends Fragment {
                 } catch (InterruptedException e) {
 
                 }
-                getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
-                        new CalibrateFragment()).commit();
+
+                if (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.CONNECTED) {
+                    getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                            new CalibrateFragment()).commit();
+                } else {
+                    getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                            new ConnectMuseFragment()).commit();
+                }
 
             }
         }).start();

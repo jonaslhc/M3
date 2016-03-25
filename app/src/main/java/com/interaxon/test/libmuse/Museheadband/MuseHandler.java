@@ -59,7 +59,7 @@ public class MuseHandler {
 
     boolean tp9Rdy, fp1Rdy, fp2Rdy, tp10Rdy;
 
-    public MuseHandler (Activity activity) {
+    public MuseHandler(Activity activity) {
 
         WeakReference<Activity> weakActivity = new WeakReference<Activity>(activity);
 
@@ -69,32 +69,32 @@ public class MuseHandler {
         setFileWriter();
     }
 
-    public static MuseHandler initHandler (Activity activity) {
+    public static MuseHandler initHandler(Activity activity) {
 
         mActivity = activity;
 
         if (mMuseHandler == null) {
             mDirectory = mActivity.getBaseContext().getFilesDir();
             mMuseHandler = new MuseHandler(activity);
-            Log.d(TAG,"new handler");
+            Log.d(TAG, "new handler");
             Log.d(TAG, mDirectory.getAbsolutePath());
         }
 
         return mMuseHandler;
     }
 
-    public static MuseHandler getHandler () {
+    public static MuseHandler getHandler() {
         return mMuseHandler;
     }
 
-    public void setFileWriter () {
+    public void setFileWriter() {
         fileWriter = MuseFileFactory.getMuseFileWriter(
                 new File(mDirectory, "new_muse_file.muse"));
         fileWriter.addAnnotationString(1, "Starting muse handler.");
         mDataListener.setFileWriter(fileWriter);
     }
 
-    public String getVersion () {
+    public String getVersion() {
         MuseVersion museVersion = currMuse.getMuseVersion();
         String version = museVersion.getFirmwareType() +
                 " - " + museVersion.getFirmwareVersion() +
@@ -104,15 +104,14 @@ public class MuseHandler {
         return version;
     }
 
-    public ConnectionState getConnectionStatus () {
+    public ConnectionState getConnectionStatus() {
 
         ConnectionState connectionState = mConnectionListener.mCurrent;
 
         return connectionState;
     }
 
-    public void disconnect () {
-
+    public void disconnect() {
         if (currMuse != null) {
             currMuse.disconnect(true);
             fileWriter.addAnnotationString(1, "Disconnect clicked.");
@@ -121,14 +120,21 @@ public class MuseHandler {
         }
     }
 
-    public void pause () {
-        dataTransmission = !dataTransmission;
+    public void pause() {
+        dataTransmission = false;
         if (currMuse != null) {
             currMuse.enableDataTransmission(dataTransmission);
         }
     }
 
-    public boolean connect () {
+    public void resume() {
+        dataTransmission = true;
+        if (currMuse != null) {
+            currMuse.enableDataTransmission(dataTransmission);
+        }
+    }
+
+    public boolean connect() {
 
         //refresh list of muses
         MuseManager.refreshPairedMuses();
@@ -179,8 +185,162 @@ public class MuseHandler {
         currMuse.enableDataTransmission(dataTransmission);
     }
 
-    public ArrayList<Double> getAlphaRelative () {
-       return alphaData;
+    public void clearMean() {
+        tp10Mean.clear();
+        tp9Mean.clear();
+        fp1Mean.clear();
+        fp2Mean.clear();
+        avgMean.clear();
+    }
+
+    public void setCalibratedMean() {
+        calibratedMean = avgMean.getResult();
+    }
+
+    public double getCalibratedMean() {
+        //Log.d(TAG, String.valueOf(avgMean.getResult()));
+        return calibratedMean;
+    }
+
+    public double getTotalMean() {
+        return totalMean;
+    }
+
+
+    /* This function checks whether the signal quality is stable
+     * MAXCHECK value determines how many "good" signals should be acquired before
+     * the signal is considered valid.
+     */
+    int countTp9 = 0;
+    int countTp10 = 0;
+    int countFp1 = 0;
+    int countFp2 = 0;
+
+    final static int MAXCHECK = 20;
+
+    private void getSignalQuality(final ArrayList<Double> data) {
+
+        tp9Rdy = false;
+        tp10Rdy = false;
+        fp1Rdy = false;
+        fp2Rdy = false;
+
+        if (data.get(Eeg.TP9.ordinal()) <= 1) countTp9++;
+        else countTp9 = 0;
+
+        if (data.get(Eeg.TP10.ordinal()) <= 1) countTp10++;
+        else countTp10 = 0;
+
+        if (data.get(Eeg.FP1.ordinal()) <= 1) countFp1++;
+        else countFp1 = 0;
+
+        if (data.get(Eeg.FP2.ordinal()) <= 1) countFp2++;
+        else countFp2 = 0;
+
+        if (countTp9 > MAXCHECK) {
+            tp9Rdy = true;
+        }
+        if (countTp10 > MAXCHECK) {
+            tp10Rdy = true;
+        }
+        if (countFp1 > MAXCHECK) {
+            fp1Rdy = true;
+        }
+        if (countFp2 > MAXCHECK) {
+            fp2Rdy = true;
+        }
+
+
+        //Log.d(TAG, String.valueOf(tp9Rdy));
+
+    }
+
+    public boolean getTp9Rdy() {
+        return tp9Rdy;
+    }
+    public boolean getTp10Rdy() {
+        return tp10Rdy;
+    }
+    public boolean getFp1Rdy() {
+        return fp1Rdy;
+    }
+    public boolean getFp2Rdy() {
+        return fp2Rdy;
+    }
+
+    /* The listeners interact with Muse to grab connection and data info
+     * only receives alpha and horseshoe currently
+     */
+    class DataListener extends MuseDataListener {
+
+        final WeakReference<Activity> activityRef;
+        private MuseFileWriter fileWriter;
+
+        DataListener(final WeakReference<Activity> activityRef) {
+            this.activityRef = activityRef;
+        }
+
+        @Override
+        public void receiveMuseDataPacket(MuseDataPacket p) {
+            switch (p.getPacketType()) {
+                case ALPHA_RELATIVE:
+                    updateAlphaRelative(p.getValues());
+                    break;
+                case HORSESHOE:
+                    getSignalQuality(p.getValues());
+                    break;
+                case BATTERY:
+                    fileWriter.addDataPacket(1, p);
+                    if (fileWriter.getBufferedMessagesSize() > 8096)
+                        fileWriter.flush();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void receiveMuseArtifactPacket(MuseArtifactPacket p) {}
+
+        public void setFileWriter(MuseFileWriter fileWriter) {
+            this.fileWriter = fileWriter;
+        }
+
+        private void updateAlphaRelative(final ArrayList<Double> data) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (Double.isNaN(data.get(Eeg.TP9.ordinal())) || Double.isNaN(data.get(Eeg.TP10.ordinal())) ||
+                            Double.isNaN(data.get(Eeg.FP1.ordinal()))|| Double.isNaN(data.get(Eeg.FP2.ordinal()))) {
+                        Log.d(TAG, "Bad data, please double check how to handle.");
+                        return;
+                    }
+                    tp9Mean.increment(data.get(Eeg.TP9.ordinal()));
+                    fp1Mean.increment(data.get(Eeg.FP1.ordinal()));
+                    fp2Mean.increment(data.get(Eeg.FP2.ordinal()));
+                    tp10Mean.increment(data.get(Eeg.TP10.ordinal()));
+
+                    totalMean = tp9Mean.getResult() + fp1Mean.getResult() +
+                            fp2Mean.getResult() + tp10Mean.getResult();
+
+                    avgMean.increment(totalMean);
+
+                    String s = String.format("%6.4f %6.4f %6.4f %6.4f",
+                            tp9Mean.getResult(), fp1Mean.getResult(),
+                            fp2Mean.getResult(), tp10Mean.getResult());
+
+                    String s2 = String.format("%6.4f %6.4f %6.4f %6.4f",
+                            data.get(Eeg.TP9.ordinal()), data.get(Eeg.FP1.ordinal()),
+                            data.get(Eeg.FP2.ordinal()), data.get(Eeg.TP10.ordinal()));
+
+                    Log.d(TAG, s);
+                    Log.d(TAG, s2);
+
+                }
+            }).start();
+        }
     }
 
     class ConnectionListener extends MuseConnectionListener {
@@ -209,164 +369,4 @@ public class MuseHandler {
         }
     }
 
-    public void startAvgMean () {
-        tp10Mean.clear();
-        tp9Mean.clear();
-        fp1Mean.clear();
-        fp2Mean.clear();
-        avgMean.clear();
-    }
-
-    public void setCalibratedMean (){
-        calibratedMean = avgMean.getResult();
-    }
-
-    public double getCalibratedMean () {
-        //Log.d(TAG, String.valueOf(avgMean.getResult()));
-        return calibratedMean;
-    }
-
-    public double getTotalMean () {
-        return totalMean;
-    }
-
-    class DataListener extends MuseDataListener {
-
-        final WeakReference<Activity> activityRef;
-        private MuseFileWriter fileWriter;
-
-        DataListener(final WeakReference<Activity> activityRef) {
-            this.activityRef = activityRef;
-        }
-
-        @Override
-        public void receiveMuseDataPacket(MuseDataPacket p) {
-            alphaDataRdy = true;
-            switch (p.getPacketType()) {
-                case ALPHA_RELATIVE:
-                    updateAlphaRelative(p.getValues());
-                    updateAlphaRdy();
-                    break;
-                case HORSESHOE:
-                    getSignalQuality(p.getValues());
-                    break;
-                case BATTERY:
-                    fileWriter.addDataPacket(1, p);
-                    if (fileWriter.getBufferedMessagesSize() > 8096)
-                        fileWriter.flush();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        @Override
-        public void receiveMuseArtifactPacket(MuseArtifactPacket p) {
-            if (p.getHeadbandOn() && p.getBlink()) {
-
-            }
-        }
-
-
-        public void setFileWriter(MuseFileWriter fileWriter) {
-            this.fileWriter = fileWriter;
-        }
-
-        public void updateAlphaRdy (){
-            alphaDataRdy = true;
-        }
-
-        private void updateAlphaRelative (final ArrayList<Double> data) {
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    if (data.get(Eeg.TP9.ordinal()) < 0.001|| data.get(Eeg.TP10.ordinal()) < 0.001||
-                            data.get(Eeg.FP1.ordinal()) < 0.001|| data.get(Eeg.FP2.ordinal())< 0.001){
-                        return;
-                    }
-                    tp9Mean.increment(data.get(Eeg.TP9.ordinal()));
-                    fp1Mean.increment(data.get(Eeg.FP1.ordinal()));
-                    fp2Mean.increment(data.get(Eeg.FP2.ordinal()));
-                    tp10Mean.increment(data.get(Eeg.TP10.ordinal()));
-
-                    totalMean = tp9Mean.getResult() + fp1Mean.getResult() +
-                            fp2Mean.getResult() + tp10Mean.getResult();
-
-                    avgMean.increment(totalMean);
-
-                    String s = String.format("%6.4f %6.4f %6.4f %6.4f",
-                            tp9Mean.getResult(), fp1Mean.getResult(),
-                            fp2Mean.getResult(), tp10Mean.getResult());
-
-                    String s2 = String.format("%6.4f %6.4f %6.4f %6.4f",
-                            data.get(Eeg.TP9.ordinal()), data.get(Eeg.FP1.ordinal()),
-                            data.get(Eeg.FP2.ordinal()), data.get(Eeg.TP10.ordinal()));
-
-                    Log.d(TAG, s);
-                    Log.d(TAG, s2);
-
-                }
-            }).start();
-        }
-
-        int countTp9 = 0;
-        int countTp10 = 0;
-        int countFp1 = 0;
-        int countFp2 = 0;
-
-        private void getSignalQuality (final ArrayList<Double> data) {
-
-            tp9Rdy = false;
-            tp10Rdy = false;
-            fp1Rdy = false;
-            fp2Rdy = false;
-
-            if (data.get(Eeg.TP9.ordinal()) <= 1) countTp9++;
-            else countTp9 = 0;
-
-            if (data.get(Eeg.TP10.ordinal()) <= 1) countTp10++;
-            else countTp10 = 0;
-
-            if (data.get(Eeg.FP1.ordinal()) <= 1) countFp1++;
-            else countFp1 = 0;
-
-            if (data.get(Eeg.FP2.ordinal()) <= 1) countFp2++;
-            else countFp2 = 0;
-
-            if (countTp9 > 10) {
-                tp9Rdy = true;
-            }
-            if (countTp10 > 10) {
-                tp10Rdy = true;
-            }
-            if (countFp1 > 10) {
-                fp1Rdy = true;
-            }
-            if (countFp2 > 10) {
-                fp2Rdy = true;
-            }
-
-
-            //Log.d(TAG, String.valueOf(tp9Rdy));
-
-        }
-    }
-
-    public boolean getTp9Rdy () {
-        return tp9Rdy;
-    }
-    public boolean getTp10Rdy () {
-        return tp10Rdy;
-    }
-    public boolean getFp1Rdy () {
-        return fp1Rdy;
-    }
-    public boolean getFp2Rdy () {
-        return fp2Rdy;
-    }
-    public boolean checkDataStatus () {
-        return alphaDataRdy;
-    }
 }
