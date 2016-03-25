@@ -92,8 +92,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="stroop_result_explanation">this will explain your result</string>
-    <string name="stoop_explanation_title">What does your score tell you?</string>
+    <string name="stroop_result_explanation">The Distractibility Task measures your ability to ignore irrelevant, distracting word information. These abilities are improved with meditation, because through this practice you are training your brain to no longer be distracted by internal or external influences.
+</string>
+    <string name="stoop_explanation_title">Distractibility Task</string>
 
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
