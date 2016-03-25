@@ -19,6 +19,8 @@ import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.R;
 import com.interaxon.test.libmuse.StroopActivity;
+import com.interaxon.test.libmuse.StroopInfo.StroopPersonalScore;
+import com.interaxon.test.libmuse.StroopInfo.StroopTabResult;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.w3c.dom.Text;
@@ -91,7 +93,7 @@ public class FinalScore extends Fragment {
         if(neutral_score == 0)
             neutral_score = 1;
 
-        correct_answer.setText(String.format("%6.2f", (float)(test/6*100)));
+        correct_answer.setText(String.format("%6.0f%%", (float)(test/6*100)));
         reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
 
         // update accuracy with specified user_name
@@ -122,8 +124,8 @@ public class FinalScore extends Fragment {
         go_to_results.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-               // Intent intent = new Intent(getActivity(), MyResults.class);
-               // startActivity(intent);
+                Intent intent = new Intent(getActivity(), StroopTabResult.class);
+                startActivity(intent);
             }
         });
 

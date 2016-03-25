@@ -282,13 +282,16 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void addAccuracyData(){
+
+        final int accuracy_percentile = findAccuracyPercentile(profileData.getAccuracy());
+
         ArrayList<Entry> yVals = new ArrayList<>();
         /*
         for(int i = 0; i < yData.length; i++){
             yVals.add(new Entry(yData[i], i));
         }*/
-        yVals.add(new Entry((float) profileData.getAccuracy(), 0));
-        yVals.add(new Entry((float) 0.8, 1));
+        yVals.add(new Entry((float) 100*accuracy_percentile/accuracy_data_pool.length, 0));
+        yVals.add(new Entry((float) (100-100*accuracy_percentile/accuracy_data_pool.length), 1));
 
         ArrayList<String> xVals = new ArrayList<>();
         /*
