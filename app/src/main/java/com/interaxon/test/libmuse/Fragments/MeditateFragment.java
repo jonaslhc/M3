@@ -58,7 +58,7 @@ public class MeditateFragment extends Fragment {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
                 stopPlayback();
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                startPlayback();
+               // startPlayback();
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 mAudioManager.abandonAudioFocus(afChangeListener);
                 stopPlayback();
@@ -190,16 +190,17 @@ public class MeditateFragment extends Fragment {
     public void playAudio(int audioReq){
 
         if (audioReq == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            startPlayback();
+            //startPlayback();
         }
     }
 
+    /*
     private void startPlayback () {
         if (getSessionNum() == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
         else if (getSessionNum() == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
-    }
+    }*/
 
     private void stopPlayback () {
         if (mMediaPlayer.isPlaying()) {
