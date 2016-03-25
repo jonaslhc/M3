@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,14 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
-import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
-import com.interaxon.test.libmuse.MyResults;
 import com.interaxon.test.libmuse.R;
 import com.interaxon.test.libmuse.StroopActivity;
+import com.interaxon.test.libmuse.StroopInfo.StroopTabResult;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.w3c.dom.Text;
 
 /**
  * Created by st924507 on 2016-03-09.
@@ -31,7 +28,7 @@ public class FinalScore extends Fragment {
 
     String TAG = FinalScore.class.getSimpleName();
     TextView correct_answer, reaction_incongruent, reaction_neutral, reaction_result;
-    int q2_incong_ans, q5_incong_ans, q3_neutral_ans, q6_neutral_ans;
+    int q1_cong_ans, q2_incong_ans, q4_cong_ans, q5_incong_ans, q3_neutral_ans, q6_neutral_ans;
     long q2_incong_time, q5_incong_time, q3_neutral_time, q6_neutral_time;
     double incong_score, neutral_score;
     Mean incongruent_mean = new Mean();
@@ -63,6 +60,8 @@ public class FinalScore extends Fragment {
 
         final SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        q1_cong_ans = app_preferences.getInt("answer_value1", 0);
+        q4_cong_ans = app_preferences.getInt("answer_value4", 0);
         q2_incong_ans = app_preferences.getInt("answer_value2", 0);
         q5_incong_ans =  app_preferences.getInt("answer_value5", 0);
         q3_neutral_ans = app_preferences.getInt("answer_value3", 0);
@@ -78,20 +77,19 @@ public class FinalScore extends Fragment {
         neutral_mean.increment(q3_neutral_time);
         neutral_mean.increment(q6_neutral_time);
 
-        incong_score = (double) (q2_incong_ans + q5_incong_ans)/2.0;
-        neutral_score = (double) (q3_neutral_ans + q6_neutral_ans)/2.0;
         Log.e(TAG," incongruent score " + incong_score + " neutral " + neutral_score);
         // divide by 0 case
         if(neutral_score == 0)
             neutral_score = 1;
 
-        correct_answer.setText(String.format("%6.2f", incong_score/neutral_score));
+        correct_answer.setText(String.format("%6.2f%%", 100*(q1_cong_ans + q2_incong_ans + q3_neutral_ans +
+                        q4_cong_ans + q5_incong_ans + q6_neutral_ans)/6.0));
         reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
 
         // update accuracy with specified user_name
         user_name = DatabaseHandler.getHandler().getCurrUser().getName();
-        //db.updateAccuracy(incong_score / neutral_score, user_name);
-        //db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
+        db.updateAccuracy(incong_score / neutral_score, user_name);
+        db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
 
 
         play_again_button = (Button) getActivity().findViewById(R.id.b_play_again);
@@ -116,7 +114,7 @@ public class FinalScore extends Fragment {
         go_to_results.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MyResults.class);
+                Intent intent = new Intent(getActivity(), StroopTabResult.class);
                 startActivity(intent);
             }
         });
