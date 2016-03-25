@@ -99,7 +99,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mLineChart.setPinchZoom(true);
 
         // set an alternative background color
-        mLineChart.setBackgroundColor(Color.LTGRAY);
+        mLineChart.setBackgroundColor(Color.WHITE);
 
         //mLineData = new LineData();
         //mLineData.setValueTextColor(Color.WHITE);

@@ -42,13 +42,14 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             DatabaseHandler.getHandler().updateCurrUser(username);
             usernameSet = true;
 
-        } else if (!calibrated) {
+        } calibrated = true;
+        /*else if (!calibrated) {
             Intent intent = getIntent();
             String calibrate_info = intent.getStringExtra(CalibrateFragment.EXTRA_MESSAGE);
 
             // this line produces a crash, null object reference
             if (calibrate_info.equals("calibrated")) calibrated = true;
-        }
+        }*/
 
         // Set up Showcaseview
         meditation_target = new ViewTarget(R.id.b_meditation, this);
