@@ -72,6 +72,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         });
 
         graphResults();
+
         return view;
     }
 

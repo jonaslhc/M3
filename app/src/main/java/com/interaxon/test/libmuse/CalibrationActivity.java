@@ -53,10 +53,10 @@ public class CalibrationActivity extends FragmentActivity implements OnClickList
 
         if (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.CONNECTED) {
             getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                    new SignalQualityFragment()).commit();
+                    new SignalQualityFragment()).addToBackStack("Adding to Back Stack").commit();
         } else {
             getSupportFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                    new ConnectMuseFragment()).commit();
+                    new ConnectMuseFragment()).addToBackStack("Adding to Back Stack").commit();
         }
     }
 

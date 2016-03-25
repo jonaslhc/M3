@@ -35,8 +35,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_AGE = "age";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_FIRST = "first";
+
+    private static final String COLUMN_STROOP_INDEX = "stroop_index";
+    private static final String COLUMN_STROOP_COUNT = "stroop_count";
     private static final String COLUMN_ACCURACY = "accuracy";
     private static final String COLUMN_REACTION_TIME = "reaction_time";
+
+    private static final String COLUMN_MEDITATION_SESSION_NUM = "meditation_session_num";
+    private static final String COLUMN_MEDITATION_INDEX = "meditation_index";
+    private static final String COLUMN_MEDITATION_COUNT = "meditation_count";
+
     private static final String COLUMN_MEDITATION = "meditation";
 
     private static final String DATABASE_CREATE =
@@ -44,6 +56,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     COLUMN_USERNAME + " TEXT, " +
                     COLUMN_PASSWORD + " TEXT, " +
                     COLUMN_NAME + " TEXT, " +
+                    COLUMN_AGE + " INT, " +
+                    COLUMN_EMAIL + " TEXT, " +
+                    COLUMN_DATE + " TEXT, " +
+                    COLUMN_FIRST + " BOOLEAN, " +
+                    COLUMN_STROOP_INDEX + " INT, " +
+                    COLUMN_STROOP_COUNT + " INT, " +
+                    COLUMN_MEDITATION_SESSION_NUM + " INT, " +
+                    COLUMN_MEDITATION_INDEX + " INT, " +
+                    COLUMN_MEDITATION_COUNT + " INT, " +
                     COLUMN_ACCURACY + " REAL, " +
                     COLUMN_REACTION_TIME + " REAL, " +
                     COLUMN_MEDITATION + " TEXT " +
@@ -70,7 +91,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = mDatabaseHandler.getReadableDatabase();
         DIR_PATH = mContext.getFilesDir().getPath();
         CURR_FILE = db.getPath();
-
 
         Log.d("Database Initialized", CURR_FILE);
         db.close();
@@ -207,6 +227,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return DataList;
     }
 
+    public ArrayList<ProfileData> getMeditationDataList(String username) {
+        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // use cursor to move through the database
+        Cursor cursor = db.query(DATA_TABLE, new String[] {
+                COLUMN_USERNAME,
+                COLUMN_PASSWORD,
+                COLUMN_NAME,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
+        } , null, null, null, null, null, null);
+
+        // do not add first element since it does not contain med info
+        boolean firstpass = false;
+
+        // go through the database and add to the array
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(0).matches(username)){
+                    if (firstpass == false) firstpass = true;
+                    else {
+                        ProfileData CurrUser = new ProfileData(
+                                cursor.getString(0),
+                                cursor.getString(1),
+                                cursor.getString(2),
+                                cursor.getDouble(3),
+                                cursor.getDouble(4),
+                                cursor.getString(5)
+                        );
+                        DataList.add(CurrUser);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        // return the array list
+        return DataList;
+    }
+
     // get one value
     public ProfileData getData(String username) {
 
@@ -220,8 +282,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_ACCURACY,
                 COLUMN_REACTION_TIME,
                 COLUMN_MEDITATION
-        } , COLUMN_USERNAME + "=?", new String[]{ username
-        } , null, null, null, null);
+        }, COLUMN_USERNAME + "=?", new String[]{username
+        }, null, null, null, null);
 
 
         ProfileData data = null;
@@ -271,7 +333,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
         }
 
-
         db.close();
         cursor.close();
 
@@ -289,16 +350,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void updateReactionTime(double value, String username){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_REACTION_TIME,value);
+        cv.put(COLUMN_REACTION_TIME, value);
         db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
     }
 
 
     public void updateMeditation(ArrayList<Double> meditation){
 
-
         Log.d(TAG+"update", meditation.get(0).toString());
-        Log.d(TAG+"update", String.valueOf(meditation.size()));
+        Log.d(TAG + "update", String.valueOf(meditation.size()));
 
         Gson gson = new Gson();
         String inputMeditation = gson.toJson(meditation);
@@ -313,7 +373,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         updateCurrUser(mCurrUser.getUsername());
     }
 
-    public ArrayList<Double> getMeditation(){
+    public void addMeditation(ArrayList<Double> meditation){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Gson gson = new Gson();
+        String inputMeditation = gson.toJson(meditation);
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_MEDITATION, inputMeditation);
+
+        db.insert(DATA_TABLE, null, cv);
+
+        mCurrUser.incrMeditation();
+
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
+        updateCurrUser(mCurrUser.getUsername());
+    }
+
+    /*public ArrayList<Double> getMeditation(){
 
         Log.d(TAG+"get", mCurrUser.getUsername());
 
@@ -321,6 +399,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Type type = new TypeToken<ArrayList<Double>>() {}.getType();
 
         ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
+
+        Log.d(TAG+"get", outputMeditation.get(0).toString());
+        Log.d(TAG+"get", String.valueOf(outputMeditation.size()));
+
+
+        return outputMeditation;
+    }*/
+    public ArrayList<Double> getMeditation(){
+
+
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Double>>() {}.getType();
+
+        ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
+
+
 
         Log.d(TAG+"get", outputMeditation.get(0).toString());
         Log.d(TAG+"get", String.valueOf(outputMeditation.size()));

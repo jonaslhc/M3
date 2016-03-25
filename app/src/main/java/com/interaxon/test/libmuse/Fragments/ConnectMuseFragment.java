@@ -94,7 +94,7 @@ public class ConnectMuseFragment extends Fragment {
                     } catch (InterruptedException e) {
 
                     }
-                    getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
+                    getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                             new SignalQualityFragment()).commit();
                 } else {
                     connectedSign.post(new Runnable() {
