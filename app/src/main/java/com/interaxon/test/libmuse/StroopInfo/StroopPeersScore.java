@@ -50,6 +50,8 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void initReaction() {
+        final int percentile_reaction = findReactionPercentile(profileData.getReaction_time());
+
         mChartReaction = (PieChart) getActivity().findViewById(R.id.pie_chart_peers_reaction);
         mChartReaction.setDescription("");
         mChartReaction.setUsePercentValues(true);
@@ -62,7 +64,7 @@ public class StroopPeersScore extends Fragment {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 if (e == null) return;
-                Toast.makeText(getActivity(), String.format("You are at the %.1f percentile", (float) 100*profileData.getReaction_time()/dummy_reaction_mean),
+                Toast.makeText(getActivity(), String.format("You are at the %fth percentile", (double) 100*percentile_reaction/stroop_reaction_datapool.length),
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -77,6 +79,18 @@ public class StroopPeersScore extends Fragment {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
+    }
+
+    private int findReactionPercentile(double reaction_time) {
+        int i = 0;
+        while(i < stroop_reaction_datapool.length){
+            if(reaction_time < stroop_reaction_datapool[i])
+                i++;
+        }
+        if(i+1 >= stroop_reaction_datapool.length)
+            return stroop_reaction_datapool.length;
+        return i+1;
+
     }
 
     private void addDataReaction() {
@@ -124,6 +138,8 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void initAccuracy() {
+        final int accuracy_percentile = findAccuracyPercentile(profileData.getAccuracy());
+
         mChartAccuracy = (PieChart) getActivity().findViewById(R.id.pie_chart_peers_accuracy);
         mChartAccuracy.setDescription("");
         mChartAccuracy.setUsePercentValues(true);
@@ -138,7 +154,7 @@ public class StroopPeersScore extends Fragment {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 if (e == null) return;
-                Toast.makeText(getActivity(), String.format("You are at the %.1fth percentile", (float) 100*profileData.getAccuracy()/dummy_accuracy_mean),
+                Toast.makeText(getActivity(), String.format("You are at the %fth percentile", (double) 100*accuracy_percentile/accuracy_data_pool.length),
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -151,6 +167,18 @@ public class StroopPeersScore extends Fragment {
         l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         l.setXEntrySpace(7);
         l.setYEntrySpace(5);
+    }
+
+    private int findAccuracyPercentile(double accuracy) {
+        int i = 0;
+        while(i < accuracy_data_pool.length){
+            if(accuracy < accuracy_data_pool[i])
+                i++;
+        }
+
+        if(i + 1 >= accuracy_data_pool.length)
+            return accuracy_data_pool.length;
+        return i + 1;
     }
 
     private void addAccuracyData(){
