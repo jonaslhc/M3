@@ -97,6 +97,7 @@ public class ConnectMuseFragment extends Fragment {
                     getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                             new SignalQualityFragment()).commit();
                 } else {
+                    Log.d("connection", "disconnected");
                     connectedSign.post(new Runnable() {
                         @Override
                         public void run() {

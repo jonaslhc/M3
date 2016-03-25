@@ -44,8 +44,7 @@ public class MuseHandler {
     private boolean dataTransmission = true;
     private MuseFileWriter fileWriter = null;
 
-    private ArrayList<Double> alphaData;
-    private boolean alphaDataRdy;
+    private boolean dataQuality = false;
 
     Mean tp9Mean = new Mean();
     Mean fp1Mean = new Mean();
@@ -255,6 +254,10 @@ public class MuseHandler {
 
     }
 
+    public boolean getDataQuality() {
+        return dataQuality;
+    }
+
     public boolean getTp9Rdy() {
         return tp9Rdy;
     }
@@ -299,6 +302,8 @@ public class MuseHandler {
             }
         }
 
+
+
         @Override
         public void receiveMuseArtifactPacket(MuseArtifactPacket p) {}
 
@@ -314,9 +319,13 @@ public class MuseHandler {
 
                     if (Double.isNaN(data.get(Eeg.TP9.ordinal())) || Double.isNaN(data.get(Eeg.TP10.ordinal())) ||
                             Double.isNaN(data.get(Eeg.FP1.ordinal()))|| Double.isNaN(data.get(Eeg.FP2.ordinal()))) {
-                        Log.d(TAG, "Bad data, please double check how to handle.");
+                        dataQuality = false;
+                        //Log.d(TAG, "Bad data, please double check how to handle.");
                         return;
                     }
+
+                    dataQuality = true;
+
                     tp9Mean.increment(data.get(Eeg.TP9.ordinal()));
                     fp1Mean.increment(data.get(Eeg.FP1.ordinal()));
                     fp2Mean.increment(data.get(Eeg.FP2.ordinal()));

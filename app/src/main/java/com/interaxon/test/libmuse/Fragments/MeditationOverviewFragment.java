@@ -1,22 +1,14 @@
 package com.interaxon.test.libmuse.Fragments;
 
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -29,67 +21,35 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
-import com.interaxon.test.libmuse.Data.ProfileData;
-import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-
-public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
-
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class MeditationOverviewFragment extends Fragment implements OnChartValueSelectedListener {
 
     private LineChart mLineChart;
     private LineData mLineData;
 
-    Button mMenuButton;
-    TextView mResultTextView;
-
-    double percentGood;
-
-    public GraphFragment() {
+    public MeditationOverviewFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_graph, container, false);
+        View view = inflater.inflate(R.layout.fragment_meditation_overview, container, false);
 
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
         mLineChart.setOnChartValueSelectedListener(this);
 
-        percentGood = 0.0;
-
-        mResultTextView = (TextView) view.findViewById(R.id.medidate_result);
-        mResultTextView.setText(String.format("%6.0f%%", percentGood));
-
-        mMenuButton = (Button) view.findViewById(R.id.b_back_menu_med);
-        mMenuButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                returnToMenu();
-            }
-        });
-
-        graphResults();
-
         return view;
     }
-
-    public void returnToMenu () {
-        getFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                new MeditationMenuFragment()).addToBackStack("Add to Back Stack").commit();
-    }
-
-
 
     public void graphResults () {
 
@@ -145,12 +105,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             yVals.add(new Entry((float)curr, i));
             yValsAvg.add(new Entry((float)avg, i));
 
-            if (curr > avg) {
-                percentGood = percentGood + 1.0;
-            }
         }
-
-        percentGood = percentGood/meditationData.size();
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
             largest = avg+Math.abs(avg-smallest);
@@ -223,8 +178,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         rightAxis.setEnabled(false);
     }
 
-
-
     @Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         Log.i("Entry selected", e.toString());
@@ -234,5 +187,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
     }
+
 
 }

@@ -45,7 +45,7 @@ public class CalibrateFragment extends Fragment {
         calibrateStatus = (TextView) view.findViewById(R.id.calibrate);
         calibrateStatus.setTextColor(getResources().getColor(R.color.Grey));
         counterStatus = (TextView) view.findViewById(R.id.count_down);
-        resultStatus = (TextView) view.findViewById(R.id.medidate_result);
+        resultStatus = (TextView) view.findViewById(R.id.back_signalQ);
         calibrateMuse();
 
         return view;
@@ -84,25 +84,17 @@ public class CalibrateFragment extends Fragment {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {}
+
+                    if (!MuseHandler.getHandler().getDataQuality()) {
+                        backToSignalQuality();
+                        return;
+                    }
                 }
 
                 MuseHandler.getHandler().setCalibratedMean();
 
                 if (Double.isNaN(MuseHandler.getHandler().getCalibratedMean())){
-                    calibrateStatus.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            calibrateStatus.setText(getString(R.string.calibratefail));
-                            resultStatus.setText(getString(R.string.back_to_signalQ));
-                        }
-                    });
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-
-                    }
-                    getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
-                            new CalibrateFragment()).commit();
+                    backToSignalQuality();
                 } else {
                     calibrateStatus.post(new Runnable() {
                         @Override
@@ -121,8 +113,21 @@ public class CalibrateFragment extends Fragment {
             }
         }).start();
     }
-    public void checkCalibration () {
+    public void backToSignalQuality () {
+        calibrateStatus.post(new Runnable() {
+            @Override
+            public void run() {
+                calibrateStatus.setText(getString(R.string.calibratefail));
+                resultStatus.setText(getString(R.string.back_to_signalQ));
+            }
+        });
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
 
+        }
+        getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
+                new SignalQualityFragment()).commit();
 
     }
 
