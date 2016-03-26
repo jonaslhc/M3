@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,14 @@ import com.interaxon.test.libmuse.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by st924507 on 2016-03-23.
  */
 public class StroopPeersScore extends Fragment {
 
-    static double[] stroop_reaction_datapool = {1.05600015316281,
+    double[] stroop_reaction_datapool = {1.05600015316281,
             1.29847247966081,
             1.2288096106039,
             1.16167778836988,
@@ -78,7 +80,7 @@ public class StroopPeersScore extends Fragment {
             1.14701616426387,
             1.12068703147899,
     };
-    static double[] accuracy_data_pool = {1,
+    double[] accuracy_data_pool = {1,
             0.99537037037037,
             0.99537037037037,
             0.99537037037037,
@@ -132,8 +134,7 @@ public class StroopPeersScore extends Fragment {
     String TAG = StroopPeersScore.class.getSimpleName();
     static ProfileData profileData;
     DatabaseHandler databaseHandler;
-    private String[] xData = {"Your data", "Your Peers' Data"};
-    private double dummy_accuracy_mean = 0.8, dummy_reaction_mean = 0.5;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.tab_stroop_peers_fragment_layout, container, false);
@@ -162,7 +163,7 @@ public class StroopPeersScore extends Fragment {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 if (e == null) return;
-                Toast.makeText(getActivity(), String.format("You are at the %fth percentile", (double) 100*percentile_reaction/stroop_reaction_datapool.length),
+                Toast.makeText(getActivity(), String.format("You are at the %.0fth percentile", (double) 100*percentile_reaction/stroop_reaction_datapool.length),
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -180,14 +181,17 @@ public class StroopPeersScore extends Fragment {
     }
 
     private int findReactionPercentile(double reaction_time) {
+        Arrays.sort(stroop_reaction_datapool);
         int i = 0;
         while(i < stroop_reaction_datapool.length){
-            if(reaction_time < stroop_reaction_datapool[i])
+            if(reaction_time >= stroop_reaction_datapool[i])
                 i++;
+            else
+                break;
         }
-        if(i+1 >= stroop_reaction_datapool.length)
-            return stroop_reaction_datapool.length;
-        return i+1;
+        Log.e(TAG, "Reaction Percentile" + i);
+
+        return stroop_reaction_datapool.length - i;
 
     }
 
@@ -195,23 +199,15 @@ public class StroopPeersScore extends Fragment {
         final int percentile_reaction = findReactionPercentile(profileData.getReaction_time());
 
         ArrayList<Entry> yVals = new ArrayList<>();
-        /*
-        for(int i = 0; i < yData.length; i++){
-            yVals.add(new Entry(yData[i], i));
-        }*/
-        yVals.add(new Entry((float) 100*percentile_reaction/stroop_reaction_datapool.length, 0));
-        yVals.add(new Entry((float) (100-100*percentile_reaction/stroop_reaction_datapool.length), 1));
+        yVals.add(new Entry((float) percentile_reaction/stroop_reaction_datapool.length, 0));
+        yVals.add(new Entry((float) (1-percentile_reaction/stroop_reaction_datapool.length)+0.01f, 1));
 
         ArrayList<String> xVals = new ArrayList<>();
-        /*
-        for(int i = 0; i < xData.length; i++){
-            xVals.add(xData[i]);
-        }*/
-        xVals.add(profileData.getUsername());
-        xVals.add("Peers' Reaction Score");
+        xVals.add(profileData.getName());
+        xVals.add("Peers' Score");
 
         PieDataSet dataSet = new PieDataSet(yVals, "Reaction Score vs. Peers");
-        dataSet.setSliceSpace(3);
+        dataSet.setSliceSpace(1);
         dataSet.setSelectionShift(5);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -254,7 +250,7 @@ public class StroopPeersScore extends Fragment {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 if (e == null) return;
-                Toast.makeText(getActivity(), String.format("You are at the %fth percentile", (double) 100*accuracy_percentile/accuracy_data_pool.length),
+                Toast.makeText(getActivity(), String.format("You are at the %.0fth percentile", (double) 100*accuracy_percentile/accuracy_data_pool.length),
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -270,15 +266,16 @@ public class StroopPeersScore extends Fragment {
     }
 
     private int findAccuracyPercentile(double accuracy) {
+        Arrays.sort(accuracy_data_pool);
         int i = 0;
         while(i < accuracy_data_pool.length){
-            if(accuracy < accuracy_data_pool[i])
+            if(accuracy >= accuracy_data_pool[i])
                 i++;
+            else
+                break;
         }
 
-        if(i + 1 >= accuracy_data_pool.length)
-            return accuracy_data_pool.length;
-        return i + 1;
+        return i;
     }
 
     private void addAccuracyData(){
@@ -286,23 +283,15 @@ public class StroopPeersScore extends Fragment {
         final int accuracy_percentile = findAccuracyPercentile(profileData.getAccuracy());
 
         ArrayList<Entry> yVals = new ArrayList<>();
-        /*
-        for(int i = 0; i < yData.length; i++){
-            yVals.add(new Entry(yData[i], i));
-        }*/
-        yVals.add(new Entry((float) 100*accuracy_percentile/accuracy_data_pool.length, 0));
-        yVals.add(new Entry((float) (100-100*accuracy_percentile/accuracy_data_pool.length), 1));
+        yVals.add(new Entry((float) accuracy_percentile/accuracy_data_pool.length, 0));
+        yVals.add(new Entry((float) (1-accuracy_percentile/accuracy_data_pool.length)+0.01f, 1));
 
         ArrayList<String> xVals = new ArrayList<>();
-        /*
-        for(int i = 0; i < xData.length; i++){
-            xVals.add(xData[i]);
-        }*/
         xVals.add(profileData.getUsername());
-        xVals.add("Peers'Score");
+        xVals.add("Peers");
 
         PieDataSet dataSet = new PieDataSet(yVals, "Accuracy Score vs. Peers");
-        dataSet.setSliceSpace(3);
+        dataSet.setSliceSpace(1);
         dataSet.setSelectionShift(5);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
