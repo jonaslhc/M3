@@ -1,7 +1,10 @@
 package com.interaxon.test.libmuse.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -30,6 +33,24 @@ public class CalibrateFragment extends Fragment {
     TextView calibrateStatus;
     TextView counterStatus;
     TextView resultStatus;
+    private AudioManager mAudioManager;
+    private MediaPlayer mMediaPlayer;
+
+
+    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                stopPlayback();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                startPlayback();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                mAudioManager.abandonAudioFocus(afChangeListener);
+                stopPlayback();
+            }
+        }
+    };
+
+
 
     public CalibrateFragment() {
         // Required empty public constructor
@@ -41,6 +62,9 @@ public class CalibrateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calibrate, container, false);
+
+        this.getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        mAudioManager = (AudioManager) this.getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         calibrateStatus = (TextView) view.findViewById(R.id.calibrate);
         calibrateStatus.setTextColor(getResources().getColor(R.color.Grey));
@@ -64,6 +88,7 @@ public class CalibrateFragment extends Fragment {
                     @Override
                     public void run() {
                         calibrateStatus.setText(getString(R.string.calibratestart));
+
                     }
                 });
 
@@ -72,6 +97,14 @@ public class CalibrateFragment extends Fragment {
                 } catch (InterruptedException e) {}
 
                 MuseHandler.getHandler().clearMean();
+
+
+                //start running audio
+                int audioReq = mAudioManager.requestAudioFocus(afChangeListener,
+                        AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN);
+
+                playAudio(audioReq);
 
                 for (int i=20; i>=0; i--) {
                     final int time_left = i;
@@ -136,4 +169,25 @@ public class CalibrateFragment extends Fragment {
         intent.putExtra(EXTRA_MESSAGE, "calibrated");
         startActivity(intent);
     }
+
+
+    public void playAudio(int audioReq){
+
+        if (audioReq == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            startPlayback();
+        }
+    }
+
+    private void startPlayback () {
+        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.calibration_1);
+        mMediaPlayer.setLooping(false);
+        mMediaPlayer.start();
+    }
+
+    private void stopPlayback () {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
+    }
+
 }
