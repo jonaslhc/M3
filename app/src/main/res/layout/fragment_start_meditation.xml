@@ -12,6 +12,7 @@
         android:background="@color/Black"
         android:padding="5dp"
         android:textColor="@color/White"
+        android:text="Session 1"
         android:layout_margin="5dp"
         android:layout_gravity="center"
         android:layout_weight="1" />
@@ -24,7 +25,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 2"/>
     <Button
         android:id="@+id/b_med3"
         android:layout_width="@dimen/button"
@@ -34,7 +36,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 3"/>
     <Button
         android:id="@+id/b_med4"
         android:layout_width="@dimen/button"
@@ -44,7 +47,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 4"/>
     <Button
         android:id="@+id/b_med5"
         android:layout_width="@dimen/button"
@@ -54,7 +58,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 5"/>
     <Button
         android:id="@+id/b_med6"
         android:layout_width="@dimen/button"
@@ -64,7 +69,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 6"/>
     <Button
         android:id="@+id/b_med7"
         android:layout_width="@dimen/button"
@@ -74,7 +80,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 7"/>
     <Button
         android:id="@+id/b_med8"
         android:layout_width="@dimen/button"
@@ -84,7 +91,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 8"/>
     <Button
         android:id="@+id/b_med9"
         android:layout_width="@dimen/button"
@@ -94,7 +102,8 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 9"/>
     <Button
         android:id="@+id/b_med10"
         android:layout_width="@dimen/button"
@@ -104,5 +113,18 @@
         android:textColor="@color/White"
         android:layout_margin="5dp"
         android:layout_gravity="center"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:text="Session 10"/>
+    <Button
+        android:id="@+id/back_to_menu"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Main Menu"
+        android:layout_gravity="center"
+        android:textColor="@color/White"
+        android:layout_weight="1"
+        android:onClick="Back"
+        android:background="@drawable/blue_button"
+        style="@style/ButtonText"/>
+
 </LinearLayout>
