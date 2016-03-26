@@ -149,7 +149,7 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void initReaction() {
-        final int percentile_reaction = findReactionPercentile(profileData.getReaction_time());
+        final int percentile_reaction = findReactionPercentile(profileData.getReactionTime());
 
         mChartReaction = (PieChart) getActivity().findViewById(R.id.pie_chart_peers_reaction);
         mChartReaction.setDescription("");
@@ -196,7 +196,7 @@ public class StroopPeersScore extends Fragment {
     }
 
     private void addDataReaction() {
-        final int percentile_reaction = findReactionPercentile(profileData.getReaction_time());
+        final int percentile_reaction = findReactionPercentile(profileData.getReactionTime());
 
         ArrayList<Entry> yVals = new ArrayList<>();
         yVals.add(new Entry((float) percentile_reaction/stroop_reaction_datapool.length, 0));

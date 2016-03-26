@@ -40,8 +40,6 @@ public class FinalScore extends Fragment {
     Button play_again_button, back_to_menu, go_to_results;
     MenuActivity menuActivity;
     String user_name;
-    DatabaseHandler db;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,7 +50,6 @@ public class FinalScore extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         menuActivity = new MenuActivity();
-        db = DatabaseHandler.getHandler();
         initView();
     }
 
@@ -89,15 +86,21 @@ public class FinalScore extends Fragment {
         incong_score = (double) (q2_incong_ans + q5_incong_ans)/2.0;
         neutral_score = (double) (q3_neutral_ans + q6_neutral_ans)/2.0;
         Log.e(TAG," incongruent score " + incong_score + " neutral " + neutral_score);
+
         // divide by 0 case
         if(neutral_score == 0)
             neutral_score = 1;
 
-        correct_answer.setText(String.format("%6.0f%%", (float)(test/6*100)));
+        correct_answer.setText(String.format("%6.0f%%", (float) (test / 6 * 100)));
         reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
 
         // update accuracy with specified user_name
-        user_name = DatabaseHandler.getHandler().getCurrUser().getName();
+        double reaction_time = (incongruent_mean.getResult()/neutral_mean.getResult());
+        double accuracy = incong_score / neutral_score;
+
+        DatabaseHandler.getHandler().addStroop(reaction_time, accuracy);
+
+        //user_name = DatabaseHandler.getHandler().getCurrUser().getName();
         //db.updateAccuracy(incong_score / neutral_score, user_name);
         //db.updateReactionTime((incongruent_mean.getResult()/neutral_mean.getResult()), user_name);
 

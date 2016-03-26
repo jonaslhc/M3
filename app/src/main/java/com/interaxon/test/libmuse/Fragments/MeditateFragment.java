@@ -80,8 +80,8 @@ public class MeditateFragment extends Fragment {
         return fragment;
     }
 
-    public int getSessionNum() {
-        return getArguments().getInt("session_num", 0);
+    public void getSessionNum() {
+        session_num = getArguments().getInt("session_num", 0);
     }
 
     @Override
@@ -89,6 +89,8 @@ public class MeditateFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meditate, container, false);
+
+        getSessionNum();
 
         counterStatus = (TextView) view.findViewById(R.id.count_down_med);
         messageDisplay = (TextView) view.findViewById(R.id.meditate);
@@ -181,7 +183,7 @@ public class MeditateFragment extends Fragment {
                     }
                 }
                 //DatabaseHandler.getHandler().updateMeditation(meditation);
-                DatabaseHandler.getHandler().addMeditation(meditation);
+                DatabaseHandler.getHandler().addMeditation(meditation, session_num);
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                         new GraphFragment()).commit();
 
@@ -199,8 +201,8 @@ public class MeditateFragment extends Fragment {
     }
 
     private void startPlayback () {
-        if (getSessionNum() == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
-        else if (getSessionNum() == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
+        if (session_num == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }

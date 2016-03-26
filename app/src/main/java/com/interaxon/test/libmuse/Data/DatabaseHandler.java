@@ -26,7 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static String DIR_PATH;
     private static String CURR_FILE;
 
-    private ProfileData mCurrUser;
+    private static ProfileData mCurrUser;
 
     private static final String DATABASE_NAME = "profiles.db";
     private static final int DATABASE_VERSION = 2;
@@ -117,6 +117,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.d(TAG, username);
     }
 
+    public void setCurrUser (ProfileData currUser) {
+        updateCurrUser(currUser.getUsername());
+    }
+
     public ProfileData getCurrUser () {
         return mCurrUser;
     }
@@ -157,16 +161,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // add new data to the table
-    public void addData(ProfileData newUser) {
+    public void addUser(ProfileData newUser) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, newUser.getUsername());
         values.put(COLUMN_PASSWORD, newUser.getPassword());
         values.put(COLUMN_NAME, newUser.getName());
-        values.put(COLUMN_ACCURACY, newUser.getAccuracy());
-        values.put(COLUMN_REACTION_TIME, newUser.getReaction_time());
-        values.put(COLUMN_MEDITATION, newUser.getMeditation());
+        values.put(COLUMN_AGE, newUser.getAge());
+        values.put(COLUMN_EMAIL, newUser.getEmail());
 
         db.insert(DATA_TABLE, null, values);
         db.close();
@@ -209,7 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } , null, null, null, null, null, null);
 
         // go through the database and add to the array
-        if (cursor.moveToFirst()) {
+       /* if (cursor.moveToFirst()) {
             do {
                 ProfileData CurrUser = new ProfileData(
                         cursor.getString(0),
@@ -221,7 +224,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 );
                 DataList.add(CurrUser);
             } while (cursor.moveToNext());
-        }
+        }*/
 
         // return the array list
         return DataList;
@@ -235,28 +238,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[]{
+        Cursor cursor = db.query(DATA_TABLE, new String[] {
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
+                COLUMN_AGE,
+                COLUMN_EMAIL,
+                COLUMN_DATE,
+                COLUMN_FIRST,
+                COLUMN_STROOP_INDEX,
+                COLUMN_STROOP_COUNT,
+                COLUMN_MEDITATION_SESSION_NUM,
+                COLUMN_MEDITATION_INDEX,
+                COLUMN_MEDITATION_COUNT,
                 COLUMN_ACCURACY,
                 COLUMN_REACTION_TIME,
                 COLUMN_MEDITATION
-        }, COLUMN_USERNAME + "=?", new String[]{username
+        } , COLUMN_USERNAME + "=?", new String[]{username
         }, null, null, null, null);
-
 
         ProfileData data = null;
 
         // go through the database and add to the array
-        if (cursor.moveToFirst()) {
+       if (cursor.moveToFirst()) {
             data = new ProfileData(
-                    cursor.getString(0), //username
-                    cursor.getString(1), //password
-                    cursor.getString(2),  //name
-                    cursor.getDouble(3),  //accuracy
-                    cursor.getDouble(4),   // reaction time
-                    cursor.getString(5) //meditation
+                    cursor.getString(0), // username
+                    cursor.getString(1), // password
+                    cursor.getString(2), // name
+                    cursor.getInt(3), // age
+                    cursor.getString(4), // email
+                    cursor.getString(5), // date
+                    cursor.getInt(6), // first
+                    cursor.getInt(7), // stroop index
+                    cursor.getInt(8), // stroop count
+                    cursor.getInt(9), // meditation session #
+                    cursor.getInt(10), // meditation index
+                    cursor.getInt(11), // meditation count
+                    cursor.getInt(12), // accuracy
+                    cursor.getInt(13), // reaction time
+                    cursor.getString(14) // meditation
             );
         }
 
@@ -300,64 +320,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public void updateAccuracy(double value, String username){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_ACCURACY, value);
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
-    }
-    public void updateReactionTime(double value, String username){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_REACTION_TIME, value);
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
-    }
-
-
-    public void updateMeditation(ArrayList<Double> meditation){
-
-        Log.d(TAG+"update", meditation.get(0).toString());
-        Log.d(TAG + "update", String.valueOf(meditation.size()));
-
-        Gson gson = new Gson();
-        String inputMeditation = gson.toJson(meditation);
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MEDITATION, inputMeditation);
-
-        Log.d(TAG + "update", inputMeditation);
-
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
-        updateCurrUser(mCurrUser.getUsername());
-    }
-
-    public void addMeditation(ArrayList<Double> meditation){
+    public void addStroop(double time, double accuracy) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Gson gson = new Gson();
-        String inputMeditation = gson.toJson(meditation);
-
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_MEDITATION, inputMeditation);
         cv.put(COLUMN_USERNAME, mCurrUser.getUsername());
+        cv.put(COLUMN_STROOP_INDEX, mCurrUser.getStroopCount()+1);
+        cv.put(COLUMN_REACTION_TIME, time);
+        cv.put(COLUMN_ACCURACY, accuracy);
 
         db.insert(DATA_TABLE, null, cv);
 
+        mCurrUser.incrStroop();
         updateCurrUser(mCurrUser.getUsername());
+    }
 
+
+    public void addMeditation(ArrayList<Double> meditation, int session_number){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Gson gson = new Gson();
+        String inputMeditation = gson.toJson(meditation);
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_USERNAME, mCurrUser.getUsername());
+        cv.put(COLUMN_MEDITATION_INDEX, mCurrUser.getMeditationCount()+1);
+        cv.put(COLUMN_MEDITATION, inputMeditation);
+        cv.put(COLUMN_MEDITATION_SESSION_NUM, session_number);
+
+        db.insert(DATA_TABLE, null, cv);
+
+        mCurrUser.setMeditation(inputMeditation);
         mCurrUser.incrMeditation();
-
-
+        //updateCurrUser(mCurrUser.getUsername());
     }
 
     public ArrayList<Double> getLatestMeditation(){
 
-        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
-
-        String username = getCurrUser().getUsername();
+        /*String username = getCurrUser().getUsername();
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -411,15 +413,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
             } while (cursor.moveToNext());
         }
-
+*/
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Double>>() {}.getType();
 
-        ArrayList<Double> outputMeditation = gson.fromJson(lastData.getMeditation(), type);
-
-        Log.d(TAG + "get", outputMeditation.get(0).toString());
-        Log.d(TAG + "get", String.valueOf(outputMeditation.size()));
-
+        ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
 
         return outputMeditation;
     }
@@ -434,7 +432,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[] {
+        Cursor cursor = db.query(DATA_TABLE, new String[]{
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
@@ -450,7 +448,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_ACCURACY,
                 COLUMN_REACTION_TIME,
                 COLUMN_MEDITATION
-        } , null, null, null, null, null, null);
+        }, null, null, null, null, null, null);
 
         // do not add first element since it does not contain med info
         boolean firstpass = false;
@@ -488,4 +486,107 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return DataList;
     }
 
+    public double getLatestAccuracy() {
+       //
+        return 0.0;
+    }
+    public double getLatestReactionTime() {
+        //
+        return 0.0;
+    }
+
+    public ArrayList<ProfileData> getStroopList() {
+        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
+
+        String username = getCurrUser().getUsername();
+
+        Log.d("getmeditationlist", username);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // use cursor to move through the database
+        Cursor cursor = db.query(DATA_TABLE, new String[]{
+                COLUMN_USERNAME,
+                COLUMN_PASSWORD,
+                COLUMN_NAME,
+                COLUMN_AGE,
+                COLUMN_EMAIL,
+                COLUMN_DATE,
+                COLUMN_FIRST,
+                COLUMN_STROOP_INDEX,
+                COLUMN_STROOP_COUNT,
+                COLUMN_MEDITATION_SESSION_NUM,
+                COLUMN_MEDITATION_INDEX,
+                COLUMN_MEDITATION_COUNT,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
+        }, null, null, null, null, null, null);
+
+        // do not add first element since it does not contain med info
+        boolean firstpass = false;
+
+        // go through the database and add to the array
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(0).matches(username)){
+                    if (firstpass == false) firstpass = true;
+                    else {
+                        ProfileData CurrUser = new ProfileData(
+                                cursor.getString(0), // username
+                                cursor.getString(1), // password
+                                cursor.getString(2), // name
+                                cursor.getInt(3), // age
+                                cursor.getString(4), // email
+                                cursor.getString(5), // date
+                                cursor.getInt(6), // first
+                                cursor.getInt(7), // stroop index
+                                cursor.getInt(8), // stroop count
+                                cursor.getInt(9), // meditation session #
+                                cursor.getInt(10), // meditation index
+                                cursor.getInt(11), // meditation count
+                                cursor.getInt(12), // accuracy
+                                cursor.getInt(13), // reaction time
+                                cursor.getString(14) // meditation
+                        );
+                        DataList.add(CurrUser);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        // return the array list
+        return DataList;
+    }
+
+    // phasing these out
+    public void updateMeditation(ArrayList<Double> meditation){
+
+        Log.d(TAG+"update", meditation.get(0).toString());
+        Log.d(TAG + "update", String.valueOf(meditation.size()));
+
+        Gson gson = new Gson();
+        String inputMeditation = gson.toJson(meditation);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_MEDITATION, inputMeditation);
+
+        Log.d(TAG + "update", inputMeditation);
+
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
+        updateCurrUser(mCurrUser.getUsername());
+    }
+    public void updateAccuracy(double value, String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_ACCURACY, value);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
+    }
+    public void updateReactionTime(double value, String username){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_REACTION_TIME, value);
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{username});
+    }
 }

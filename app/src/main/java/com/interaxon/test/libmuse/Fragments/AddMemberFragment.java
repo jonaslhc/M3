@@ -3,6 +3,7 @@ package com.interaxon.test.libmuse.Fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,9 @@ public class AddMemberFragment extends Fragment {
                         username.getText().toString().equals("")  || password.getText().toString().equals("")  ||
                         password2.getText().toString().equals(""))  {
                     Toast.makeText(getActivity(), "Please complete the form.",Toast.LENGTH_SHORT).show();
-                } else if (password.getText().toString().equals(password2.getText().toString())) {
+                } else if (!password.getText().toString().equals(password2.getText().toString())) {
+                    Log.d("password check", password.getText().toString());
+                    Log.d("passwrod check 2", password2.getText().toString());
                     Toast.makeText(getActivity(), "Your passwords do not match.",Toast.LENGTH_SHORT).show();
                 } else {
                     addMember();

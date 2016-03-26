@@ -69,7 +69,7 @@ public class StroopPersonalScore extends Fragment {
         profileData = databaseHandler.getHandler().getData(DatabaseHandler.getHandler().getCurrUser().getName());
 
         last_accuracy = profileData.getAccuracy();
-        last_reaction_time = profileData.getReaction_time();
+        last_reaction_time = profileData.getReactionTime();
 
         XAxis horizontal_axis = mChart.getXAxis();
         YAxis vertical_axis = mChart.getAxis(YAxis.AxisDependency.LEFT);
@@ -92,7 +92,7 @@ public class StroopPersonalScore extends Fragment {
 
         // Populate with values
         accuracy.add(new BarEntry((float) profileData.getAccuracy(), 0));
-        reaction_time.add(new BarEntry((float) profileData.getReaction_time(), 0));
+        reaction_time.add(new BarEntry((float) profileData.getReactionTime(), 0));
 
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");

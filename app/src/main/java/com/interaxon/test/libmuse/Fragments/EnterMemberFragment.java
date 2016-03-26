@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.interaxon.test.libmuse.Data.DatabaseHandler;
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.R;
 
 
 public class EnterMemberFragment extends Fragment {
+    EditText username, password;
 
 
     public EnterMemberFragment() {
@@ -32,16 +35,19 @@ public class EnterMemberFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_enter_member, container, false);
 
-        final EditText username = (EditText)view.findViewById(R.id.enter_existing_username);
-        final EditText password = (EditText)view.findViewById(R.id.enter_existing_password);
+        username = (EditText)view.findViewById(R.id.enter_existing_username);
+        password = (EditText)view.findViewById(R.id.enter_existing_password);
 
 
         Button check_user = (Button)view.findViewById(R.id.b_check_member);
         check_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ProfileData user = new ProfileData(username.getText().toString(), password.getText().toString(), "", 0.0, 0.0, null);
-                checkMember(user);
+                if (username.getText().toString().equals("")  || password.getText().toString().equals(""))  {
+                    Toast.makeText(getActivity(), "Please complete the form.", Toast.LENGTH_SHORT).show();
+                } else {
+                    checkMember();
+                }
             }
         });
 
@@ -55,7 +61,10 @@ public class EnterMemberFragment extends Fragment {
         return view;
     }
 
-    public void checkMember (ProfileData user) {
+    public void checkMember () {
+
+        ProfileData user = new ProfileData(username.getText().toString(),
+                password.getText().toString(), null, 0, null);
         mListener.CheckMemberListener(user);
     }
 

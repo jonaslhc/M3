@@ -14,7 +14,6 @@ import com.interaxon.test.libmuse.Fragments.MainPageFragment;
 
 public class ProfileActivity extends FragmentActivity implements EnterMemberFragment.CheckMemberListener, AddMemberFragment.NewMemberListener {
 
-    public final static String EXTRA_MESSAGE = "USER INFORMATION";
     Context mContext = null;
 
     @Override
@@ -26,10 +25,10 @@ public class ProfileActivity extends FragmentActivity implements EnterMemberFrag
 
         DatabaseHandler.initHandler(mContext);
         //DatabaseHandler.getHandler().deleteDatabase();
+        //DatabaseHandler.initHandler(mContext);
 
         getSupportFragmentManager().beginTransaction().add(R.id.frag_container,
                 new MainPageFragment()).addToBackStack(null).commit();
-
     }
 
     @Override
@@ -40,9 +39,9 @@ public class ProfileActivity extends FragmentActivity implements EnterMemberFrag
                 new MainPageFragment()).addToBackStack(null).commit();
     }
 
-    public void StartMenuActivity(String username) {
+    public void StartMenuActivity(ProfileData member_info) {
+        DatabaseHandler.getHandler().setCurrUser(member_info);
         Intent intent = new Intent(this, MenuActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, username);
         startActivity(intent);
     }
 
@@ -51,13 +50,13 @@ public class ProfileActivity extends FragmentActivity implements EnterMemberFrag
     //////////////////////////
 
     public void NewMemberListener (ProfileData member_info) {
-        DatabaseHandler.getHandler().addData(member_info);
-        StartMenuActivity(member_info.getUsername());
+        DatabaseHandler.getHandler().addUser(member_info);
+        StartMenuActivity(member_info);
     }
 
     public void CheckMemberListener (ProfileData member_info) {
         if (DatabaseHandler.getHandler().checkUser(member_info)) {
-            StartMenuActivity(member_info.getUsername());
+            StartMenuActivity(member_info);
         } else {
             Toast toast = Toast.makeText(mContext, "Wrong Password.", Toast.LENGTH_SHORT);
             toast.show();

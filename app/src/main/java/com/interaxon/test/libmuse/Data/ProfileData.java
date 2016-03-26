@@ -63,17 +63,6 @@ public class ProfileData {
 
     }
 
-
-    public ProfileData(String username, String password, String name,
-                       double accuracy, double reaction_time, String meditation) {
-        this.username = username;
-        this.name = name;
-        this.password = password;
-        this.accuracy = accuracy;
-        this.reaction_time = reaction_time;
-        this.meditation = meditation;
-    }
-
     // add a new user
     // initialize to be "first time user" until 1st stroop completed
     // initilize the stroop and meditation count to 0
@@ -94,12 +83,12 @@ public class ProfileData {
     public void incrStroop() {
         this.stroop_count++;
     }
-
-
-    public void AddStroop (int index, double accuracy, double reaction_time) {
-        this.stroop_index = index;
+    public void setMeditation(String meditation) {
+        this.meditation = meditation;
+    }
+    public void setStroop(double time, double accuracy) {
+        this.reaction_time = time;
         this.accuracy = accuracy;
-        this.reaction_time = reaction_time;
     }
 
     // get functions for data
@@ -109,11 +98,12 @@ public class ProfileData {
     public String getEmail() {return email;}
     public int getAge () {return age;}
     public String getDate() {return date;}
+    public boolean getFirst() {return first;}
 
     public int getStroopIndex() {return stroop_index;}
     public int getStroopCount () {return stroop_count;}
     public double getAccuracy() {return accuracy;}
-    public double getReaction_time() {return reaction_time;}
+    public double getReactionTime() {return reaction_time;}
 
     public int getMeditationIndex() {return meditation_index;}
     public int getMeditationCount() {return meditation_count;}
