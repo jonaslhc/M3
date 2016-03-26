@@ -27,6 +27,25 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/age"
+        android:layout_weight="1"
+        android:layout_gravity="left"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+    <EditText
+        android:id="@+id/enter_age"
+        android:textColor="@color/Grey"
+        android:inputType="number"
+        android:hint="@string/enter_age"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/username"
         android:layout_weight="1"
         android:layout_gravity="left"
@@ -64,7 +83,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/enter_password2"
+        android:text="@string/password2"
         android:layout_weight="1"
         android:layout_gravity="left"
         android:textSize="18sp"

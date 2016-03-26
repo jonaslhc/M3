@@ -34,12 +34,6 @@ public class ProfileData {
 
     }
 
-    // temp - remove eventually
-    public ProfileData(String username, String password, String name) {
-        this.username = username;
-        this.name = name;
-        this.password = password;
-    }
     // add a new data
     public ProfileData(String username, String password, String name, int age, String email,
                        String date, int first_time,

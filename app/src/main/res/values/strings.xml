@@ -6,15 +6,18 @@
     <string name="new_member">New Member</string>
     <string name="old_member">Already a Member</string>
     <string name="add_member">Sign Me Up!</string>
-    <string name="enter_name">First and Last Name</string>
-    <string name="enter_username">Create Username</string>
-    <string name="enter_password">Create Password</string>
-    <string name="enter_password2">Confirm Password</string>
 
+    <string name="enter_name">First and Last Name</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_password2">Confirm Password</string>
+    <string name="enter_age">Enter Age</string>
 
     <string name="name">Name: </string>
+    <string name="age">Age: </string>
     <string name="username">Username: </string>
     <string name="password">Password: </string>
+    <string name="password2">Confirm Password: </string>
 
     <string name="find_me">Sign In</string>
     <string name="calibrate_button">Start Calibration</string>

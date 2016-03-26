@@ -114,7 +114,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         Typeface tf = Typeface.DEFAULT;
 
-        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getMeditation();
+        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getLatestMeditation();
 
         double second = 0.0;
         double largest = 0.0;

@@ -80,14 +80,9 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         // set an alternative background color
         mLineChart.setBackgroundColor(Color.WHITE);
 
-        //mLineData = new LineData();
-        //mLineData.setValueTextColor(Color.WHITE);
-
         Typeface tf = Typeface.DEFAULT;
-        //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
-
-        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getMeditation();
+        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getLatestMeditation();
 
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < meditationData.size(); i++) {

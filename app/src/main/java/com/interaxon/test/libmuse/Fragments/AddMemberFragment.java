@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.R;
 
 public class AddMemberFragment extends Fragment {
+
+    EditText name, age, username, password, password2;
 
     public AddMemberFragment() {
         // Required empty public constructor
@@ -30,11 +33,11 @@ public class AddMemberFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_member, container, false);
 
-        final EditText name = (EditText)view.findViewById(R.id.enter_name);
-        final EditText username = (EditText)view.findViewById(R.id.enter_username);
-        final EditText password = (EditText)view.findViewById(R.id.enter_password);
-        final EditText password2 = (EditText)view.findViewById(R.id.enter_password2);
-
+        name = (EditText)view.findViewById(R.id.enter_name);
+        age = (EditText) view.findViewById(R.id.enter_age);
+        username = (EditText)view.findViewById(R.id.enter_username);
+        password = (EditText)view.findViewById(R.id.enter_password);
+        password2 = (EditText)view.findViewById(R.id.enter_password2);
 
         Button old_user = (Button)view.findViewById(R.id.b_back_old_member);
         old_user.setOnClickListener(new View.OnClickListener() {
@@ -48,15 +51,27 @@ public class AddMemberFragment extends Fragment {
         add_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMember (new ProfileData(username.getText().toString(),
-                        password.getText().toString(), name.getText().toString(), 0.0, 0.0, null));
+
+                if (name.getText().toString().equals("") || age.getText().toString().equals("")  ||
+                        username.getText().toString().equals("")  || password.getText().toString().equals("")  ||
+                        password2.getText().toString().equals(""))  {
+                    Toast.makeText(getActivity(), "Please complete the form.",Toast.LENGTH_SHORT).show();
+                } else if (password.getText().toString().equals(password2.getText().toString())) {
+                    Toast.makeText(getActivity(), "Your passwords do not match.",Toast.LENGTH_SHORT).show();
+                } else {
+                    addMember();
+                }
             }
         });
 
         return view;
     }
 
-    public void addMember(ProfileData newMember) {
+    public void addMember() {
+
+        ProfileData newMember = new ProfileData(username.getText().toString(), password.getText().toString(),
+                name.getText().toString(), Integer.parseInt(age.getText().toString()), null);
+
         mListener.NewMemberListener(newMember);
         this.getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
