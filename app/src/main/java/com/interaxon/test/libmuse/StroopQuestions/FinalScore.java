@@ -50,7 +50,12 @@ public class FinalScore extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         menuActivity = new MenuActivity();
+        clearFirstTimeUser();
         initView();
+    }
+
+    private void clearFirstTimeUser () {
+        DatabaseHandler.getHandler().updateFirst();
     }
 
     private void initView() {
@@ -91,7 +96,7 @@ public class FinalScore extends Fragment {
         if(neutral_score == 0)
             neutral_score = 1;
 
-        correct_answer.setText(String.format("%6.0f%%", (float) (test / 6 * 100)));
+        correct_answer.setText(String.format("%6.0f%%", (float) ((float)test / 6.0 * 100)));
         reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
 
         // update accuracy with specified user_name

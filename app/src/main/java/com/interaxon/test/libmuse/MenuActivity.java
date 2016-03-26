@@ -37,22 +37,6 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 " " +DatabaseHandler.getHandler().getCurrUser().getName();
         welcome.setText(welcomeMsg);
 
-        // Showcaseview only when it's user's first time
-        if (DatabaseHandler.getHandler().getCurrUser().getFirst()) {
-            meditation_target = new ViewTarget(R.id.b_meditation, this);
-            stroop_target = new ViewTarget(R.id.b_stroop, this);
-            profile_target = new ViewTarget(R.id.b_profile, this);
-
-            showcaseView = new ShowcaseView.Builder(this)
-                    .setTarget(Target.NONE)
-                    .setOnClickListener(this)
-                    .setContentTitle("Walk Through")
-                    .setContentText("This will guide you through the correct usage of our app")
-                    .setStyle(R.style.CustomShowcaseTheme2)
-                    .build();
-            showcaseView.setButtonText("OK");
-        }
-
         overviewButton = (Button) findViewById(R.id.b_profile);
         overviewButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +54,9 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         });
 
         stroopButton = (Button) findViewById(R.id.b_stroop);
-        stroopButton.setOnClickListener(new View.OnClickListener(){
+        stroopButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 // 1. Instantiate an AlertDialog.Builder with its constructor
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
                 // 2. Chain together various setter methods to set the dialog characteristics
@@ -85,6 +69,34 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 }).create().show();
             }
         });
+
+        // Showcaseview only when it's user's first time
+        meditation_target = new ViewTarget(R.id.b_meditation, this);
+        stroop_target = new ViewTarget(R.id.b_stroop, this);
+        profile_target = new ViewTarget(R.id.b_profile, this);
+        if (DatabaseHandler.getHandler().getCurrUser().getFirst()) {
+
+
+            showcaseView = new ShowcaseView.Builder(this)
+                    .setTarget(Target.NONE)
+                    .setOnClickListener(this)
+                    .setContentTitle("Walk Through")
+                    .setContentText("This will guide you through the correct usage of our app")
+                    .setStyle(R.style.CustomShowcaseTheme2)
+                    .build();
+            showcaseView.setButtonText("OK");
+
+            overviewButton.setBackgroundColor(getResources().getColor(R.color.Grey));
+            overviewButton.setEnabled(false);
+            meditationButton.setBackgroundColor(getResources().getColor(R.color.Grey));
+            meditationButton.setEnabled(false);
+        } else {
+            overviewButton.setBackgroundColor(getResources().getColor(R.color.Black));
+            overviewButton.setEnabled(true);
+            meditationButton.setBackgroundColor(getResources().getColor(R.color.Black));
+            meditationButton.setEnabled(true);
+        }
+
 
     }
 

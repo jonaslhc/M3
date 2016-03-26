@@ -90,6 +90,9 @@ public class ProfileData {
         this.reaction_time = time;
         this.accuracy = accuracy;
     }
+    public void updateFirst() {
+        this.first = false;
+    }
 
     // get functions for data
     public String getUsername() {return username;}

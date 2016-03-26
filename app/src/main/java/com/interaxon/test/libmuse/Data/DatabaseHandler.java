@@ -125,41 +125,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return mCurrUser;
     }
 
-    public void load(String file_name) {
-
-        // close the data base
-        mDatabaseHandler.close();
-
-        // checks if destination folder exists and create if not
-        File createOutFile = new File(DIR_PATH);
-        if (!createOutFile.exists()){
-            createOutFile.mkdir();
-        }
-
-        File currFile = new File(CURR_FILE);
-        File newFile = new File(DIR_PATH, file_name);
-
-        FileInputStream inStream;
-        FileOutputStream outStream;
-
-        // copy file over
-        try {
-            inStream = new FileInputStream(newFile);
-            outStream = new FileOutputStream(currFile);
-
-            FileChannel inChannel = inStream.getChannel();
-            FileChannel outChannel = outStream.getChannel();
-
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-
-            inStream.close();
-            outStream.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     // add new data to the table
     public void addUser(ProfileData newUser) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -170,6 +135,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, newUser.getName());
         values.put(COLUMN_AGE, newUser.getAge());
         values.put(COLUMN_EMAIL, newUser.getEmail());
+        if (newUser.getFirst()) values.put(COLUMN_FIRST, 1);
+        else values.put(COLUMN_FIRST, 0);
 
         db.insert(DATA_TABLE, null, values);
         db.close();
@@ -190,47 +157,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         mDatabaseHandler = initHandler(mContext);
     }
 
-    static public String getDirectory (){
+    static public String getDirectory () {
         Log.d("dir path", DIR_PATH);
         return DIR_PATH;
     }
-
-    // get all the values
-    public ArrayList<ProfileData> getDataList() {
-        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[] {
-                COLUMN_USERNAME,
-                COLUMN_PASSWORD,
-                COLUMN_NAME,
-                COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME,
-                COLUMN_MEDITATION
-        } , null, null, null, null, null, null);
-
-        // go through the database and add to the array
-       /* if (cursor.moveToFirst()) {
-            do {
-                ProfileData CurrUser = new ProfileData(
-                        cursor.getString(0),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getDouble(3),
-                        cursor.getDouble(4),
-                        cursor.getString(5)
-                );
-                DataList.add(CurrUser);
-            } while (cursor.moveToNext());
-        }*/
-
-        // return the array list
-        return DataList;
-    }
-
-
 
     // get one value
     public ProfileData getData(String username) {
@@ -319,6 +249,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return itExists;
     }
 
+    public void updateFirst () {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_FIRST, 0); // no longer first
+
+        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
+        mCurrUser.updateFirst();
+    }
 
     public void addStroop(double time, double accuracy) {
 
@@ -332,8 +271,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.insert(DATA_TABLE, null, cv);
 
+        mCurrUser.setStroop(time, accuracy);
         mCurrUser.incrStroop();
-        updateCurrUser(mCurrUser.getUsername());
     }
 
 
@@ -354,66 +293,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         mCurrUser.setMeditation(inputMeditation);
         mCurrUser.incrMeditation();
-        //updateCurrUser(mCurrUser.getUsername());
     }
 
     public ArrayList<Double> getLatestMeditation(){
 
-        /*String username = getCurrUser().getUsername();
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[] {
-                COLUMN_USERNAME,
-                COLUMN_PASSWORD,
-                COLUMN_NAME,
-                COLUMN_AGE,
-                COLUMN_EMAIL,
-                COLUMN_DATE,
-                COLUMN_FIRST,
-                COLUMN_STROOP_INDEX,
-                COLUMN_STROOP_COUNT,
-                COLUMN_MEDITATION_SESSION_NUM,
-                COLUMN_MEDITATION_INDEX,
-                COLUMN_MEDITATION_COUNT,
-                COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME,
-                COLUMN_MEDITATION
-        } , null, null, null, null, null, null);
-
-        // do not add first element since it does not contain med info
-        boolean firstpass = false;
-        ProfileData lastData = null;
-
-        // go through the database and add to the array
-        if (cursor.moveToFirst()) {
-            do {
-                if (cursor.getString(0).matches(username)) {
-                    if (firstpass == false) firstpass = true;
-                    else {
-                        lastData = new ProfileData(
-                                cursor.getString(0), // username
-                                cursor.getString(1), // password
-                                cursor.getString(2), // name
-                                cursor.getInt(3), // age
-                                cursor.getString(4), // email
-                                cursor.getString(5), // date
-                                cursor.getInt(6), // first
-                                cursor.getInt(7), // stroop index
-                                cursor.getInt(8), // stroop count
-                                cursor.getInt(9), // meditation session #
-                                cursor.getInt(10), // meditation index
-                                cursor.getInt(11), // meditation count
-                                cursor.getInt(12), // accuracy
-                                cursor.getInt(13), // reaction time
-                                cursor.getString(14) // meditation
-                        );
-                    }
-                }
-            } while (cursor.moveToNext());
-        }
-*/
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Double>>() {}.getType();
 
@@ -487,12 +370,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public double getLatestAccuracy() {
-       //
-        return 0.0;
+        return mCurrUser.getAccuracy();
     }
     public double getLatestReactionTime() {
-        //
-        return 0.0;
+        return mCurrUser.getReactionTime();
     }
 
     public ArrayList<ProfileData> getStroopList() {
