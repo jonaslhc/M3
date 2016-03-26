@@ -3,6 +3,7 @@ package com.interaxon.test.libmuse.StroopInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -37,7 +38,6 @@ public class StroopPersonalScore extends Fragment {
     double last_accuracy, last_reaction_time;
     static ProfileData profileData;
     TextView moreInfoText;
-    DatabaseHandler databaseHandler;
     String TAG = StroopPersonalScore.class.getSimpleName();
     MenuActivity menuActivity;
     BarChart mChart;
@@ -64,10 +64,10 @@ public class StroopPersonalScore extends Fragment {
         mChart.setDescription("");
         mChart.setDrawHighlightArrow(true);
 
-        Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getName());
+        Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
         Typeface tf = Typeface.DEFAULT;
-        profileData = databaseHandler.getHandler().getData(DatabaseHandler.getHandler().getCurrUser().getName());
 
+        profileData = DatabaseHandler.getHandler().getCurrUser();
         last_accuracy = profileData.getAccuracy();
         last_reaction_time = profileData.getReactionTime();
 

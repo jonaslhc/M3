@@ -133,7 +133,6 @@ public class StroopPeersScore extends Fragment {
     PieChart mChartReaction, mChartAccuracy;
     String TAG = StroopPeersScore.class.getSimpleName();
     static ProfileData profileData;
-    DatabaseHandler databaseHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -143,7 +142,7 @@ public class StroopPeersScore extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        profileData = databaseHandler.getHandler().getData(DatabaseHandler.getHandler().getCurrUser().getName());
+        profileData = DatabaseHandler.getHandler().getCurrUser();
         initAccuracy();
         initReaction();
     }
