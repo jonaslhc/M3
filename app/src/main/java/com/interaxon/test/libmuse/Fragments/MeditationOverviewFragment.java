@@ -4,6 +4,7 @@ package com.interaxon.test.libmuse.Fragments;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,9 +23,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.interaxon.test.libmuse.Data.DatabaseHandler;
+import com.interaxon.test.libmuse.Data.ProfileData;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
 import com.interaxon.test.libmuse.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -44,6 +47,12 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meditation_overview, container, false);
+
+        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
+
+        for (int i=0; i<arrayList.size(); i++){
+            Log.d("MEDITATION SESSIONS", arrayList.get(i).getMeditation());
+        }
 
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
         mLineChart.setOnChartValueSelectedListener(this);

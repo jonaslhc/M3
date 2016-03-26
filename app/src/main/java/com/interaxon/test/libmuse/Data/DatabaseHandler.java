@@ -227,47 +227,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return DataList;
     }
 
-    public ArrayList<ProfileData> getMeditationDataList(String username) {
-        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
 
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[] {
-                COLUMN_USERNAME,
-                COLUMN_PASSWORD,
-                COLUMN_NAME,
-                COLUMN_ACCURACY,
-                COLUMN_REACTION_TIME,
-                COLUMN_MEDITATION
-        } , null, null, null, null, null, null);
-
-        // do not add first element since it does not contain med info
-        boolean firstpass = false;
-
-        // go through the database and add to the array
-        if (cursor.moveToFirst()) {
-            do {
-                if (cursor.getString(0).matches(username)){
-                    if (firstpass == false) firstpass = true;
-                    else {
-                        ProfileData CurrUser = new ProfileData(
-                                cursor.getString(0),
-                                cursor.getString(1),
-                                cursor.getString(2),
-                                cursor.getDouble(3),
-                                cursor.getDouble(4),
-                                cursor.getString(5)
-                        );
-                        DataList.add(CurrUser);
-                    }
-                }
-            } while (cursor.moveToNext());
-        }
-
-        // return the array list
-        return DataList;
-    }
 
     // get one value
     public ProfileData getData(String username) {
@@ -382,46 +342,93 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_MEDITATION, inputMeditation);
+        cv.put(COLUMN_USERNAME, mCurrUser.getUsername());
 
         db.insert(DATA_TABLE, null, cv);
 
+        //db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
+        updateCurrUser(mCurrUser.getUsername());
+
         mCurrUser.incrMeditation();
 
-        db.update(DATA_TABLE, cv, COLUMN_USERNAME + "=?", new String[]{mCurrUser.getUsername()});
-        updateCurrUser(mCurrUser.getUsername());
+
     }
 
-    /*public ArrayList<Double> getMeditation(){
-
-        Log.d(TAG+"get", mCurrUser.getUsername());
-
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Double>>() {}.getType();
-
-        ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
-
-        Log.d(TAG+"get", outputMeditation.get(0).toString());
-        Log.d(TAG+"get", String.valueOf(outputMeditation.size()));
-
-
-        return outputMeditation;
-    }*/
     public ArrayList<Double> getMeditation(){
 
-
-
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Double>>() {}.getType();
 
         ArrayList<Double> outputMeditation = gson.fromJson(mCurrUser.getMeditation(), type);
 
-
-
-        Log.d(TAG+"get", outputMeditation.get(0).toString());
-        Log.d(TAG+"get", String.valueOf(outputMeditation.size()));
+        Log.d(TAG + "get", outputMeditation.get(0).toString());
+        Log.d(TAG + "get", String.valueOf(outputMeditation.size()));
 
 
         return outputMeditation;
+    }
+    public ArrayList<ProfileData> getMeditationList() {
+        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
+
+        String username = getCurrUser().getUsername();
+
+        Log.d("getmeditationlist", username);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // use cursor to move through the database
+        Cursor cursor = db.query(DATA_TABLE, new String[] {
+                COLUMN_USERNAME,
+                COLUMN_PASSWORD,
+                COLUMN_NAME,
+                COLUMN_AGE,
+                COLUMN_EMAIL,
+                COLUMN_DATE,
+                COLUMN_FIRST,
+                COLUMN_STROOP_INDEX,
+                COLUMN_STROOP_COUNT,
+                COLUMN_MEDITATION_SESSION_NUM,
+                COLUMN_MEDITATION_INDEX,
+                COLUMN_MEDITATION_COUNT,
+                COLUMN_ACCURACY,
+                COLUMN_REACTION_TIME,
+                COLUMN_MEDITATION
+        } , null, null, null, null, null, null);
+
+        // do not add first element since it does not contain med info
+        boolean firstpass = false;
+
+        // go through the database and add to the array
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(0).matches(username)){
+                    if (firstpass == false) firstpass = true;
+                    else {
+                        ProfileData CurrUser = new ProfileData(
+                                cursor.getString(0), // username
+                                cursor.getString(1), // password
+                                cursor.getString(2), // name
+                                cursor.getInt(3), // age
+                                cursor.getString(4), // email
+                                cursor.getString(5), // date
+                                cursor.getInt(6), // first
+                                cursor.getInt(7), // stroop index
+                                cursor.getInt(8), // stroop count
+                                cursor.getInt(9), // meditation session #
+                                cursor.getInt(10), // meditation index
+                                cursor.getInt(11), // meditation count
+                                cursor.getInt(12), // accuracy
+                                cursor.getInt(13), // reaction time
+                                cursor.getString(14) // meditation
+                        );
+                        DataList.add(CurrUser);
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+
+        // return the array list
+        return DataList;
     }
 
 }

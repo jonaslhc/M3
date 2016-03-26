@@ -21,6 +21,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
 
     Button meditation;
     Button stroop_button;
+    Button overview_button;
 
     static boolean calibrated = false;
     static boolean usernameSet = false;
@@ -72,13 +73,13 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                 " " +DatabaseHandler.getHandler().getCurrUser().getName();
         welcome.setText(welcomeMsg);
 
-        //Button calibration = (Button) findViewById(R.id.b_meditation);
-        //calibration.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        start_calibration();
-        //    }
-        //});
+        Button calibration = (Button) findViewById(R.id.b_profile);
+        calibration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                go_to_overview();
+            }
+        });
 
         meditation = (Button) findViewById(R.id.b_meditation);
         meditation.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +128,8 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         startActivity(intent);
     }
 
-    public void start_meditation() {
-        Intent intent = new Intent(this, MeditationActivity.class);
+    public void go_to_overview() {
+        Intent intent = new Intent(this, OverviewActivity.class);
         startActivity(intent);
     }
 

@@ -337,15 +337,10 @@ public class MuseHandler {
                     avgMean.increment(totalMean);
 
                     String s = String.format("%6.4f %6.4f %6.4f %6.4f",
-                            tp9Mean.getResult(), fp1Mean.getResult(),
-                            fp2Mean.getResult(), tp10Mean.getResult());
-
-                    String s2 = String.format("%6.4f %6.4f %6.4f %6.4f",
                             data.get(Eeg.TP9.ordinal()), data.get(Eeg.FP1.ordinal()),
                             data.get(Eeg.FP2.ordinal()), data.get(Eeg.TP10.ordinal()));
 
                     Log.d(TAG, s);
-                    Log.d(TAG, s2);
 
                 }
             }).start();
