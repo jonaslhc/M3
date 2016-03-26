@@ -68,8 +68,8 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         percentGood = 0.0;
 
-        mResultTextView = (TextView) view.findViewById(R.id.medidate_result);
-        mResultTextView.setText(String.format("%6.0f%%", percentGood));
+        mResultTextView = (TextView) view.findViewById(R.id.meditate_result);
+        //mResultTextView.setText(String.format("%6.0f%%", percentGood));
 
         mMenuButton = (Button) view.findViewById(R.id.b_back_menu_med);
         mMenuButton.setOnClickListener(new View.OnClickListener(){
@@ -80,13 +80,14 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         });
 
         graphResults();
+        mResultTextView.setText(String.format("%6.0f%%", percentGood));
 
         return view;
     }
 
     public void returnToMenu () {
-        getFragmentManager().beginTransaction().add(R.id.frag_container_med,
-                new MeditationMenuFragment()).addToBackStack("Add to Back Stack").commit();
+        Intent intent = new Intent(this.getActivity(), MenuActivity.class);
+        startActivity(intent);
     }
 
 
@@ -111,30 +112,25 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         // set an alternative background color
         mLineChart.setBackgroundColor(Color.WHITE);
 
-        //mLineData = new LineData();
-        //mLineData.setValueTextColor(Color.WHITE);
-
         Typeface tf = Typeface.DEFAULT;
-        //createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
-
 
         ArrayList<Double> meditationData = DatabaseHandler.getHandler().getMeditation();
 
-        ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < meditationData.size(); i++) {
-            xVals.add("");
-        }
-
-        double largest = 0;
+        double second = 0.0;
+        double largest = 0.0;
         double smallest = meditationData.get(0);
-        double curr = 0;
+        double curr;
 
         ArrayList<Entry> yVals = new ArrayList<Entry>();
         ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
+        ArrayList<String> xVals = new ArrayList<String>();
 
         double avg = MuseHandler.getHandler().getCalibratedMean();
 
         for (int i = 0; i < meditationData.size(); i++) {
+            xVals.add(String.format("%6.1f", second));
+            second += 0.5;
+
             curr = meditationData.get(i).floatValue();
             if (curr > largest) largest = curr;
             else if (curr < smallest) smallest = curr;
@@ -150,7 +146,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             }
         }
 
-        percentGood = percentGood/meditationData.size();
+        Log.d("Data Processing", String.valueOf(percentGood));
+        Log.d("Data Processing", String.valueOf((double)meditationData.size()));
+
+        percentGood = percentGood/(double)meditationData.size()*100;
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
             largest = avg+Math.abs(avg-smallest);
@@ -169,7 +168,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         set.setFillAlpha(65);
         set.setFillColor(ColorTemplate.getHoloBlue());
         set.setHighLightColor(Color.rgb(244, 117, 117));
-        set.setValueTextColor(Color.WHITE);
+        set.setValueTextColor(Color.BLACK);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
 
@@ -181,7 +180,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         setAvg.setFillAlpha(65);
         setAvg.setFillColor(ColorTemplate.getHoloBlue());
         setAvg.setHighLightColor(Color.rgb(244, 117, 117));
-        setAvg.setValueTextColor(Color.WHITE);
+        setAvg.setValueTextColor(Color.BLACK);
         setAvg.setValueTextSize(9f);
         setAvg.setDrawValues(false);
 
@@ -205,19 +204,19 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         XAxis xl = mLineChart.getXAxis();
         xl.setTypeface(tf);
-        xl.setTextColor(Color.WHITE);
+        xl.setTextColor(Color.BLACK);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawGridLines(false);
         xl.setAvoidFirstLastClipping(true);
         xl.setSpaceBetweenLabels(5);
         xl.setEnabled(true);
 
         YAxis leftAxis = mLineChart.getAxisLeft();
-        leftAxis.setTypeface(tf);
+        //leftAxis.setTypeface(tf);
         leftAxis.setTextColor(Color.WHITE);
-
         leftAxis.setAxisMaxValue(((float)largest));
         leftAxis.setAxisMinValue((float)smallest);
-        leftAxis.setDrawGridLines(true);
+        leftAxis.setDrawGridLines(false);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);

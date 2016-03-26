@@ -71,6 +71,8 @@ public class SignalQualityFragment extends Fragment {
         lf_bool = false;
         rf_bool = false;
 
+        MuseHandler.getHandler().resume();
+
         monitorQuality();
 
         return view;

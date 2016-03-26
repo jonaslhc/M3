@@ -41,6 +41,35 @@ public class ProfileData {
         this.password = password;
     }
     // add a new data
+    public ProfileData(String username, String password, String name, int age, String email,
+                       String date, int first_time,
+                       int stroop_index, int stroop_count, double accuracy, double reaction_time,
+                       int meditation_index, int meditation_count, int meditation_session_num,
+                       String meditation) {
+
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.age = age;
+        this.email = email;
+        this.date = date;
+
+        this.stroop_count = stroop_count;
+        this.stroop_index = stroop_index;
+        this.accuracy = accuracy;
+        this.reaction_time = reaction_time;
+
+        this.meditation_count = meditation_count;
+        this.meditation_index = meditation_index;
+        this.meditation_session_num = meditation_session_num;
+        this.meditation = meditation;
+
+        if (first_time == 1) this.first = true;
+        else this.first = false;
+
+    }
+
+
     public ProfileData(String username, String password, String name,
                        double accuracy, double reaction_time, String meditation) {
         this.username = username;
@@ -50,7 +79,6 @@ public class ProfileData {
         this.reaction_time = reaction_time;
         this.meditation = meditation;
     }
-
 
     // add a new user
     // initialize to be "first time user" until 1st stroop completed
