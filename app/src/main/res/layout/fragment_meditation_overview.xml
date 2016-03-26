@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.interaxon.test.libmuse.Fragments.MeditationOverviewFragment">
+    tools:context="com.interaxon.test.libmuse.Fragments.MeditationOverviewFragment"
+    android:background="@color/White">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
