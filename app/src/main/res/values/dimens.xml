@@ -5,6 +5,6 @@
     <dimen name="activity_vertical_margin">15dp</dimen>
 
     <dimen name="button">200dp</dimen>
-
+    <dimen name="graph_text">20sp</dimen>
 
 </resources>

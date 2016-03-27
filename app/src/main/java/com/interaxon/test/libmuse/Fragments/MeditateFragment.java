@@ -144,7 +144,11 @@ public class MeditateFragment extends Fragment {
             playAudio(audioReq);
             gatherData();
 
-            for (int i=45; i>=0; i--) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {}
+
+            for (int i=30; i>=0; i--) {
                 final int time_left = i;
                 counterStatus.post(new Runnable() {
                     @Override
@@ -157,6 +161,12 @@ public class MeditateFragment extends Fragment {
                 } catch (InterruptedException e) {}
 
             }
+
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {}
+
+
             finish = true;
             MuseHandler.getHandler().pause();
 
@@ -171,6 +181,7 @@ public class MeditateFragment extends Fragment {
 
             @Override
             public void run() {
+                double percentGood = 0.0;
 
                 while (!finish) {
                     MuseHandler.getHandler().clearMean();
@@ -180,8 +191,15 @@ public class MeditateFragment extends Fragment {
                     double currMean = MuseHandler.getHandler().getTotalMean();
                     if (!Double.isNaN(currMean)) {
                         meditation.add(currMean);
+                        if (currMean > MuseHandler.getHandler().getCalibratedMean()) {
+                            percentGood += 1.0;
+                        }
+
                     }
                 }
+
+                percentGood = percentGood/meditation.size();
+                meditation.add(percentGood);
                 DatabaseHandler.getHandler().addMeditation(meditation, session_num);
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                         new GraphFragment()).commit();

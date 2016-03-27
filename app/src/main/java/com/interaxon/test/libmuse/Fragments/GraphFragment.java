@@ -67,7 +67,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
         mLineChart.setOnChartValueSelectedListener(this);
 
-        percentGood = 0.0;
+        //percentGood = 0.0;
 
         mResultTextView = (TextView) view.findViewById(R.id.meditate_result);
         mResultTitleTextView = (TextView) view.findViewById(R.id.meditate_title);
@@ -132,7 +132,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         double avg = MuseHandler.getHandler().getCalibratedMean();
 
-        for (int i = 0; i < meditationData.size(); i++) {
+        for (int i = 0; i < meditationData.size()-1; i++) {
             xVals.add(String.format("%6.1f", second));
             second += 0.5;
 
@@ -146,12 +146,17 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             yVals.add(new Entry((float)curr, i));
             yValsAvg.add(new Entry((float)avg, i));
 
-            if (curr > avg) {
-                percentGood = percentGood + 1.0;
-            }
+            //if (curr > avg) {
+            //    percentGood = percentGood + 1.0;
+            //}
         }
 
-        percentGood = percentGood/(double)meditationData.size()*100;
+
+        //percentGood = percentGood/(double)meditationData.size()*100;
+
+        //Log.d("graphing", String.valueOf(percentGood) + " vs " +
+         //       String.valueOf();
+        percentGood = meditationData.get(meditationData.size()-1).floatValue()*100;
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
             largest = avg+Math.abs(avg-smallest);
@@ -206,6 +211,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         XAxis xl = mLineChart.getXAxis();
         xl.setTypeface(tf);
+        //xl.setTextSize(getResources().getDimension(R.dimen.graph_text));
         xl.setTextColor(Color.BLACK);
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawGridLines(false);
@@ -214,11 +220,12 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         xl.setEnabled(true);
 
         YAxis leftAxis = mLineChart.getAxisLeft();
+        leftAxis.setEnabled(false);
         //leftAxis.setTypeface(tf);
-        leftAxis.setTextColor(Color.BLACK);
+        //leftAxis.setTextColor(Color.BLACK);
         leftAxis.setAxisMaxValue(((float)largest));
         leftAxis.setAxisMinValue((float)smallest);
-        leftAxis.setDrawGridLines(false);
+        //leftAxis.setDrawGridLines(false);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);

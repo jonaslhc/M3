@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name ="past_session">Your Past Sessions: </string>
+
     <string name="app_name">M3</string>
     <string name="app_name_long">Mindful Meditative Minds</string>
     <string name="new_member">New Member</string>

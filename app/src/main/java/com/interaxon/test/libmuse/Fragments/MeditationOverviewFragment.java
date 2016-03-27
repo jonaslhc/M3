@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -37,6 +41,8 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
 
     private LineChart mLineChart;
     private LineData mLineData;
+    private Spinner mSessionSpinner;
+    private TextView mSessionResult;
 
     public MeditationOverviewFragment() {
         // Required empty public constructor
@@ -48,6 +54,13 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_meditation_overview, container, false);
 
+        //set chart and spinner and text
+        mLineChart = (LineChart) view.findViewById(R.id.chart1);
+        mLineChart.setOnChartValueSelectedListener(this);
+
+        mSessionSpinner = (Spinner) view.findViewById(R.id.session_spinner);
+        mSessionResult = (TextView) view.findViewById(R.id.meditate_result);
+
         ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
 
         Log.d("MEDITATION SIZE", String.valueOf(arrayList.size()));
@@ -57,11 +70,27 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
             Log.d("MEDITATION", arrayList.get(i).getMeditation());
         }
 
-        mLineChart = (LineChart) view.findViewById(R.id.chart1);
-        mLineChart.setOnChartValueSelectedListener(this);
+
 
         return view;
     }
+
+    /*private void setSpinner (View view) {
+
+        // Fine my spinner
+        Spinner spinner = (Spinner) view.findViewById(R.id.pick_movie);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
+                R.array.movie_list, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        // Regular drop down menu
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+    }*/
 
     public void graphResults () {
 
