@@ -33,6 +33,8 @@
         <activity android:name=".MeditationActivity" />
         <activity android:name=".StroopActivity"/>
         <activity android:name=".StroopInfo.StroopTabResult"/>
+        <activity android:name=".OverviewActivity"/>
+
 
     </application>
 
