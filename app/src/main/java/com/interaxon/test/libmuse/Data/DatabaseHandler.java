@@ -433,8 +433,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                 cursor.getInt(9), // meditation session #
                                 cursor.getInt(10), // meditation index
                                 cursor.getInt(11), // meditation count
-                                cursor.getInt(12), // accuracy
-                                cursor.getInt(13), // reaction time
+                                cursor.getDouble(12), // accuracy
+                                cursor.getDouble(13), // reaction time
                                 cursor.getString(14) // meditation
                         );
                         DataList.add(CurrUser);
