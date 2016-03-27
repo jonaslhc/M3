@@ -34,12 +34,10 @@ public class FinalScore extends Fragment {
     TextView correct_answer, reaction_incongruent, reaction_neutral, reaction_result;
     int q2_incong_ans, q5_incong_ans, q3_neutral_ans, q6_neutral_ans;
     long q2_incong_time, q5_incong_time, q3_neutral_time, q6_neutral_time;
-    double incong_score, neutral_score;
     Mean incongruent_mean = new Mean();
     Mean neutral_mean = new Mean();
     Button play_again_button, back_to_menu, go_to_results;
     MenuActivity menuActivity;
-    String user_name;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,7 +77,7 @@ public class FinalScore extends Fragment {
         q6_neutral_ans = app_preferences.getInt("answer_value6", 0);
 
         q2_incong_time = app_preferences.getLong("time_incong1", 0);
-        q5_incong_time = app_preferences.getLong("time_incong5", 0);
+        q5_incong_time = app_preferences.getLong("time_incong2", 0);
         q3_neutral_time = app_preferences.getLong("time_neutral1", 0);
         q6_neutral_time = app_preferences.getLong("time_neutral2", 0);
 
@@ -88,20 +86,13 @@ public class FinalScore extends Fragment {
         neutral_mean.increment(q3_neutral_time);
         neutral_mean.increment(q6_neutral_time);
 
-        incong_score = (double) (q2_incong_ans + q5_incong_ans)/2.0;
-        neutral_score = (double) (q3_neutral_ans + q6_neutral_ans)/2.0;
-        Log.e(TAG," incongruent score " + incong_score + " neutral " + neutral_score);
 
-        // divide by 0 case
-        if(neutral_score == 0)
-            neutral_score = 1;
-
-        correct_answer.setText(String.format("%6.0f%%", (float) ((float)test / 6.0 * 100)));
-        reaction_incongruent.setText(String.format("%6.2f", (incongruent_mean.getResult() / neutral_mean.getResult())));
+        correct_answer.setText(String.format("%6.0f%%", (float) ((float)test / 6.0 *100)));
+        reaction_incongruent.setText(String.format("%6.2f", (double) (q2_incong_time + q5_incong_time) / (q3_neutral_time+q6_neutral_time)));
 
         // update accuracy with specified user_name
-        double reaction_time = (incongruent_mean.getResult()/neutral_mean.getResult());
-        double accuracy = incong_score / neutral_score;
+        double reaction_time =  (q2_incong_time + q5_incong_time) / (q3_neutral_time + q6_neutral_time);
+        double accuracy = ((double)test / 6.0 );
 
         DatabaseHandler.getHandler().addStroop(reaction_time, accuracy);
 

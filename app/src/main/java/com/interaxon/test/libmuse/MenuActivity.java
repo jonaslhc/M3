@@ -80,7 +80,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
             showcaseView = new ShowcaseView.Builder(this)
                     .setTarget(Target.NONE)
                     .setOnClickListener(this)
-                    .setContentTitle("Walk Through")
+                    .setContentTitle("Walking Through")
                     .setContentText("This will guide you through the correct usage of our app")
                     .setStyle(R.style.CustomShowcaseTheme2)
                     .build();
@@ -111,8 +111,19 @@ public class MenuActivity extends Activity implements View.OnClickListener{
     }
 
     public void go_to_overview() {
-        Intent intent = new Intent(this, OverviewActivity.class);
-        startActivity(intent);
+        if(DatabaseHandler.getHandler().getLatestMeditation() == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
+            builder.setMessage("You have to have at least 1 meditation session before you can see your results!").
+                    setTitle("Error");
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //empty
+                }
+            }).create().show();}
+        else {
+            Intent intent = new Intent(this, OverviewActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void start_stroop() {
