@@ -12,6 +12,15 @@
         android:layout_gravity="center"
         android:layout_weight="4" />
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="36sp"
+        android:text="@string/welcome"
+        android:textStyle="bold"
+        android:textColor="@color/Black"
+        android:layout_gravity="center"
+        android:layout_weight="4" />
+    <TextView
         android:id="@+id/welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +30,12 @@
         android:textColor="@color/Black"
         android:layout_gravity="center"
         android:layout_weight="4" />
-
+    <ImageView
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/m3_logo_new"
+        android:layout_gravity="center"
+        android:layout_weight="14.72"/>
     <Button
         android:id="@+id/b_meditation"
         android:text="@string/meditation"
@@ -58,7 +72,7 @@
         android:layout_margin="5dp"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@drawable/black_button"
+        android:background="@drawable/blue_button"
         style="@style/ButtonText"/>
     <TextView
         android:layout_width="wrap_content"

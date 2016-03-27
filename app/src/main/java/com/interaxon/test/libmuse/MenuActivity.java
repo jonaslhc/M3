@@ -33,8 +33,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_menu);
 
         TextView welcome = (TextView)findViewById(R.id.welcome);
-        String welcomeMsg = getResources().getString(R.string.welcome) +
-                " " +DatabaseHandler.getHandler().getCurrUser().getName();
+        String welcomeMsg = DatabaseHandler.getHandler().getCurrUser().getName();
         welcome.setText(welcomeMsg);
 
         overviewButton = (Button) findViewById(R.id.b_profile);
@@ -86,14 +85,10 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                     .build();
             showcaseView.setButtonText("OK");
 
-            overviewButton.setBackgroundColor(getResources().getColor(R.color.Grey));
-            overviewButton.setEnabled(false);
-            meditationButton.setBackgroundColor(getResources().getColor(R.color.Grey));
+            meditationButton.setBackground(getResources().getDrawable(R.drawable.grey_button));
             meditationButton.setEnabled(false);
         } else {
-            overviewButton.setBackgroundColor(getResources().getColor(R.color.Black));
-            overviewButton.setEnabled(true);
-            meditationButton.setBackgroundColor(getResources().getColor(R.color.Black));
+            meditationButton.setBackground(getResources().getDrawable(R.drawable.black_button));
             meditationButton.setEnabled(true);
         }
 
@@ -111,7 +106,7 @@ public class MenuActivity extends Activity implements View.OnClickListener{
     }
 
     public void go_to_overview() {
-        if(DatabaseHandler.getHandler().getLatestMeditation() == null){
+        /*if(DatabaseHandler.getHandler().getLatestMeditation() == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
             builder.setMessage("You have to have at least 1 meditation session before you can see your results!").
                     setTitle("Error");
@@ -120,10 +115,10 @@ public class MenuActivity extends Activity implements View.OnClickListener{
                     //empty
                 }
             }).create().show();}
-        else {
+        else {*/
             Intent intent = new Intent(this, OverviewActivity.class);
             startActivity(intent);
-        }
+        //}
     }
 
     private void start_stroop() {

@@ -21,7 +21,7 @@
 
     <string name="find_me">Sign In</string>
     <string name="calibrate_button">Start Calibration</string>
-    <string name="welcome">Welcome Back</string>
+    <string name="welcome">Welcome</string>
     <string name="calibration">Calibrate</string>
     <string name="meditation">Meditate</string>
     <string name="stroop">Mental Game</string>
@@ -62,11 +62,13 @@
     <string name="bluetooth">There is no Muse headband to connect.</string>
     <string name="signalQ">Muse is checking for signal quality.\nPlease adjust the headset around the areas not reported good.</string>
     <string name="back_to_signalQ">Muse will go back to signal quality check.</string>
-    <string name="calibratefail">Calibration was not successful.</string>
+    <string name="back_to_connect">Muse will go back to establish a connection.</string>
 
     <string name="calibrate">Muse will calibrate.</string>
     <string name="calibratedone">Muse is calibrated.</string>
     <string name="calibratestart">Muse is starting calibration.</string>
+    <string name="calibratedisconnect">Muse is disconnected.</string>
+    <string name="calibratefail">Calibration was not successful.</string>
 
     <string name="meditate">Meditation will start in a moment.\nClose your eyes and wait for the audio.</string>
     <string name="start_meditate">Close your eyes and listen to the audio.</string>
@@ -93,9 +95,6 @@
 
     <string name="med_session">Session: </string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="stroop_result_explanation">The Distractibility Task measures your ability to ignore irrelevant, distracting word information. These abilities are improved with meditation, because through this practice you are training your brain to no longer be distracted by internal or external influences.
 </string>
     <string name="stoop_explanation_title">Distractibility Task</string>
@@ -106,7 +105,7 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">3dp</item>
-        <item name="android:textSize">30dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#000000</item>
         <item name="android:shadowDx">1</item>

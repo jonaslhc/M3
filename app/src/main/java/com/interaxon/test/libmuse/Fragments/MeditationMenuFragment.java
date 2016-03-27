@@ -67,6 +67,30 @@ public class MeditationMenuFragment extends Fragment implements View.OnClickList
         } else if (v.getId() == R.id.b_med2) {
             getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                     new MeditateFragment().newInstance(2)).commit();
+        } else if (v.getId() == R.id.b_med3) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(3)).commit();
+        } else if (v.getId() == R.id.b_med4) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(4)).commit();
+        } else if (v.getId() == R.id.b_med5) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(5)).commit();
+        } else if (v.getId() == R.id.b_med6) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(6)).commit();
+        } else if (v.getId() == R.id.b_med7) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(7)).commit();
+        } else if (v.getId() == R.id.b_med8) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(8)).commit();
+        } else if (v.getId() == R.id.b_med9) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(9)).commit();
+        } else if (v.getId() == R.id.b_med10) {
+            getFragmentManager().beginTransaction().add(R.id.frag_container_med,
+                    new MeditateFragment().newInstance(10)).commit();
         }
     }
 

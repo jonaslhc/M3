@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.interaxon.libmuse.ConnectionState;
 import com.interaxon.test.libmuse.MeditationActivity;
 import com.interaxon.test.libmuse.MenuActivity;
 import com.interaxon.test.libmuse.Museheadband.MuseHandler;
@@ -42,7 +43,7 @@ public class CalibrateFragment extends Fragment {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
                 stopPlayback();
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                startPlayback();
+                //startPlayback();
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 mAudioManager.abandonAudioFocus(afChangeListener);
                 stopPlayback();
@@ -96,7 +97,6 @@ public class CalibrateFragment extends Fragment {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {}
 
-                MuseHandler.getHandler().clearMean();
 
 
                 //start running audio
@@ -106,7 +106,16 @@ public class CalibrateFragment extends Fragment {
 
                 playAudio(audioReq);
 
-                for (int i=20; i>=0; i--) {
+                for (int i=9; i>=0; i--) {
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {}
+
+                }
+                MuseHandler.getHandler().clearMean();
+
+                for (int i=20; i>=1; i--) {
                     final int time_left = i;
                     counterStatus.post(new Runnable() {
                         @Override
@@ -119,8 +128,12 @@ public class CalibrateFragment extends Fragment {
                     } catch (InterruptedException e) {}
 
                     if (!MuseHandler.getHandler().getDataQuality()) {
+                        stopPlayback();
                         backToSignalQuality();
                         return;
+                    } else if (MuseHandler.getHandler().getConnectionStatus() == ConnectionState.DISCONNECTED) {
+                        stopPlayback();
+                        backToConnectMuse();
                     }
                 }
 
@@ -164,6 +177,24 @@ public class CalibrateFragment extends Fragment {
 
     }
 
+    public void backToConnectMuse () {
+        calibrateStatus.post(new Runnable() {
+            @Override
+            public void run() {
+                calibrateStatus.setText(getString(R.string.calibratedisconnect));
+                resultStatus.setText(getString(R.string.back_to_connect));
+            }
+        });
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+
+        }
+        getFragmentManager().beginTransaction().replace(R.id.frag_container_med,
+                new SignalQualityFragment()).commit();
+
+    }
+
     public void finish () {
         Intent intent = new Intent(getActivity(), MeditationActivity.class);
         intent.putExtra(EXTRA_MESSAGE, "calibrated");
@@ -179,7 +210,7 @@ public class CalibrateFragment extends Fragment {
     }
 
     private void startPlayback () {
-        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
+        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.calibration);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }

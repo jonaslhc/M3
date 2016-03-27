@@ -58,7 +58,7 @@ public class MeditateFragment extends Fragment {
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
             stopPlayback();
         } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-            startPlayback();
+            //startPlayback();
         } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
             mAudioManager.abandonAudioFocus(afChangeListener);
             stopPlayback();
@@ -144,7 +144,7 @@ public class MeditateFragment extends Fragment {
             playAudio(audioReq);
             gatherData();
 
-            for (int i=20; i>=0; i--) {
+            for (int i=45; i>=0; i--) {
                 final int time_left = i;
                 counterStatus.post(new Runnable() {
                     @Override
@@ -200,8 +200,17 @@ public class MeditateFragment extends Fragment {
     }
 
     private void startPlayback () {
-        if (session_num == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
-        else if (session_num == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
+        if (session_num == 1) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_s1);
+        else if (session_num == 2) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 3) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 4) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 5) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 6) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 7) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 8) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 9) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_1);
+        else if (session_num == 10) mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_s10);
+
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }

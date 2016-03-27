@@ -55,7 +55,6 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         for (int i=0; i<arrayList.size(); i++){
             Log.d("MEDITATION SESSIONS", String.valueOf(arrayList.get(i).getMeditationSessionNum()));
             Log.d("MEDITATION", arrayList.get(i).getMeditation());
-
         }
 
         mLineChart = (LineChart) view.findViewById(R.id.chart1);

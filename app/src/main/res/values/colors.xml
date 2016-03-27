@@ -2,7 +2,10 @@
 <resources>
     <color name="AccentBlue">#129793</color>
     <color name="Blue">#6BCAE2</color>
+    <color name="DarkerBlue">#5BBAD2</color>
     <color name="Grey">#7F7270</color>
+    <color name="DarkerGrey">#6F6260</color>
+
     <color name="Black">#000000</color>
     <color name="White">#FFFFFF</color>
 
