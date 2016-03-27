@@ -37,9 +37,9 @@ public class ProfileData {
     // add a new data
     public ProfileData(String username, String password, String name, int age, String email,
                        String date, int first_time,
-                       int stroop_index, int stroop_count, double accuracy, double reaction_time,
-                       int meditation_index, int meditation_count, int meditation_session_num,
-                       String meditation) {
+                       int stroop_index, int stroop_count,
+                       int meditation_session_num, int meditation_index, int meditation_count,
+                       double accuracy, double reaction_time, String meditation) {
 
         this.username = username;
         this.name = name;

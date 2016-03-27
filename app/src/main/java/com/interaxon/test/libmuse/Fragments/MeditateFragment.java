@@ -182,7 +182,6 @@ public class MeditateFragment extends Fragment {
                         meditation.add(currMean);
                     }
                 }
-                //DatabaseHandler.getHandler().updateMeditation(meditation);
                 DatabaseHandler.getHandler().addMeditation(meditation, session_num);
                 getFragmentManager().beginTransaction().add(R.id.frag_container_med,
                         new GraphFragment()).commit();

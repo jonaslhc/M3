@@ -168,7 +168,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // use cursor to move through the database
-        Cursor cursor = db.query(DATA_TABLE, new String[] {
+        Cursor cursor = db.query(DATA_TABLE, new String[]{
                 COLUMN_USERNAME,
                 COLUMN_PASSWORD,
                 COLUMN_NAME,
@@ -184,7 +184,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COLUMN_ACCURACY,
                 COLUMN_REACTION_TIME,
                 COLUMN_MEDITATION
-        } , COLUMN_USERNAME + "=?", new String[]{username
+        }, COLUMN_USERNAME + "=?", new String[]{username
         }, null, null, null, null);
 
         ProfileData data = null;
@@ -283,6 +283,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Gson gson = new Gson();
         String inputMeditation = gson.toJson(meditation);
 
+        Log.d(TAG, String.valueOf(session_number));
+
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_USERNAME, mCurrUser.getUsername());
         cv.put(COLUMN_MEDITATION_INDEX, mCurrUser.getMeditationCount()+1);
@@ -306,11 +308,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public ArrayList<ProfileData> getMeditationList() {
-        ArrayList<ProfileData> DataList = new ArrayList<ProfileData>();
+
+        ArrayList<ProfileData> DataList = new ArrayList<>();
 
         String username = getCurrUser().getUsername();
 
-        Log.d("getmeditationlist", username);
+        Log.d("Get Meditation List", username);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -334,14 +337,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }, null, null, null, null, null, null);
 
         // do not add first element since it does not contain med info
-        boolean firstpass = false;
+        boolean firstpass = true;
 
         // go through the database and add to the array
         if (cursor.moveToFirst()) {
             do {
-                if (cursor.getString(0).matches(username)){
-                    if (firstpass == false) firstpass = true;
+                if (cursor.getString(0).equals(username)){
+                    if (firstpass||cursor.getString(14) == null) {
+                        firstpass = false;
+                    }
                     else {
+                        Log.d("Session # ", String.valueOf(cursor.getInt(9)));
+
                         ProfileData CurrUser = new ProfileData(
                                 cursor.getString(0), // username
                                 cursor.getString(1), // password
@@ -355,8 +362,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                 cursor.getInt(9), // meditation session #
                                 cursor.getInt(10), // meditation index
                                 cursor.getInt(11), // meditation count
-                                cursor.getInt(12), // accuracy
-                                cursor.getInt(13), // reaction time
+                                cursor.getDouble(12), // accuracy
+                                cursor.getDouble(13), // reaction time
                                 cursor.getString(14) // meditation
                         );
                         DataList.add(CurrUser);

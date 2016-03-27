@@ -49,6 +49,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
     Button mMenuButton;
     TextView mResultTextView;
+    TextView mResultTitleTextView;
 
     double percentGood;
 
@@ -69,6 +70,10 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         percentGood = 0.0;
 
         mResultTextView = (TextView) view.findViewById(R.id.meditate_result);
+        mResultTitleTextView = (TextView) view.findViewById(R.id.meditate_title);
+
+        mResultTitleTextView.setText(getResources().getString(R.string.graph_title));
+
         //mResultTextView.setText(String.format("%6.0f%%", percentGood));
 
         mMenuButton = (Button) view.findViewById(R.id.b_back_menu_med);
@@ -80,7 +85,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         });
 
         graphResults();
-        mResultTextView.setText(String.format("%6.0f%%", percentGood));
+        mResultTextView.setText("You were calm:" + String.format("%6.0f%%", percentGood) + " of the time.");
 
         return view;
     }
@@ -146,9 +151,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
             }
         }
 
-        Log.d("Data Processing", String.valueOf(percentGood));
-        Log.d("Data Processing", String.valueOf((double)meditationData.size()));
-
         percentGood = percentGood/(double)meditationData.size()*100;
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
@@ -200,7 +202,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
 
         XAxis xl = mLineChart.getXAxis();
         xl.setTypeface(tf);
@@ -213,7 +215,7 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         YAxis leftAxis = mLineChart.getAxisLeft();
         //leftAxis.setTypeface(tf);
-        leftAxis.setTextColor(Color.WHITE);
+        leftAxis.setTextColor(Color.BLACK);
         leftAxis.setAxisMaxValue(((float)largest));
         leftAxis.setAxisMinValue((float)smallest);
         leftAxis.setDrawGridLines(false);

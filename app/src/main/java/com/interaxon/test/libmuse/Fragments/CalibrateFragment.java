@@ -179,7 +179,7 @@ public class CalibrateFragment extends Fragment {
     }
 
     private void startPlayback () {
-        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.calibration_1);
+        mMediaPlayer = MediaPlayer.create(this.getActivity(), R.raw.meditation_2);
         mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }

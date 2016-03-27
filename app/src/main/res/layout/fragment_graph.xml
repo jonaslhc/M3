@@ -6,7 +6,16 @@
     android:orientation="vertical"
     android:background="@color/White">
 
-
+    <TextView
+        android:id="@+id/meditate_title"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart1"
         android:layout_width="match_parent"

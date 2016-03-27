@@ -24,7 +24,7 @@
     <string name="welcome">Welcome Back</string>
     <string name="calibration">Calibrate</string>
     <string name="meditation">Meditate</string>
-    <string name="stroop">Stroop</string>
+    <string name="stroop">Mental Game</string>
     <string name="profile">Profile</string>
 
     <string name="action_settings">Settings</string>
@@ -70,6 +70,7 @@
 
     <string name="meditate">Meditation will start in a moment.\nClose your eyes and wait for the audio.</string>
     <string name="start_meditate">Close your eyes and listen to the audio.</string>
+    <string name="graph_title">Meditation Performance </string>
 
     <string name="low_volume_message">Please turn up the volume to continue the meditation session.</string>
     <string name="left_ear">Left Ear</string>
