@@ -34,10 +34,9 @@ public class ProfileData {
 
     }
 
-    // add a new data
+    // constructor for adding new meditation session
     public ProfileData(String username, String password, String name, int age, String email,
-                       String date, int first_time,
-                       int stroop_index, int stroop_count,
+                       String date, int first, int stroop_index, int stroop_count,
                        int meditation_session_num, int meditation_index, int meditation_count,
                        double accuracy, double reaction_time, String meditation) {
 
@@ -58,9 +57,37 @@ public class ProfileData {
         this.meditation_session_num = meditation_session_num;
         this.meditation = meditation;
 
-        if (first_time == 1) this.first = true;
-        else this.first = false;
+    }
 
+    // constructor for adding new meditation session
+    public ProfileData(String username,
+                       int meditation_session_num, int meditation_index, int meditation_count,
+                       String meditation) {
+
+        this.username = username;
+
+        this.stroop_index = -1;
+
+        this.meditation_count = meditation_count;
+        this.meditation_index = meditation_index;
+        this.meditation_session_num = meditation_session_num;
+        this.meditation = meditation;
+
+    }
+
+    // constructor for adding new stroop session
+    public ProfileData(String username,
+                       int stroop_index, int stroop_count,
+                       double accuracy, double reaction_time) {
+
+        this.username = username;
+
+        this.stroop_count = stroop_count;
+        this.stroop_index = stroop_index;
+        this.accuracy = accuracy;
+        this.reaction_time = reaction_time;
+
+        this.meditation_index = -1;
     }
 
     // add a new user
