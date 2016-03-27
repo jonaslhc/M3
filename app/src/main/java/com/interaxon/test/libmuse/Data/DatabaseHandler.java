@@ -351,19 +351,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                         ProfileData CurrUser = new ProfileData(
                                 cursor.getString(0), // username
-                                cursor.getString(1), // password
-                                cursor.getString(2), // name
-                                cursor.getInt(3), // age
-                                cursor.getString(4), // email
-                                cursor.getString(5), // date
-                                cursor.getInt(6), // first
-                                cursor.getInt(7), // stroop index
-                                cursor.getInt(8), // stroop count
                                 cursor.getInt(9), // meditation session #
                                 cursor.getInt(10), // meditation index
                                 cursor.getInt(11), // meditation count
-                                cursor.getDouble(12), // accuracy
-                                cursor.getDouble(13), // reaction time
                                 cursor.getString(14) // meditation
                         );
                         DataList.add(CurrUser);
@@ -412,30 +402,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }, null, null, null, null, null, null);
 
         // do not add first element since it does not contain med info
-        boolean firstpass = false;
+        boolean firstpass = true;
 
         // go through the database and add to the array
         if (cursor.moveToFirst()) {
             do {
                 if (cursor.getString(0).matches(username)){
-                    if (firstpass == false) firstpass = true;
+                    if (firstpass || cursor.getInt(10)==-1) firstpass = false;
                     else {
                         ProfileData CurrUser = new ProfileData(
                                 cursor.getString(0), // username
-                                cursor.getString(1), // password
-                                cursor.getString(2), // name
-                                cursor.getInt(3), // age
-                                cursor.getString(4), // email
-                                cursor.getString(5), // date
-                                cursor.getInt(6), // first
                                 cursor.getInt(7), // stroop index
                                 cursor.getInt(8), // stroop count
-                                cursor.getInt(9), // meditation session #
-                                cursor.getInt(10), // meditation index
-                                cursor.getInt(11), // meditation count
-                                cursor.getDouble(12), // accuracy
-                                cursor.getDouble(13), // reaction time
-                                cursor.getString(14) // meditation
+                                cursor.getInt(12), // accuracy
+                                cursor.getInt(13) // reaction time
                         );
                         DataList.add(CurrUser);
                     }
