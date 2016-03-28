@@ -42,9 +42,15 @@ public class PersonalResultFragment extends Fragment {
     String TAG = PersonalResultFragment.class.getSimpleName();
     int session_index;
 
+    TextView accuracyTextView, reactionTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile_result_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile_result_layout, container, false);
+
+        accuracyTextView = (TextView) view.findViewById(R.id.accuracy_result);
+        reactionTextView = (TextView) view.findViewById(R.id.reaction_time_result);
+        return view;
     }
 
     @Override
@@ -58,8 +64,8 @@ public class PersonalResultFragment extends Fragment {
 
         Typeface tf = Typeface.DEFAULT;
 
-        //accuracyTextView.setText("Your were" + String.format("%6.0f%%", last_accuracy*100) + " accurate.");
-        //reactionTextView.setText("Your distractibility score was" + String.format("%6.2f", last_reaction_time) + ".");
+        accuracyTextView.setText("Your were" + String.format("%6.0f%%", accuracy_data*100) + " accurate.");
+        reactionTextView.setText("Your distractibility score was" + String.format("%6.2f", reaction_time_data) + ".");
 
         XAxis horizontal_axis = mChart.getXAxis();
         YAxis vertical_axis = mChart.getAxis(YAxis.AxisDependency.LEFT);
