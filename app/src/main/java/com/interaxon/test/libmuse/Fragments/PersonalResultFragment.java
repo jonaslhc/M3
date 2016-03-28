@@ -93,14 +93,14 @@ public class PersonalResultFragment extends Fragment {
         //accuracy_set.setHighLightColor(Color.rgb(244, 117, 117));
         accuracy_set.setValueTextColor(Color.BLACK);
         accuracy_set.setValueTextSize(10f);
-        accuracy_set.setDrawValues(false);
+        accuracy_set.setDrawValues(true);
 
         reaction_score.setAxisDependency(YAxis.AxisDependency.LEFT);
         reaction_score.setColor(Color.MAGENTA);
         //reaction_score.setHighLightColor(Color.rgb(244, 117, 117));
         reaction_score.setValueTextColor(Color.BLACK);
         reaction_score.setValueTextSize(10f);
-        reaction_score.setDrawValues(false);
+        reaction_score.setDrawValues(true);
 
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
@@ -120,6 +120,7 @@ public class PersonalResultFragment extends Fragment {
         mChart.setData(mData);
         mChart.animateX(2000);
         mChart.animateY(2000);
+        mChart.setDrawValueAboveBar(true);
         mChart.setDrawHighlightArrow(true);
         mChart.invalidate();
 

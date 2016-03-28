@@ -66,13 +66,10 @@ public class MeditationSummaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initView();
 
-        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
-        ArrayList<ProfileData> stroopList = DatabaseHandler.getHandler().getStroopList();
+        initCombGraph();
+        initBarGraph();
 
-        for(int i = 0; i < arrayList.size(); i++) {
-            initCombGraph(arrayList.get(i).getMeditationDouble().get(arrayList.size() - 1).floatValue(), arrayList.get(i).getUsername());
-        }
-
+        /*
         if(stroopList.size() < 2){
             initBarGraph(stroopList.get(0).getAccuracy(), stroopList.get(0).getReactionTime(), 0.0, 0.0, stroopList.get(0).getUsername());
         }
@@ -81,14 +78,19 @@ public class MeditationSummaryFragment extends Fragment {
                     stroopList.get(stroopList.size()-2).getAccuracy(),
                     stroopList.get(stroopList.size()-2).getReactionTime(), stroopList.get(stroopList.size()-2).getUsername());
         }
+        */
 
     }
 
-    private void initCombGraph(float percentile, String name){
+    private void initCombGraph(){
+
+        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
+
         mCombChart.setNoDataText("No Data");
-        mCombChart.setDescription("");
+        mCombChart.setDescription("Your historical % calm");
         mCombChart.setDrawHighlightArrow(true);
         Typeface tf = Typeface.DEFAULT;
+
 
         XAxis horizontal_axis = mCombChart.getXAxis();
         YAxis vertical_axis = mCombChart.getAxis(YAxis.AxisDependency.LEFT);
@@ -107,16 +109,15 @@ public class MeditationSummaryFragment extends Fragment {
 
 
         ArrayList<String> xVals = new ArrayList<String>();
-        xVals.add(name);
-
+        for(int i = 0; i < arrayList.size(); i++) {
+            xVals.add(arrayList.get(i).getUsername());
+        }
 
         CombinedData data = new CombinedData(xVals);
 
-        data.setData(generateBarData(percentile, name));
-        data.setData(generateLineData(percentile, name));
+        data.setData(generateBarData(arrayList));
+        data.setData(generateLineData(arrayList));
 
-
-        //mData.setValueFormatter(new PercentFormatter());
         mCombChart.setData(data);
         mCombChart.setDrawValueAboveBar(true);
         mCombChart.animateX(2000);
@@ -135,13 +136,15 @@ public class MeditationSummaryFragment extends Fragment {
 
     }
 
-    private LineData generateLineData(float percentile, String name) {
+    private LineData generateLineData(ArrayList<ProfileData> array) {
         LineData d = new LineData();
 
         ArrayList<Entry> entries = new ArrayList<Entry>();
 
 
-        entries.add(new Entry(percentile, 0));
+        for(int i = 0; i < array.size(); i++) {
+            entries.add(new Entry( 0.5f*array.get(i).getMeditationDouble().get(array.size()-1).floatValue(), i));
+        }
 
         LineDataSet set = new LineDataSet(entries, "Line DataSet");
         set.setColor(Color.rgb(240, 238, 70));
@@ -161,13 +164,14 @@ public class MeditationSummaryFragment extends Fragment {
         return d;
     }
 
-    private BarData generateBarData(double percentile, String name) {
+    private BarData generateBarData(ArrayList<ProfileData> array) {
         BarData d = new BarData();
 
         ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
 
-        entries.add(new BarEntry((float)percentile, 0));
-
+        for(int i = 0; i < array.size(); i++) {
+            entries.add(new BarEntry((float) array.get(i).getMeditationDouble().get(array.size()-1).floatValue(), i));
+        }
         BarDataSet set = new BarDataSet(entries, "Bar DataSet");
         set.setColor(Color.rgb(60, 220, 78));
         set.setValueTextColor(Color.rgb(60, 220, 78));
@@ -179,10 +183,11 @@ public class MeditationSummaryFragment extends Fragment {
         return d;
     }
 
-    private void initBarGraph(double accuracy_data1, double reaction_time_data1, double accuracy_data2, double reaction_time_data2, String name) {
+    private void initBarGraph() {
+        ArrayList<ProfileData> stroopList = DatabaseHandler.getHandler().getStroopList();
 
         mChart.setNoDataText("No data is currently available");
-        mChart.setDescription("");
+        mChart.setDescription("Your historical Brain Game result");
         mChart.setDrawHighlightArrow(true);
 
         Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
@@ -213,10 +218,10 @@ public class MeditationSummaryFragment extends Fragment {
         accuracy.add(new BarEntry((float) profileData.getAccuracy(), 0));
         reaction_time.add(new BarEntry((float) profileData.getReactionTime(), 0));
         */
-        accuracy.add(new BarEntry((float) accuracy_data1, 0));
-        accuracy.add(new BarEntry((float) accuracy_data2, 0));
-        reaction_time.add(new BarEntry((float) reaction_time_data1, 0));
-        reaction_time.add(new BarEntry((float) reaction_time_data2, 0));
+        for(int i = 0; i < stroopList.size(); i ++) {
+            accuracy.add(new BarEntry((float) stroopList.get(i).getAccuracy(), i));
+            reaction_time.add(new BarEntry((float) stroopList.get(i).getReactionTime(), i));
+        }
 
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
@@ -244,10 +249,9 @@ public class MeditationSummaryFragment extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<String>();
         //xVals.add(arrayList.get(0).getName());
-        xVals.add(name);
-        xVals.add(name);
-
-        Log.e(TAG, "Name " + name + " Accuracy " + accuracy_data1 + " Reaction " + reaction_time_data1);
+        for(int i = 0; i < stroopList.size(); i ++) {
+            xVals.add(stroopList.get(i).getUsername());
+        }
 
         BarData mData = new BarData(xVals, dataSets);
         //mData.setValueFormatter(new PercentFormatter());
@@ -257,6 +261,7 @@ public class MeditationSummaryFragment extends Fragment {
         mChart.setData(mData);
         mChart.animateX(2000);
         mChart.animateY(2000);
+        mChart.setDrawValueAboveBar(true);
         mChart.setDrawHighlightArrow(true);
         mChart.invalidate();
 
