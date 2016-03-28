@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.interaxon.test.libmuse.Fragments.MeditateFragment;
 import com.interaxon.test.libmuse.Fragments.MeditationOverviewFragment;
+import com.interaxon.test.libmuse.Fragments.MeditationSummaryFragment;
 import com.interaxon.test.libmuse.Fragments.PersonalResultFragment;
 import com.interaxon.test.libmuse.StroopInfo.StroopPeersScore;
 import com.interaxon.test.libmuse.StroopInfo.StroopPersonalScore;
@@ -31,6 +32,8 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
                 PersonalResultFragment s2 = new PersonalResultFragment();
                 return s2;
             case 2:
+                MeditationSummaryFragment s3 = new MeditationSummaryFragment();
+                return s3;
 
 
         }
@@ -39,7 +42,7 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
