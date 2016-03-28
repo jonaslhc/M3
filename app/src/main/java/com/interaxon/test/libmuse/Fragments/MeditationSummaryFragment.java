@@ -136,10 +136,14 @@ public class MeditationSummaryFragment extends Fragment {
         LineData d = new LineData();
 
         ArrayList<Entry> entries = new ArrayList<Entry>();
-
+        double sum = 0.0;
 
         for(int i = 0; i < array.size(); i++) {
-            entries.add(new Entry( 0.5f*array.get(i).getMeditationDouble().get(array.size()-1).floatValue(), i));
+            for(int y = 0; y < array.size()-2; y++) {
+                sum += array.get(i).getMeditationDouble().get(y).floatValue();
+            }
+            entries.add(new Entry( (float) sum/4.0f, i));
+            sum = 0;
         }
 
         LineDataSet set = new LineDataSet(entries, "Line DataSet");
