@@ -61,7 +61,7 @@ public class Question4 extends Fragment {
             //end_time = System.currentTimeMillis();
             //editor.putLong("time_answer4", end_time - start_time);
             editor.commit();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Question5()).addToBackStack(null).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Question5()).commit();
         }
     };
 }

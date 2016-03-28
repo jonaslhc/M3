@@ -203,9 +203,9 @@ public class StroopPeersScore extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<>();
         xVals.add(profileData.getName());
-        xVals.add("Peers' Score");
+        xVals.add("Peers");
 
-        PieDataSet dataSet = new PieDataSet(yVals, "Reaction Score vs. Peers");
+        PieDataSet dataSet = new PieDataSet(yVals, "Reaction Score Percentile");
         dataSet.setSliceSpace(1);
         dataSet.setSelectionShift(5);
 
@@ -286,10 +286,10 @@ public class StroopPeersScore extends Fragment {
         yVals.add(new Entry((float) (1-accuracy_percentile/accuracy_data_pool.length)+0.01f, 1));
 
         ArrayList<String> xVals = new ArrayList<>();
-        xVals.add(profileData.getUsername());
+        xVals.add(profileData.getName());
         xVals.add("Peers");
 
-        PieDataSet dataSet = new PieDataSet(yVals, "Accuracy Score vs. Peers");
+        PieDataSet dataSet = new PieDataSet(yVals, "Accuracy Percentile");
         dataSet.setSliceSpace(1);
         dataSet.setSelectionShift(5);
 

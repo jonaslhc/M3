@@ -1,5 +1,6 @@
 package com.interaxon.test.libmuse.StroopInfo;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ public class StroopPersonalScore extends Fragment {
     BarChart mChart;
     Button backButton;
 
+    TextView accuracyTextView, reactionTextView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.tab_stroop_score_fragment_layout, container, false);
@@ -62,17 +65,23 @@ public class StroopPersonalScore extends Fragment {
 
         mChart.setNoDataText("No data is currently available");
         mChart.setDescription("");
-        mChart.setDrawHighlightArrow(true);
+        //mChart.setDrawHighlightArrow(true);
 
-        Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
+        //Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
         Typeface tf = Typeface.DEFAULT;
 
         profileData = DatabaseHandler.getHandler().getCurrUser();
         last_accuracy = profileData.getAccuracy();
         last_reaction_time = profileData.getReactionTime();
 
+        accuracyTextView.setText("Your were" + String.format("%6.0f%%", last_accuracy*100) + " accurate.");
+        reactionTextView.setText("Your reaction score was" + String.format("%6.2f", last_reaction_time) + ".");
+
         XAxis horizontal_axis = mChart.getXAxis();
         YAxis vertical_axis = mChart.getAxis(YAxis.AxisDependency.LEFT);
+
+        Log.d(TAG, String.valueOf(last_accuracy));
+        Log.d(TAG, String.valueOf(last_reaction_time));
 
         // x-axis
         horizontal_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -85,6 +94,12 @@ public class StroopPersonalScore extends Fragment {
         vertical_axis.setDrawAxisLine(true);
         vertical_axis.setDrawGridLines(true);
         vertical_axis.setDrawZeroLine(true);
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setEnabled(true);
+
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setEnabled(false);
 
         ArrayList<BarEntry> accuracy = new ArrayList<>();
         ArrayList<BarEntry> reaction_time = new ArrayList<>();
@@ -135,12 +150,19 @@ public class StroopPersonalScore extends Fragment {
 
         // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTypeface(tf);
+        l.setTextColor(Color.BLACK);
+
+        /*Legend l = mChart.getLegend();
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
         l.setTextColor(Color.BLACK);
         l.setTextSize(12f);
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_INSIDE);
+        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_INSIDE);*/
     }
 
 
@@ -148,7 +170,17 @@ public class StroopPersonalScore extends Fragment {
     private void initView() {
         mChart = (BarChart) getActivity().findViewById(R.id.bar_chart_personal);
         backButton = (Button) getActivity().findViewById(R.id.back_to_menu);
+        backButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
         moreInfoText = (TextView) getActivity().findViewById(R.id.more_info_text_view);
+        accuracyTextView = (TextView) getActivity().findViewById(R.id.accuracy_result);
+        reactionTextView = (TextView) getActivity().findViewById(R.id.reaction_time_result);
     }
 
 

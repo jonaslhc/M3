@@ -3,46 +3,54 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your Last Results"
-            android:textSize="18sp"/>
 
-        <TextView
-            android:id="@+id/more_info_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Learn More"
-            android:clickable="true"
-            android:textSize="15sp"
-            android:paddingLeft="100dp"
-            android:textColor="@color/AccentBlue"
-            android:onClick="text_view_on_click"/>
-    </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/more_info_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Learn More"
+        android:clickable="true"
+        android:textSize="20sp"
+        android:paddingLeft="70dp"
+        android:textColor="@color/Blue"
+        android:onClick="text_view_on_click"/>
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/bar_chart_personal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="100"/>
-
-
+        android:layout_weight="15"/>
+    <TextView
+        android:id="@+id/accuracy_result"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+    <TextView
+        android:id="@+id/reaction_time_result"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
 
     <Button
         android:id="@+id/back_to_menu"
-        android:layout_width="200dp"
-        android:layout_height="35dp"
-        android:text="Back"
-        android:layout_gravity="center"
+        android:text="@string/back_menu"
+        android:layout_width="@dimen/button"
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_button"
+        style="@style/ButtonText"
         android:textColor="@color/White"
+        android:padding="5dp"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:onClick="Back"
-        android:background="@drawable/blue_button"
-        style="@style/ButtonText"/>
+        android:layout_margin="5dp"/>
 
 </LinearLayout>
