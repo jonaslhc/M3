@@ -38,8 +38,6 @@ public class PersonalResultFragment extends Fragment {
 
     BarChart mChart;
     Spinner mSessionSpinner;
-    static ProfileData profileData;
-    double last_accuracy, last_reaction_time;
     String TAG = PersonalResultFragment.class.getSimpleName();
     int session_index;
 
@@ -52,11 +50,10 @@ public class PersonalResultFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initView();
-        initBarGraph();
     }
 
 
-    private void initBarGraph() {
+    private void initBarGraph(double accuracy_data,double reaction_time_data, String name) {
 
         mChart.setNoDataText("No data is currently available");
         mChart.setDescription("");
@@ -64,40 +61,6 @@ public class PersonalResultFragment extends Fragment {
 
         Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
         Typeface tf = Typeface.DEFAULT;
-
-
-
-
-        ArrayList<String> numSession = new ArrayList<>();
-        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getStroopList();
-
-
-
-        /*
-        for(int i = 0; i < arrayList.size(); i ++){
-            numSession.add("Session " + String.valueOf(i));
-        }*/
-
-        numSession.add("Session 0");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, numSession);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSessionSpinner.setAdapter(adapter);
-
-
-        mSessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                session_index = (int) parent.getItemIdAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        last_accuracy = arrayList.get(0).getAccuracy();
-        last_reaction_time = arrayList.get(0).getReactionTime();
 
 
         XAxis horizontal_axis = mChart.getXAxis();
@@ -119,16 +82,8 @@ public class PersonalResultFragment extends Fragment {
         ArrayList<BarEntry> reaction_time = new ArrayList<>();
 
 
-        /*
-        // Populate with values
-        accuracy.add(new BarEntry((float) profileData.getAccuracy(), 0));
-        reaction_time.add(new BarEntry((float) profileData.getReactionTime(), 0));
-        */
-        accuracy.add(new BarEntry((float) arrayList.get(0).getAccuracy(), 0));
-        reaction_time.add(new BarEntry((float) arrayList.get(0).getReactionTime(), 0));
-
-        Log.e(TAG, "Session number" + arrayList.get(0).getMeditationSessionNum()  + "Accuracy = " + arrayList.get(0).getAccuracy());
-
+        accuracy.add(new BarEntry((float) accuracy_data, 0));
+        reaction_time.add(new BarEntry((float) reaction_time_data, 0));
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
         BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
@@ -155,7 +110,7 @@ public class PersonalResultFragment extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<String>();
         //xVals.add(arrayList.get(0).getName());
-        xVals.add("Jonas");
+        xVals.add(name);
 
         BarData mData = new BarData(xVals, dataSets);
         //mData.setValueFormatter(new PercentFormatter());
@@ -183,6 +138,30 @@ public class PersonalResultFragment extends Fragment {
     private void initView() {
         mChart = (BarChart) getActivity().findViewById(R.id.profile_bar_chart);
         mSessionSpinner = (Spinner) getActivity().findViewById(R.id.session_spinner);
-       // ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, )
+
+        ArrayList<String> numSession = new ArrayList<>();
+        final ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getStroopList();
+
+        for(int i = 0; i < arrayList.size(); i ++){
+            numSession.add("Session " + String.valueOf(i+1));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, numSession);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSessionSpinner.setAdapter(adapter);
+
+
+        mSessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                session_index = position;
+                initBarGraph(arrayList.get(session_index).getAccuracy(), arrayList.get(session_index).getReactionTime(), arrayList.get(session_index).getUsername());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

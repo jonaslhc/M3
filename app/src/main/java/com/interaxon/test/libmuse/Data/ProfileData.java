@@ -63,6 +63,9 @@ public class ProfileData {
         this.meditation_session_num = meditation_session_num;
         this.meditation = meditation;
 
+        if (first == 1) this.first = true;
+        else this.first = false;
+
     }
 
     // constructor for adding new meditation session
