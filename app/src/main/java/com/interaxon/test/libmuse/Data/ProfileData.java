@@ -6,6 +6,12 @@ package com.interaxon.test.libmuse.Data;
  * ...
  * password: for privacy */
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 public class ProfileData {
     private String username;
     private String name;
@@ -139,4 +145,12 @@ public class ProfileData {
     public int getMeditationCount() {return meditation_count;}
     public int getMeditationSessionNum() {return meditation_session_num;}
     public String getMeditation() {return meditation;}
+    public ArrayList<Double> getMeditationDouble() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Double>>() {}.getType();
+
+        ArrayList<Double> outputMeditation = gson.fromJson(this.meditation, type);
+
+        return outputMeditation;
+    }
 }
