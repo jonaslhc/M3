@@ -17,7 +17,7 @@
             android:textStyle="bold"
             android:padding="5dp"/>
         <Spinner
-            android:id="@+id/session_spinner"
+            android:id="@+id/spinner_sessions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </Spinner>

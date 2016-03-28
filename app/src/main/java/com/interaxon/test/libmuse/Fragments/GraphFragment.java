@@ -41,7 +41,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 
-public class GraphFragment extends Fragment implements OnChartValueSelectedListener {
+public class GraphFragment extends Fragment {
 
 
     private LineChart mLineChart;
@@ -65,7 +65,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
 
         mLineChart = (LineChart) view.findViewById(R.id.chart1);
-        mLineChart.setOnChartValueSelectedListener(this);
 
         //percentGood = 0.0;
 
@@ -130,9 +129,11 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
         ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
         ArrayList<String> xVals = new ArrayList<String>();
 
-        double avg = MuseHandler.getHandler().getCalibratedMean();
+        double avg = meditationData.get(meditationData.size()-2).floatValue();
 
-        for (int i = 0; i < meditationData.size()-1; i++) {
+        // meditationData[size-2] is calibrated mean
+        // meditationData[size-1] is %good
+        for (int i = 0; i < meditationData.size()-2; i++) {
             xVals.add(String.format("%6.1f", second));
             second += 0.5;
 
@@ -229,18 +230,6 @@ public class GraphFragment extends Fragment implements OnChartValueSelectedListe
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);
-    }
-
-
-
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        Log.i("Entry selected", e.toString());
-    }
-
-    @Override
-    public void onNothingSelected() {
-        Log.i("Nothing selected", "Nothing selected.");
     }
 
 }

@@ -198,6 +198,7 @@ public class MeditateFragment extends Fragment {
                     }
                 }
 
+                meditation.add(MuseHandler.getHandler().getCalibratedMean());
                 percentGood = percentGood/meditation.size();
                 meditation.add(percentGood);
                 DatabaseHandler.getHandler().addMeditation(meditation, session_num);

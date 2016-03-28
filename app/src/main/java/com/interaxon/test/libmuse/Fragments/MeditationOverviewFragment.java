@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,12 +39,13 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeditationOverviewFragment extends Fragment implements OnChartValueSelectedListener {
+public class MeditationOverviewFragment extends Fragment {
 
     private LineChart mLineChart;
-    private LineData mLineData;
     private Spinner mSessionSpinner;
     private TextView mSessionResult;
+
+    ArrayList<String> sessionList;
 
     public MeditationOverviewFragment() {
         // Required empty public constructor
@@ -55,51 +58,48 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         View view = inflater.inflate(R.layout.fragment_meditation_overview, container, false);
 
         //set chart and spinner and text
-        mLineChart = (LineChart) view.findViewById(R.id.chart1);
-        mLineChart.setOnChartValueSelectedListener(this);
+        mLineChart = (LineChart) view.findViewById(R.id.meditate_graph);
 
-        mSessionSpinner = (Spinner) view.findViewById(R.id.session_spinner);
+        mSessionSpinner = (Spinner) view.findViewById(R.id.spinner_sessions);
         mSessionResult = (TextView) view.findViewById(R.id.meditate_result);
 
-        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
 
-        Log.d("MEDITATION SIZE", String.valueOf(arrayList.size()));
+        sessionList = new ArrayList<>();
+        final ArrayList<ProfileData> meditationList = DatabaseHandler.getHandler().getMeditationList();
 
-        for (int i=0; i<arrayList.size(); i++){
-            Log.d("MEDITATION SESSIONS", String.valueOf(arrayList.get(i).getMeditationSessionNum()));
-            Log.d("MEDITATION", arrayList.get(i).getMeditation());
+        for (int i = 0; i < meditationList.size(); i ++){
+            sessionList.add("Session " + meditationList.get(i).getMeditationSessionNum());
         }
 
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_spinner_item, sessionList);
 
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSessionSpinner.setAdapter(adapter);
+
+        mSessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                graphResults(meditationList.get(position).getMeditationDouble());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         return view;
     }
 
-    /*private void setSpinner (View view) {
+    public void graphResults (ArrayList<Double> meditationData) {
 
-        // Fine my spinner
-        Spinner spinner = (Spinner) view.findViewById(R.id.pick_movie);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
-                R.array.movie_list, android.R.layout.simple_spinner_item);
-
-        // Specify the layout to use when the list of choices appears
-        // Regular drop down menu
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-    }*/
-
-    public void graphResults () {
+        double percentGood = meditationData.get(meditationData.size()-1).floatValue()*100;
+        mSessionResult.setText("You were calm:" + String.format("%6.0f%%", percentGood) + " of the time.");
 
         // no description text
         mLineChart.setDescription("");
         mLineChart.setNoDataTextDescription("You need to provide data for the chart.");
-
-        // enable touch gestures
-        mLineChart.setTouchEnabled(true);
 
         // enable scaling and dragging
         mLineChart.setDragEnabled(true);
@@ -114,8 +114,6 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
 
         Typeface tf = Typeface.DEFAULT;
 
-        ArrayList<Double> meditationData = DatabaseHandler.getHandler().getLatestMeditation();
-
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < meditationData.size(); i++) {
             xVals.add("");
@@ -128,7 +126,7 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         ArrayList<Entry> yVals = new ArrayList<Entry>();
         ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
 
-        double avg = MuseHandler.getHandler().getCalibratedMean();
+        double avg = meditationData.get(meditationData.size()-2).floatValue();
 
         for (int i = 0; i < meditationData.size(); i++) {
             curr = meditationData.get(i).floatValue();
@@ -140,7 +138,6 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
 
             yVals.add(new Entry((float)curr, i));
             yValsAvg.add(new Entry((float)avg, i));
-
         }
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
@@ -181,18 +178,7 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
         dataSets.add(setAvg); // add the datasets
 
         // create a data object with the datasets
-        mLineData = new LineData(xVals, dataSets);
-
-        // set data
-        mLineChart.setData(mLineData);
-
-        // get the legend (only possible after setting data)
-        Legend l = mLineChart.getLegend();
-
-        // modify the legend ...
-        l.setForm(Legend.LegendForm.LINE);
-        l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
+        LineData mLineData = new LineData(xVals, dataSets);
 
         XAxis xl = mLineChart.getXAxis();
         xl.setTypeface(tf);
@@ -212,9 +198,22 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);
+
+        // set data
+        mLineChart.setData(mLineData);
+
+        // get the legend (only possible after setting data)
+        Legend l = mLineChart.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        l.setTypeface(tf);
+        l.setTextColor(Color.WHITE);
+
+        mLineChart.invalidate();
     }
 
-    @Override
+    /*@Override
     public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
         Log.i("Entry selected", e.toString());
     }
@@ -223,6 +222,6 @@ public class MeditationOverviewFragment extends Fragment implements OnChartValue
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
     }
-
+*/
 
 }
