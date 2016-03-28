@@ -26,13 +26,13 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
 
         switch (i) {
             case 0:
-                MeditationOverviewFragment s1 = new MeditationOverviewFragment();
+                MeditationSummaryFragment s1 = new MeditationSummaryFragment();
                 return s1;
             case 1:
                 PersonalResultFragment s2 = new PersonalResultFragment();
                 return s2;
             case 2:
-                MeditationSummaryFragment s3 = new MeditationSummaryFragment();
+                MeditationOverviewFragment s3 = new MeditationOverviewFragment();
                 return s3;
 
 
