@@ -378,7 +378,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String username = getCurrUser().getUsername();
 
-        Log.d("getmeditationlist", username);
+        //Log.d("getmeditationlist", username);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
