@@ -130,14 +130,14 @@ public class MenuActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch(pos) {
             case 0:
-                showcaseView.setShowcase(meditation_target, false);
-                showcaseView.setContentTitle("Meditation");
-                showcaseView.setContentText("We will guide you through a meditation session");
-                break;
-            case 1:
                 showcaseView.setShowcase(stroop_target, false);
                 showcaseView.setContentTitle("Stroop");
-                showcaseView.setContentText("We will begin a brain game that will be used to evaluate your cognitive performance");
+                showcaseView.setContentText("We will start off with a brain game that will be used to evaluate your cognitive performance");
+                break;
+            case 1:
+                showcaseView.setShowcase(meditation_target, false);
+                showcaseView.setContentTitle("Meditation");
+                showcaseView.setContentText("Later, we will guide you through a meditation session");
                 break;
             case 2:
                 showcaseView.setShowcase(profile_target, false);

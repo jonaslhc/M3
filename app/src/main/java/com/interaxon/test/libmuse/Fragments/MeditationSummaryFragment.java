@@ -66,19 +66,15 @@ public class MeditationSummaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initView();
 
-        initCombGraph();
-        initBarGraph();
+        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
+        ArrayList<ProfileData> stroopList = DatabaseHandler.getHandler().getStroopList();
 
-        /*
-        if(stroopList.size() < 2){
-            initBarGraph(stroopList.get(0).getAccuracy(), stroopList.get(0).getReactionTime(), 0.0, 0.0, stroopList.get(0).getUsername());
-        }
-        else{
-            initBarGraph(stroopList.get(stroopList.size()-1).getAccuracy(), stroopList.get(stroopList.size()-1).getReactionTime(),
-                    stroopList.get(stroopList.size()-2).getAccuracy(),
-                    stroopList.get(stroopList.size()-2).getReactionTime(), stroopList.get(stroopList.size()-2).getUsername());
-        }
-        */
+        if(arrayList.size() > 0)
+            initCombGraph();
+
+        if(stroopList.size() > 0)
+            initBarGraph();
+
 
     }
 
@@ -140,10 +136,14 @@ public class MeditationSummaryFragment extends Fragment {
         LineData d = new LineData();
 
         ArrayList<Entry> entries = new ArrayList<Entry>();
-
+        double sum = 0.0;
 
         for(int i = 0; i < array.size(); i++) {
-            entries.add(new Entry( 0.5f*array.get(i).getMeditationDouble().get(array.size()-1).floatValue(), i));
+            for(int y = 0; y < array.size()-2; y++) {
+                sum += array.get(i).getMeditationDouble().get(y).floatValue();
+            }
+            entries.add(new Entry( (float) sum/4.0f, i));
+            sum = 0;
         }
 
         LineDataSet set = new LineDataSet(entries, "Line DataSet");
