@@ -22,6 +22,25 @@
         android:id="@+id/profile_bar_chart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="100"/>
-
+        android:layout_weight="15"/>
+    <TextView
+        android:id="@+id/accuracy_result"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
+    <TextView
+        android:id="@+id/reaction_time_result"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_margin="5dp"/>
 </LinearLayout>

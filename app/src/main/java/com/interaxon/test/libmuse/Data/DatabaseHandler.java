@@ -414,8 +414,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                 cursor.getString(0), // username
                                 cursor.getInt(7), // stroop index
                                 cursor.getInt(8), // stroop count
-                                cursor.getInt(12), // accuracy
-                                cursor.getInt(13) // reaction time
+                                cursor.getDouble(12), // accuracy
+                                cursor.getDouble(13) // reaction time
                         );
                         DataList.add(CurrUser);
                     }

@@ -75,7 +75,7 @@ public class StroopPersonalScore extends Fragment {
         last_reaction_time = profileData.getReactionTime();
 
         accuracyTextView.setText("Your were" + String.format("%6.0f%%", last_accuracy*100) + " accurate.");
-        reactionTextView.setText("Your reaction score was" + String.format("%6.2f", last_reaction_time) + ".");
+        reactionTextView.setText("Your distractibility score was" + String.format("%6.2f", last_reaction_time) + ".");
 
         XAxis horizontal_axis = mChart.getXAxis();
         YAxis vertical_axis = mChart.getAxis(YAxis.AxisDependency.LEFT);
