@@ -66,19 +66,15 @@ public class MeditationSummaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initView();
 
-        initCombGraph();
-        initBarGraph();
+        ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
+        ArrayList<ProfileData> stroopList = DatabaseHandler.getHandler().getStroopList();
 
-        /*
-        if(stroopList.size() < 2){
-            initBarGraph(stroopList.get(0).getAccuracy(), stroopList.get(0).getReactionTime(), 0.0, 0.0, stroopList.get(0).getUsername());
-        }
-        else{
-            initBarGraph(stroopList.get(stroopList.size()-1).getAccuracy(), stroopList.get(stroopList.size()-1).getReactionTime(),
-                    stroopList.get(stroopList.size()-2).getAccuracy(),
-                    stroopList.get(stroopList.size()-2).getReactionTime(), stroopList.get(stroopList.size()-2).getUsername());
-        }
-        */
+        if(arrayList.size() > 0)
+            initCombGraph();
+
+        if(stroopList.size() > 0)
+            initBarGraph();
+
 
     }
 

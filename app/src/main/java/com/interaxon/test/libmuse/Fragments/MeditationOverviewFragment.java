@@ -68,7 +68,7 @@ public class MeditationOverviewFragment extends Fragment {
         final ArrayList<ProfileData> meditationList = DatabaseHandler.getHandler().getMeditationList();
 
         for (int i = 0; i < meditationList.size(); i++){
-            sessionList.add("Session " + (i+1));
+            sessionList.add("Session " + meditationList.get(i).getMeditationSessionNum());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),
