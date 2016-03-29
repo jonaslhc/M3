@@ -83,7 +83,7 @@ public class MeditationSummaryFragment extends Fragment {
         ArrayList<ProfileData> arrayList = DatabaseHandler.getHandler().getMeditationList();
 
         mCombChart.setNoDataText("No Data");
-        mCombChart.setDescription("Your historical % calm");
+        mCombChart.setDescription("");
         mCombChart.setDrawHighlightArrow(true);
         Typeface tf = Typeface.DEFAULT;
 
@@ -95,7 +95,7 @@ public class MeditationSummaryFragment extends Fragment {
         horizontal_axis.setPosition(XAxis.XAxisPosition.BOTTOM);
         horizontal_axis.setTextSize(10f);
         horizontal_axis.setDrawAxisLine(true);
-        horizontal_axis.setDrawGridLines(true);
+        horizontal_axis.setDrawGridLines(false);
 
         // y-axis
         vertical_axis.setDrawLabels(true);
@@ -106,7 +106,8 @@ public class MeditationSummaryFragment extends Fragment {
 
         ArrayList<String> xVals = new ArrayList<String>();
         for(int i = 0; i < arrayList.size(); i++) {
-            xVals.add(arrayList.get(i).getUsername());
+            //xVals.add(arrayList.get(i).getUsername());
+            xVals.add("");
         }
 
         CombinedData data = new CombinedData(xVals);
@@ -127,8 +128,6 @@ public class MeditationSummaryFragment extends Fragment {
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
         l.setTextColor(Color.BLACK);
-        l.setTextSize(12f);
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_INSIDE);
 
     }
 
@@ -138,15 +137,18 @@ public class MeditationSummaryFragment extends Fragment {
         ArrayList<Entry> entries = new ArrayList<Entry>();
         double sum = 0.0;
 
+        ArrayList<Double> meditationData;
+
         for(int i = 0; i < array.size(); i++) {
-            for(int y = 0; y < array.size()-2; y++) {
-                sum += array.get(i).getMeditationDouble().get(y).floatValue();
+            meditationData = array.get(i).getMeditationDouble();
+            for(int y = 0; y < meditationData.size()-2; y++) {
+                sum += meditationData.get(y).floatValue();
             }
-            entries.add(new Entry( (float) sum/4.0f, i));
+            entries.add(new Entry( (float) (sum/(meditationData.size()-2)/4.0), i));
             sum = 0;
         }
 
-        LineDataSet set = new LineDataSet(entries, "Line DataSet");
+        LineDataSet set = new LineDataSet(entries, "Average Alpha");
         set.setColor(Color.rgb(240, 238, 70));
         set.setLineWidth(2.5f);
         set.setCircleColor(Color.rgb(240, 238, 70));
@@ -169,10 +171,15 @@ public class MeditationSummaryFragment extends Fragment {
 
         ArrayList<BarEntry> entries = new ArrayList<BarEntry>();
 
+        ArrayList<Double> meditationData;
+
+
         for(int i = 0; i < array.size(); i++) {
-            entries.add(new BarEntry((float) array.get(i).getMeditationDouble().get(array.size()-1).floatValue(), i));
+            meditationData = array.get(i).getMeditationDouble();
+            entries.add(new BarEntry(meditationData.get(meditationData.size()-1).floatValue(), i));
+            //Log.d("bar data", String.valueOf(array.get(i).getMeditationDouble().get(array.size()-1).floatValue()));
         }
-        BarDataSet set = new BarDataSet(entries, "Bar DataSet");
+        BarDataSet set = new BarDataSet(entries, "% of Time Calm");
         set.setColor(Color.rgb(60, 220, 78));
         set.setValueTextColor(Color.rgb(60, 220, 78));
         set.setValueTextSize(10f);
@@ -187,7 +194,7 @@ public class MeditationSummaryFragment extends Fragment {
         ArrayList<ProfileData> stroopList = DatabaseHandler.getHandler().getStroopList();
 
         mChart.setNoDataText("No data is currently available");
-        mChart.setDescription("Your historical Brain Game result");
+        mChart.setDescription("");
         mChart.setDrawHighlightArrow(true);
 
         Log.e(TAG, "current user name: " + DatabaseHandler.getHandler().getCurrUser().getUsername());
@@ -225,7 +232,7 @@ public class MeditationSummaryFragment extends Fragment {
 
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
-        BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
+        BarDataSet reaction_score = new BarDataSet(reaction_time, "Distractibility");
 
         accuracy_set.setAxisDependency(YAxis.AxisDependency.LEFT);
         accuracy_set.setColor(ColorTemplate.getHoloBlue());
@@ -246,11 +253,11 @@ public class MeditationSummaryFragment extends Fragment {
         dataSets.add(accuracy_set);
         dataSets.add(reaction_score);
 
-
         ArrayList<String> xVals = new ArrayList<String>();
         //xVals.add(arrayList.get(0).getName());
         for(int i = 0; i < stroopList.size(); i ++) {
-            xVals.add(stroopList.get(i).getUsername());
+            //xVals.add(stroopList.get(i).getUsername());
+            xVals.add("");
         }
 
         BarData mData = new BarData(xVals, dataSets);
@@ -271,8 +278,6 @@ public class MeditationSummaryFragment extends Fragment {
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
         l.setTextColor(Color.BLACK);
-        l.setTextSize(12f);
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_INSIDE);
     }
 
 

@@ -408,7 +408,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 if (cursor.getString(0).matches(username)){
-                    if (firstpass || cursor.getInt(10)==-1) firstpass = false;
+                    if (firstpass || cursor.getString(14) != null) firstpass = false;
                     else {
                         ProfileData CurrUser = new ProfileData(
                                 cursor.getString(0), // username

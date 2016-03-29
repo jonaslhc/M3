@@ -3,21 +3,26 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Your Past Sessions"/>
-
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mental Game Progress"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"/>
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/summary_bar_chart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meditation Progress"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="5dp"/>
 
     <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/summary_comb_chart"

@@ -62,6 +62,10 @@ public class PersonalResultFragment extends Fragment {
 
     private void initBarGraph(double accuracy_data,double reaction_time_data, String name) {
 
+
+        mChart.setNoDataText("No Data");
+        mChart.setDescription("");
+        mChart.setDrawHighlightArrow(true);
         Typeface tf = Typeface.DEFAULT;
 
         accuracyTextView.setText("Your were" + String.format("%6.0f%%", accuracy_data*100) + " accurate.");
@@ -98,7 +102,7 @@ public class PersonalResultFragment extends Fragment {
 
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
-        BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
+        BarDataSet reaction_score = new BarDataSet(reaction_time, "Distractibility");
 
         accuracy_set.setAxisDependency(YAxis.AxisDependency.LEFT);
         accuracy_set.setColor(ColorTemplate.getHoloBlue());
@@ -121,7 +125,7 @@ public class PersonalResultFragment extends Fragment {
 
 
         ArrayList<String> xVals = new ArrayList<String>();
-        xVals.add("test");
+        xVals.add("");
 
         BarData mData = new BarData(xVals, dataSets);
         mData.setValueFormatter(new PercentFormatter());

@@ -54,7 +54,7 @@ public class ProfilePagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return "Distractibility"; // same as case 2 for stroop
             case 2:
-                return "Meditation Summary";  // have ability to choose which session to see
+                return "Meditation";  // have ability to choose which session to see
         }
         return null;
     }

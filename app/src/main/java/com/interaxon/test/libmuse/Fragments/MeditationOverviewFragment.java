@@ -114,21 +114,26 @@ public class MeditationOverviewFragment extends Fragment {
 
         Typeface tf = Typeface.DEFAULT;
 
-        ArrayList<String> xVals = new ArrayList<String>();
+        /*ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < meditationData.size(); i++) {
             xVals.add("");
-        }
+        }*/
 
+        double second = 0.0;
         double largest = 0;
         double smallest = meditationData.get(0);
         double curr = 0;
 
         ArrayList<Entry> yVals = new ArrayList<Entry>();
         ArrayList<Entry> yValsAvg = new ArrayList<Entry>();
+        ArrayList<String> xVals = new ArrayList<String>();
 
         double avg = meditationData.get(meditationData.size()-2).floatValue();
 
-        for (int i = 0; i < meditationData.size(); i++) {
+        for (int i = 0; i < meditationData.size()-2; i++) {
+            xVals.add(String.format("%6.1f", second));
+            second += 0.5;
+
             curr = meditationData.get(i).floatValue();
             if (curr > largest) largest = curr;
             else if (curr < smallest) smallest = curr;
@@ -138,6 +143,10 @@ public class MeditationOverviewFragment extends Fragment {
 
             yVals.add(new Entry((float)curr, i));
             yValsAvg.add(new Entry((float)avg, i));
+
+            //if (curr > avg) {
+            //    percentGood = percentGood + 1.0;
+            //}
         }
 
         if (Math.abs(largest-avg) < Math.abs(avg-smallest)) {
@@ -182,19 +191,21 @@ public class MeditationOverviewFragment extends Fragment {
 
         XAxis xl = mLineChart.getXAxis();
         xl.setTypeface(tf);
-        xl.setTextColor(Color.WHITE);
+        //xl.setTextSize(getResources().getDimension(R.dimen.graph_text));
+        xl.setTextColor(Color.BLACK);
+        xl.setPosition(XAxis.XAxisPosition.BOTTOM);
         xl.setDrawGridLines(false);
         xl.setAvoidFirstLastClipping(true);
         xl.setSpaceBetweenLabels(5);
         xl.setEnabled(true);
 
         YAxis leftAxis = mLineChart.getAxisLeft();
-        leftAxis.setTypeface(tf);
-        leftAxis.setTextColor(Color.WHITE);
-
+        leftAxis.setEnabled(false);
+        //leftAxis.setTypeface(tf);
+        //leftAxis.setTextColor(Color.BLACK);
         leftAxis.setAxisMaxValue(((float)largest));
         leftAxis.setAxisMinValue((float)smallest);
-        leftAxis.setDrawGridLines(true);
+        //leftAxis.setDrawGridLines(false);
 
         YAxis rightAxis = mLineChart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -208,7 +219,7 @@ public class MeditationOverviewFragment extends Fragment {
         // modify the legend ...
         l.setForm(Legend.LegendForm.LINE);
         l.setTypeface(tf);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
 
         mLineChart.invalidate();
     }

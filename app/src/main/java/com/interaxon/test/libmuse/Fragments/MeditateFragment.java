@@ -148,7 +148,7 @@ public class MeditateFragment extends Fragment {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {}
 
-            for (int i=30; i>=0; i--) {
+            for (int i=20; i>=0; i--) {
                 final int time_left = i;
                 counterStatus.post(new Runnable() {
                     @Override
@@ -163,7 +163,7 @@ public class MeditateFragment extends Fragment {
             }
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {}
 
 

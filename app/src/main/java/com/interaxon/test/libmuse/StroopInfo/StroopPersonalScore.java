@@ -111,7 +111,7 @@ public class StroopPersonalScore extends Fragment {
 
 
         BarDataSet accuracy_set = new BarDataSet(accuracy, "Accuracy");
-        BarDataSet reaction_score = new BarDataSet(reaction_time, "Reaction Score");
+        BarDataSet reaction_score = new BarDataSet(reaction_time, "Distractibility");
 
         accuracy_set.setAxisDependency(YAxis.AxisDependency.LEFT);
         accuracy_set.setColor(ColorTemplate.getHoloBlue());
