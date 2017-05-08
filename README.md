@@ -9,3 +9,5 @@ This app's flow is as follows:
 3. The app records EEG data & interpret the result for instant feedback
 4. Repeat from part 2 the next day. This continues for 30 days.
 5. User plays the Stroop mental game after 30 days to compare result
+
+Link to final report: http://www.eecg.utoronto.ca/~jayar/ece1778.2016w/m3.pdf
